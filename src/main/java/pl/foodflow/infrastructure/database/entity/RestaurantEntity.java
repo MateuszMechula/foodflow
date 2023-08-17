@@ -49,7 +49,7 @@ public class RestaurantEntity {
     private BigDecimal deliveryPrice;
 
     @Column(name = "delivery_option")
-    private Boolean deliverOption;
+    private Boolean deliveryOption;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
