@@ -2,6 +2,8 @@ package pl.foodflow.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -9,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @AllArgsConstructor
 public class HomeController {
 
-    public static final String HOME = "/";
-
-    @RequestMapping(value = HOME, method = RequestMethod.GET)
+    @GetMapping
     public String homePage() {
-        return "home";
+        return "owner_home_page";
+    }
+
+    @GetMapping("/{section}")
+    public String showSection(@PathVariable String section) {
+        return section;
     }
 
 }
