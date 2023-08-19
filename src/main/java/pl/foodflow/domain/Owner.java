@@ -1,8 +1,6 @@
 package pl.foodflow.domain;
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.AddressEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 
 @With
 @Value
@@ -16,6 +14,6 @@ public class Owner {
     String surname;
     String email;
     String phone;
-    AddressEntity address;
-    RestaurantEntity restaurant;
+    Address address;
+    Restaurant restaurant;
 }

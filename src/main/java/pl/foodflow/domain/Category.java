@@ -1,7 +1,6 @@
 package pl.foodflow.domain;
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.RestaurantCategoryEntity;
 
 import java.util.Set;
 
@@ -14,5 +13,5 @@ public class Category {
 
     Long categoryId;
     String name;
-    Set<RestaurantCategoryEntity> restaurantCategories;
+    Set<RestaurantCategory> restaurantCategories;
 }

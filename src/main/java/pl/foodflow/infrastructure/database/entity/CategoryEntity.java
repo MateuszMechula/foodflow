@@ -20,7 +20,7 @@ public class CategoryEntity {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "name",unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")

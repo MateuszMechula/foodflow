@@ -1,7 +1,6 @@
 package pl.foodflow.domain;
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetTime;
@@ -25,10 +24,10 @@ public class Restaurant {
     BigDecimal minimumOrderAmount;
     BigDecimal deliveryPrice;
     Boolean deliveryOption;
-    AddressEntity address;
-    OwnerEntity owner;
-    MenuEntity menu;
-    Set<RestaurantAddressEntity> restaurantAddresses;
-    Set<RestaurantCategoryEntity> restaurantCategories;
-    Set<OrderRecordEntity> orderRecords;
+    Address address;
+    Owner owner;
+    Menu menu;
+    Set<RestaurantAddress> restaurantAddresses;
+    Set<RestaurantCategory> restaurantCategories;
+    Set<OrderRecord> orderRecords;
 }

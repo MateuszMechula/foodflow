@@ -1,8 +1,6 @@
 package pl.foodflow.domain;
 
-
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.MenuItemEntity;
 
 @With
 @Value
@@ -13,5 +11,5 @@ public class ItemImage {
 
     Long itemImageId;
     String imageUrl;
-    MenuItemEntity menuItem;
+    CategoryItem categoryItem;
 }

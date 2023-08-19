@@ -22,6 +22,6 @@ public class ItemImageEntity {
     private String imageUrl;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "menu_item_id")
-    private MenuItemEntity menuItem;
+    @JoinColumn(name = "category_item_id")
+    private CategoryItemEntity categoryItem;
 }

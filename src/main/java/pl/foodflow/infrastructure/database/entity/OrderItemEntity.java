@@ -27,8 +27,8 @@ public class OrderItemEntity {
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_item_id")
-    private MenuItemEntity menuItem;
+    @JoinColumn(name = "category_item_id")
+    private CategoryItemEntity categoryItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_record_id")

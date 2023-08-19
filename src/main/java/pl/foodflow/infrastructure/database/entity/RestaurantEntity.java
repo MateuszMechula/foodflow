@@ -59,7 +59,7 @@ public class RestaurantEntity {
     @JoinColumn(name = "owner_id")
     private OwnerEntity owner;
 
-    @OneToOne(fetch = FetchType.EAGER,mappedBy = "restaurant")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "restaurant")
     private MenuEntity menu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

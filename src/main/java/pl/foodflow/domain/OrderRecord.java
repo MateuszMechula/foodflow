@@ -1,9 +1,6 @@
 package pl.foodflow.domain;
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.CustomerEntity;
-import pl.foodflow.infrastructure.database.entity.OrderItemEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -26,7 +23,7 @@ public class OrderRecord {
     String contactPhone;
     String deliveryAddress;
     Boolean deliveryType;
-    CustomerEntity customer;
-    RestaurantEntity restaurant;
-    Set<OrderItemEntity> orderItems;
+    Customer customer;
+    Restaurant restaurant;
+    Set<OrderItem> orderItems;
 }

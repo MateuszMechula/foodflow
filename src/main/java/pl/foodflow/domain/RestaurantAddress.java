@@ -1,8 +1,6 @@
 package pl.foodflow.domain;
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.AddressEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 
 @With
 @Value
@@ -12,6 +10,6 @@ import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 public class RestaurantAddress {
 
     Long restaurantAddressId;
-    RestaurantEntity restaurant;
-    AddressEntity address;
+    Restaurant restaurant;
+    Address address;
 }

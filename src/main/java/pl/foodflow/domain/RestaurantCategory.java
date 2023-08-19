@@ -2,8 +2,6 @@ package pl.foodflow.domain;
 
 
 import lombok.*;
-import pl.foodflow.infrastructure.database.entity.CategoryEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 
 @With
 @Value
@@ -14,6 +12,6 @@ import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 public class RestaurantCategory {
 
     Long restaurantCategoryId;
-    RestaurantEntity restaurant;
-    CategoryEntity category;
+    Restaurant restaurant;
+    Category category;
 }
