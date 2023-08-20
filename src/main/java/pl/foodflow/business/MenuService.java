@@ -28,7 +28,6 @@ public class MenuService {
 
         Menu menuToAdd = buildMenu(menu, existingRestaurant);
 
-        restaurantService.addRestaurant(existingRestaurant.withMenu(menuToAdd));
     }
 
     private Menu buildMenu(Menu menu, Restaurant restaurant) {

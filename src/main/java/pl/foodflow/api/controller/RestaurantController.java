@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
 import pl.foodflow.business.RestaurantFactoryService;
-import pl.foodflow.business.RestaurantService;
 import pl.foodflow.business.dao.OwnerDAO;
 import pl.foodflow.domain.Restaurant;
 
@@ -44,6 +43,6 @@ public class RestaurantController {
 
         ModelAndView modelAndView = new ModelAndView("owner_restaurant");
         modelAndView.addObject("restaurantDTO", restaurantDTO);
-        return "redirect:/owner_restaurant.html";
+        return "redirect:/";
     }
 }

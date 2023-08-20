@@ -9,9 +9,11 @@ import pl.foodflow.infrastructure.database.entity.OwnerEntity;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface OwnerEntityMapper {
-    @Mappings({@Mapping(target = "address", ignore = true)})
+    @Mapping(target = "address", ignore = true)
+    @Mapping(target = "restaurant", ignore = true)
     OwnerEntity mapToEntity(Owner owner);
 
-    @Mappings({@Mapping(target = "address", ignore = true)})
+    @Mapping(target = "address", ignore = true)
+    @Mapping(target = "restaurant", ignore = true)
     Owner mapFromEntity(OwnerEntity saved);
 }

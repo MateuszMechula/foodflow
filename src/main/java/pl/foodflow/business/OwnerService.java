@@ -58,4 +58,8 @@ public class OwnerService {
 
         ownerDAO.saveOwner(updatedOwner);
     }
+
+    public Owner findById(Long ownerId) {
+        return ownerDAO.findById(ownerId).orElseThrow();
+    }
 }

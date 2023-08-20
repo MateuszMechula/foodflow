@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.domain.Address;
+import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.domain.RestaurantAddress;
 
@@ -19,6 +20,8 @@ import java.util.Set;
 public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
+    private final OwnerService ownerService;
+
     @Transactional
     public Restaurant findRestaurantByNip(String nip) {
         final Optional<Restaurant> restaurant = restaurantDAO.findByNip(nip);
@@ -30,7 +33,8 @@ public class RestaurantService {
 
     @Transactional
     public void addRestaurant(Restaurant restaurant) {
-            restaurantDAO.saveRestaurant(restaurant);
+
+        restaurantDAO.saveRestaurant(restaurant);
     }
 
     @Transactional
@@ -47,7 +51,6 @@ public class RestaurantService {
         Set<RestaurantAddress> restaurantAddresses = existingRestaurant.getRestaurantAddresses();
         restaurantAddresses.add(newRestaurantAddress);
 
-        addRestaurant(existingRestaurant.withRestaurantAddresses(restaurantAddresses));
     }
 
     private RestaurantAddress buildRestaurantAddress(Address address, Restaurant restaurant) {

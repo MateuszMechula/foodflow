@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import pl.foodflow.domain.Address;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
-import pl.foodflow.infrastructure.database.entity.OwnerEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 
 @Service
 @Slf4j
@@ -23,7 +21,7 @@ public class RestaurantFactoryService {
         Owner owner = ownerService.findByEmail(restaurant.getOwnerEmail());
         log.debug("Owner found: {}", owner);
 
-        Restaurant updatedRestaurant = buildRestaurant(restaurant, owner);
+        Restaurant updatedRestaurant = restaurant.withOwner(owner);
 
         restaurantService.addRestaurant(updatedRestaurant);
 
