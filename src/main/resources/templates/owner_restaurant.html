@@ -1,25 +1,105 @@
-<div id="owner_restaurant" class="hidden">
-    <h1>Restauracja</h1>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nazwa</th>
-            <th>Adres</th>
-            <th>Telefon</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Nazwa restauracji 1</td>
-            <td>Adres 1</td>
-            <td>Telefon 1</td>
-        </tr>
-        <tr>
-            <td>Nazwa restauracji 2</td>
-            <td>Adres 2</td>
-            <td>Telefon 2</td>
-        </tr>
-        <!-- Dodaj więcej wierszy według potrzeb -->
-        </tbody>
-    </table>
+<div id="restaurant" class="hidden">
+    <br>
+    <h2>Add restaurant</h2>
+    <div class="container mt-5">
+        <form action="#" th:action="@{/restaurant}" th:object="${restaurantDTO}" method="post">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nip">NIP:</label>
+                        <input type="text" class="form-control" id="nip" th:field="*{nip}" placeholder="1234567890" pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form-control" id="description" th:field="*{description}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" class="form-control" id="phone" th:field="*{phone}">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="openTime">Open Time:</label>
+                        <input type="text" class="form-control" id="openTime" th:field="*{openTime}"
+                               required pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]" placeholder="HH:mm:ss (e.g. 09:30:00)">
+                    </div>
+                    <div class="form-group">
+                        <label for="closeTime">Close Time:</label>
+                        <input type="text" class="form-control" id="closeTime" th:field="*{closeTime}"
+                               required pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]" placeholder="HH:mm:ss (e.g. 18:00:00)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="minimumOrderAmount">Minimum order amount:</label>
+                        <input type="text" class="form-control" id="minimumOrderAmount" th:field="*{minimumOrderAmount}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="deliveryPrice">Delivery price:</label>
+                        <input type="text" class="form-control" id="deliveryPrice" th:field="*{deliveryPrice}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="street">Street:</label>
+                        <input type="text" class="form-control" id="street" th:field="*{address.street}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code:</label>
+                        <input type="text" class="form-control" id="postalCode" th:field="*{address.postalCode}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" class="form-control" id="city" th:field="*{address.city}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <input type="text" class="form-control" id="country" th:field="*{address.country}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ownerEmail">Owner Email:</label>
+                        <select id="ownerEmail" th:name="email">
+                            <option th:each="owner: ${allOwners}" th:value="${owner.email}" th:text="${owner.email}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+

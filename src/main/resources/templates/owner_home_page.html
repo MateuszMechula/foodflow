@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Side Navbar Example</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
         }
+
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -20,6 +22,7 @@
             transition: left 0.3s;
             padding-top: 60px;
         }
+
         .sidebar a {
             padding: 15px;
             text-align: center;
@@ -28,13 +31,16 @@
             display: block;
             transition: background-color 0.3s;
         }
+
         .sidebar a:hover {
             background-color: #333;
         }
+
         .content {
             margin-left: 250px;
             padding: 20px;
         }
+
         .hidden {
             display: none;
         }
@@ -42,16 +48,16 @@
 </head>
 <body>
 <div class="sidebar" id="sidebar">
-    <a href="#" data-section="owner_restaurant" onclick="showSection(this)">Restauracja</a>
+    <a href="#" data-section="restaurant" onclick="showSection(this)">Restauracja</a>
     <a href="#" data-section="owner_menu" onclick="showSection(this)">Menu</a>
     <a href="#" data-section="category" onclick="showSection(this)">Category</a>
     <a href="#" data-section="category_items" onclick="showSection(this)">Category Items</a>
 </div>
 <div class="content">
-    <button class="btn btn-primary" onclick="toggleSidebar()">Toggle Sidebar</button>
+    <button class="btn btn-success" onclick="toggleSidebar()"> <i class="fas fa-bars"></i></button>
 
     <div id="dynamic-content">
-        <!-- Tutaj zostanie wstawiona dynamiczna treść sekcji -->
+
     </div>
 </div>
 
@@ -75,18 +81,25 @@
             visibleSection.classList.add("hidden");
         }
 
-        const url = "/foodflow/" + sectionId + ".html"; // Zakładając, że pliki sekcji mają nazwy "owner_restaurant.html", "menu.html", ...
+        const url = "/foodflow/" + sectionId;
+
         console.log("URL to fetch:", url);
-        // Wykonaj żądanie AJAX, aby pobrać zawartość pliku sekcji
         fetch(url)
             .then(response => response.text())
             .then(content => {
                 dynamicContent.innerHTML = content;
-                dynamicContent.classList.remove("hidden"); // Usuń klasę hidden, aby zawartość stała się widoczna
-                const newVisibleSection = dynamicContent.querySelector("#" + sectionId);
-                newVisibleSection.classList.add("visible-section");
-                newVisibleSection.classList.remove("hidden");
                 console.log("Response content:", content);
+
+                const newVisibleSection = dynamicContent.querySelector("#" + sectionId);
+                if (newVisibleSection) {
+                    newVisibleSection.classList.add("visible-section");
+                    newVisibleSection.classList.remove("hidden");
+                } else {
+                    console.log("Section not found:", sectionId);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching content:", error);
             });
 
         return false;

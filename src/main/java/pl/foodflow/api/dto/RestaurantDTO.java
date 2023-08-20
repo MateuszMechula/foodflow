@@ -25,7 +25,7 @@ public class RestaurantDTO {
     BigDecimal minimumOrderAmount;
     BigDecimal deliveryPrice;
     Boolean deliveryOption;
-    Address address;
+    AddressDTO address;
     Owner owner;
     Menu menu;
     Set<RestaurantAddress> restaurantAddresses;

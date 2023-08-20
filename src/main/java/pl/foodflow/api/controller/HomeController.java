@@ -16,9 +16,4 @@ public class HomeController {
         return "owner_home_page";
     }
 
-    @GetMapping("/{section}")
-    public String showSection(@PathVariable String section) {
-        return section;
-    }
-
 }

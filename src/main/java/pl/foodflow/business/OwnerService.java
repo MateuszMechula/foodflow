@@ -2,19 +2,29 @@ package pl.foodflow.business;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.OwnerDAO;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
 
+import java.util.List;
 import java.util.Objects;
 
+
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OwnerService {
 
     private final RestaurantService restaurantService;
     private final OwnerDAO ownerDAO;
+
+    public List<Owner> findAll() {
+        List<Owner> allOwners = ownerDAO.findAll();
+        log.info("Owners : [{}]", allOwners.size());
+        return allOwners;
+    }
 
     @Transactional
     public void createRestaurant(Restaurant restaurant) {
