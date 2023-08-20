@@ -3,6 +3,7 @@ package pl.foodflow.business;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.domain.Address;
@@ -13,11 +14,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
-
     @Transactional
     public Restaurant findRestaurantByNip(String nip) {
         final Optional<Restaurant> restaurant = restaurantDAO.findByNip(nip);
@@ -28,8 +29,8 @@ public class RestaurantService {
     }
 
     @Transactional
-    public void saveRestaurant(Restaurant restaurant) {
-        restaurantDAO.saveRestaurant(restaurant);
+    public void addRestaurant(Restaurant restaurant) {
+            restaurantDAO.saveRestaurant(restaurant);
     }
 
     @Transactional
@@ -46,7 +47,7 @@ public class RestaurantService {
         Set<RestaurantAddress> restaurantAddresses = existingRestaurant.getRestaurantAddresses();
         restaurantAddresses.add(newRestaurantAddress);
 
-        saveRestaurant(existingRestaurant.withRestaurantAddresses(restaurantAddresses));
+        addRestaurant(existingRestaurant.withRestaurantAddresses(restaurantAddresses));
     }
 
     private RestaurantAddress buildRestaurantAddress(Address address, Restaurant restaurant) {

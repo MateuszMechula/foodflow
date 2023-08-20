@@ -3,6 +3,7 @@ package pl.foodflow.domain;
 import lombok.*;
 
 @With
+@Setter
 @Value
 @Builder
 @EqualsAndHashCode(of = "ownerId")

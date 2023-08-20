@@ -6,4 +6,6 @@ import pl.foodflow.infrastructure.database.entity.OwnerEntity;
 
 @Repository
 public interface OwnerJpaRepository extends JpaRepository<OwnerEntity, Long> {
+
+    OwnerEntity findByEmail(String email);
 }
