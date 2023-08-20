@@ -32,10 +32,17 @@ public class RestaurantService {
     }
 
     @Transactional
-    public void addRestaurant(Restaurant restaurant) {
+    public void createRestaurant(Restaurant restaurant) {
+        Owner owner = ownerService.findByEmail(restaurant.getOwnerEmail());
+        log.debug("Owner found: {}", owner);
 
-        restaurantDAO.saveRestaurant(restaurant);
+        Restaurant updatedRestaurant = restaurant.withOwner(owner);
+
+        restaurantDAO.saveRestaurant(updatedRestaurant);
+
+        log.info("Restaurant added successfully.");
     }
+
 
     @Transactional
     public void addDeliveryAddressToRestaurant(String nip, Address address) {

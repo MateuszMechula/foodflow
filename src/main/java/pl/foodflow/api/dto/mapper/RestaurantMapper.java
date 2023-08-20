@@ -11,9 +11,14 @@ import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-@Mapper(componentModel = "spring")
+@Mapper(uses = AddressMapper.class, componentModel = "spring")
 public interface RestaurantMapper {
     @Mapping(target = "restaurantId", ignore = true)
+    @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "menu", ignore = true)
+    @Mapping(target = "restaurantAddresses", ignore = true)
+    @Mapping(target = "restaurantCategories", ignore = true)
+    @Mapping(target = "orderRecords", ignore = true)
     @Mapping(source = "openTime", target = "openTime", qualifiedByName = "mapStringToOffsetTime")
     @Mapping(source = "closeTime", target = "closeTime", qualifiedByName = "mapStringToOffsetTime")
     Restaurant map(RestaurantDTO restaurantDTO);

@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.OwnerDAO;
 import pl.foodflow.domain.Owner;
-import pl.foodflow.domain.Restaurant;
 
 import java.util.List;
-import java.util.Objects;
 
 
 @Slf4j

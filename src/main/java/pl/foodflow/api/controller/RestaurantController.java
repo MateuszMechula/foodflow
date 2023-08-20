@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
-import pl.foodflow.business.RestaurantFactoryService;
+import pl.foodflow.business.RestaurantService;
 import pl.foodflow.business.dao.OwnerDAO;
 import pl.foodflow.domain.Restaurant;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 public class RestaurantController {
 
     public static final String RESTAURANT = "/restaurant";
-    private final RestaurantFactoryService restaurantFactoryService;
+    private final RestaurantService restaurantService;
     private final RestaurantMapper restaurantMapper;
     private final OwnerDAO ownerDAO;
 
@@ -39,7 +39,7 @@ public class RestaurantController {
     ) {
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
-        restaurantFactoryService.createRestaurant(restaurant);
+        restaurantService.createRestaurant(restaurant);
 
         ModelAndView modelAndView = new ModelAndView("owner_restaurant");
         modelAndView.addObject("restaurantDTO", restaurantDTO);

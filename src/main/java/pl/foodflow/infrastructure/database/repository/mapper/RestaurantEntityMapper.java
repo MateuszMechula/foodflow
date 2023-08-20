@@ -2,7 +2,6 @@ package pl.foodflow.infrastructure.database.repository.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
@@ -12,5 +11,6 @@ public interface RestaurantEntityMapper {
 
     RestaurantEntity mapToEntity(Restaurant restaurant);
 
+    @Mapping(target = "ownerEmail", ignore = true)
     Restaurant mapFromEntity(RestaurantEntity saved);
 }

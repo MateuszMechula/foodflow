@@ -15,9 +15,10 @@ public class CategoryItemRepository implements CategoryItemDAO {
 
     private final CategoryItemJpaRepository categoryItemJpaRepository;
     private final CategoryItemEntityMapper categoryItemEntityMapper;
+
     @Override
     public Optional<CategoryItem> findById(Long categoryId) {
-       return categoryItemJpaRepository.findById(categoryId)
-               .map(categoryItemEntityMapper::mapFromEntity);
+        return categoryItemJpaRepository.findById(categoryId)
+                .map(categoryItemEntityMapper::mapFromEntity);
     }
 }
