@@ -1,8 +1,8 @@
-<div id="menu" class="hidden">
+<div id="category" class="hidden">
     <br>
-    <h2>Add menu</h2>
+    <h2>Add Category</h2>
     <div class="container mt-5">
-        <form action="#" th:action="@{/menu}" th:object="${menuDTO}" method="post">
+        <form action="#" th:action="@{/category}" th:object="${categoryDTO}" method="post">
 
             <div class="row">
                 <div class="col-md-6">
@@ -21,10 +21,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="restaurantNIP">Restaurant nip:</label>
-                        <select id="restaurantNIP" th:name="restaurantNIP">
-                            <option th:each="restaurant: ${allRestaurants}" th:value="${restaurant.nip}"
-                                    th:text="${restaurant.nip}"></option>
+                        <label for="menuId">Menu:</label>
+                        <select id="menuId" th:name="menuId">
+                            <option th:each="menu: ${allMenus}" th:value="${menu.menuId}"
+                                    th:text="${menu.menuId}"></option>
                         </select>
                     </div>
                 </div>

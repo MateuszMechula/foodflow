@@ -11,7 +11,10 @@ public interface MenuEntityMapper {
 
     MenuEntity mapToEntity(Menu menu);
 
-    @Mapping(target = "restaurant", ignore = true)
+
+    @Mapping(target = "restaurant.address", ignore = true)
+    @Mapping(target = "restaurant.owner", ignore = true)
+    @Mapping(target = "restaurant.menu", ignore = true)
     @Mapping(target = "menuCategories", ignore = true)
     Menu mapFromEntity(MenuEntity menuEntity);
 }

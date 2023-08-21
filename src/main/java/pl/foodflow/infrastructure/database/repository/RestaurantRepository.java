@@ -8,6 +8,7 @@ import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.RestaurantJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,5 +29,19 @@ public class RestaurantRepository implements RestaurantDAO {
     public Optional<Restaurant> findByNip(String nip) {
         return restaurantJpaRepository.findByNip(nip)
                 .map(restaurantEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public List<Restaurant> findAll() {
+        return restaurantJpaRepository.findAll().stream()
+                .map(restaurantEntityMapper::mapFromEntity)
+                .toList();
+    }
+
+    @Override
+    public List<Restaurant> findAllWithMenuAndCategoriesAndItems() {
+        return restaurantJpaRepository.findAllWithMenuAndCategoriesAndItems().stream()
+                .map(restaurantEntityMapper::mapFromEntity)
+                .toList();
     }
 }

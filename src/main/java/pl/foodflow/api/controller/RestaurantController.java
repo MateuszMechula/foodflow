@@ -12,6 +12,7 @@ import pl.foodflow.business.RestaurantService;
 import pl.foodflow.business.dao.OwnerDAO;
 import pl.foodflow.domain.Restaurant;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -19,12 +20,13 @@ import java.util.Map;
 public class RestaurantController {
 
     public static final String RESTAURANT = "/restaurant";
+    public static final String RESTAURANT_DETAILS = "/restaurant-details";
     private final RestaurantService restaurantService;
     private final RestaurantMapper restaurantMapper;
     private final OwnerDAO ownerDAO;
 
     @GetMapping(value = RESTAURANT)
-    public ModelAndView mechanicCheckPage() {
+    public ModelAndView restaurantSection() {
         var allOwners = ownerDAO.findAll();
         Map<String, ?> model = Map.of(
                 "restaurantDTO", RestaurantDTO.buildDefault(),
@@ -32,6 +34,18 @@ public class RestaurantController {
         );
         return new ModelAndView("owner_restaurant", model);
     }
+
+    @GetMapping(value = RESTAURANT_DETAILS)
+    public ModelAndView restaurantDetails() {
+
+        List<Restaurant> allRestaurants = restaurantService.findAllWithMenuAndCategoriesAndItems();
+
+        Map<String, ?> model = Map.of(
+                "allRestaurants", allRestaurants
+        );
+        return new ModelAndView("owner_restaurant_details", model);
+    }
+
 
     @PostMapping(value = RESTAURANT)
     public String addRestaurant(

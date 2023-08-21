@@ -2,6 +2,8 @@ package pl.foodflow.domain;
 
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @With
@@ -16,4 +18,8 @@ public class Menu {
     String description;
     Restaurant restaurant;
     Set<MenuCategory> menuCategories;
+
+    public Set<MenuCategory> getCategories() {
+        return Objects.isNull(menuCategories) ? new HashSet<>() : menuCategories;
+    }
 }

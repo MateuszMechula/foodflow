@@ -30,10 +30,10 @@ public class OwnerEntity {
     @Column(name = "phone")
     private String phone;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @OneToOne(mappedBy = "owner")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "owner")
     private RestaurantEntity restaurant;
 }

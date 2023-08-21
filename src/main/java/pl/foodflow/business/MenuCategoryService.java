@@ -20,14 +20,16 @@ public class MenuCategoryService {
 
 
     @Transactional
-    public void addCategoryToMenu(Long menuId, MenuCategory menuCategory) {
+    public void addCategoryToMenu(String menuId, MenuCategory menuCategory) {
 
-        Menu menu = menuService.findMenuById(menuId);
+        long id = Long.parseLong(menuId);
+        Menu menu = menuService.findMenuById(id);
 
-        Set<MenuCategory> menuCategories = menu.getMenuCategories();
+        Set<MenuCategory> menuCategories = menu.getCategories();
         menuCategories.add(menuCategory);
 
         menuDAO.saveMenu(menu.withMenuCategories(menuCategories));
+        menuCategoryDAO.saveMenuCategory(menuCategory.withMenu(menu));
     }
 
     @Transactional
