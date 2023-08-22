@@ -6,14 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.RestaurantDAO;
-import pl.foodflow.business.exceptions.RestaurantAlreadyExistsException;
 import pl.foodflow.domain.Address;
-import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.domain.RestaurantAddress;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,17 +37,7 @@ public class RestaurantService {
 
     @Transactional
     public void createRestaurant(Restaurant restaurant) {
-        Owner owner = ownerService.findByEmail(restaurant.getOwnerEmail());
-        log.debug("Owner found: {}", owner);
-
-        if (Objects.nonNull(owner.getRestaurant())) {
-            throw new RestaurantAlreadyExistsException(
-                    "Owner with email [%s] has already owns the restaurant".formatted(owner.getEmail()));
-        }
-        Restaurant updatedRestaurant = restaurant.withOwner(owner);
-
-        restaurantDAO.saveRestaurant(updatedRestaurant);
-
+        restaurantDAO.saveRestaurant(restaurant);
         log.info("Restaurant added successfully.");
     }
 

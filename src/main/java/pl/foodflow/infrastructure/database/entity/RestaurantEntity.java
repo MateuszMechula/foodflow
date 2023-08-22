@@ -55,7 +55,7 @@ public class RestaurantEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
     private OwnerEntity owner;
 

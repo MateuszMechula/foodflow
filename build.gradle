@@ -30,6 +30,7 @@ dependencies {
 
     // db
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     runtimeOnly 'org.postgresql:postgresql'
 
     // annotations

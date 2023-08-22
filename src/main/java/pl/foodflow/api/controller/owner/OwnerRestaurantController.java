@@ -1,33 +1,43 @@
-package pl.foodflow.api.controller;
+package pl.foodflow.api.controller.owner;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
+import pl.foodflow.business.OwnerService;
 import pl.foodflow.business.RestaurantService;
-import pl.foodflow.business.dao.OwnerDAO;
+import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
+import pl.foodflow.infrastructure.security.UserService;
 
 import java.util.List;
 import java.util.Map;
 
+import static pl.foodflow.api.controller.owner.OwnerRestaurantController.OWNER;
+
 @Controller
 @AllArgsConstructor
-public class RestaurantController {
+@RequestMapping(value = OWNER)
+public class OwnerRestaurantController {
 
+    public static final String OWNER = "/owner";
     public static final String RESTAURANT = "/restaurant";
     public static final String RESTAURANT_DETAILS = "/restaurant-details";
     private final RestaurantService restaurantService;
     private final RestaurantMapper restaurantMapper;
-    private final OwnerDAO ownerDAO;
+    private final OwnerService ownerService;
+    private final UserService userService;
+
 
     @GetMapping(value = RESTAURANT)
     public ModelAndView restaurantSection() {
-        var allOwners = ownerDAO.findAll();
+        var allOwners = ownerService.findAll();
         Map<String, ?> model = Map.of(
                 "restaurantDTO", RestaurantDTO.buildDefault(),
                 "allOwners", allOwners
@@ -49,14 +59,18 @@ public class RestaurantController {
 
     @PostMapping(value = RESTAURANT)
     public String addRestaurant(
-            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO
+            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
+            Authentication authentication
     ) {
+        String username = authentication.getName();
+        int userId = userService.findByUserName(username).getUser_id();
+        Owner owner = ownerService.findByUserId(userId);
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
-        restaurantService.createRestaurant(restaurant);
+        restaurantService.createRestaurant(restaurant.withOwner(owner));
 
         ModelAndView modelAndView = new ModelAndView("owner_restaurant");
         modelAndView.addObject("restaurantDTO", restaurantDTO);
-        return "redirect:/";
+        return "redirect:/owner";
     }
 }

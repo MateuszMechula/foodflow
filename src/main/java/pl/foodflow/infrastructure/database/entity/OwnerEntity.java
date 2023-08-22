@@ -30,6 +30,9 @@ public class OwnerEntity {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;

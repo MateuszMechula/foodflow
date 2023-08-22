@@ -2,7 +2,7 @@
     <br>
     <h2>Add restaurant</h2>
     <div class="container mt-5">
-        <form action="#" th:action="@{/restaurant}" th:object="${restaurantDTO}" method="post">
+        <form action="#" th:action="@{/owner/restaurant}" th:object="${restaurantDTO}" method="post">
 
             <div class="row">
                 <div class="col-md-6">
@@ -88,15 +88,6 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="ownerEmail">Owner id:</label>
-                        <select id="ownerEmail" th:field="*{ownerEmail}">
-                            <option th:each="owner: ${allOwners}" th:value="${owner.email}"
-                                    th:text="${owner.email}"></option>
-                        </select>
-                    </div>
-                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <div class="form-check">

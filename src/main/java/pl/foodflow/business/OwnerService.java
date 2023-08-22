@@ -1,5 +1,6 @@
 package pl.foodflow.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,28 +18,33 @@ public class OwnerService {
 
     private final OwnerDAO ownerDAO;
 
+    @Transactional
+    public Owner findByEmail(String email) {
+        return ownerDAO.findByEmail(email);
+    }
+
+    @Transactional
+    public Owner findById(Long ownerId) {
+        return ownerDAO.findById(ownerId).orElseThrow();
+    }
+
+    @Transactional
+    public Owner findByUserId(Integer userId) {
+        return ownerDAO.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "OwnerEntity with userId: [%s] not found".formatted(userId)
+                ));
+    }
+
     public List<Owner> findAll() {
         List<Owner> allOwners = ownerDAO.findAll();
         log.info("Owners : [{}]", allOwners.size());
         return allOwners;
     }
 
-//    @Transactional
-//    public void createRestaurant(Restaurant restaurant) {
-//        if (Objects.nonNull(restaurant.getRestaurantId())) {
-//            throw new IllegalArgumentException("New restaurant should not have a restaurant ID.");
-//        }
-//        restaurantService.addRestaurant(restaurant);
-//    }
-
     @Transactional
     public void saveOwner(Owner owner) {
         ownerDAO.saveOwner(owner);
-    }
-
-    @Transactional
-    public Owner findByEmail(String email) {
-        return ownerDAO.findByEmail(email);
     }
 
     @Transactional
@@ -57,7 +63,11 @@ public class OwnerService {
         ownerDAO.saveOwner(updatedOwner);
     }
 
-    public Owner findById(Long ownerId) {
-        return ownerDAO.findById(ownerId).orElseThrow();
+    @Transactional
+    public Owner findByUserIdWithMenuAndCategoryAndItems(int userId) {
+        return ownerDAO.findByUserIdWithMenuAndCategoryAndItems(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "OwnerEntity with userId: [%s] not found".formatted(userId)
+                ));
     }
 }

@@ -2,7 +2,7 @@
     <br>
     <h2>Add menu</h2>
     <div class="container mt-5">
-        <form action="#" th:action="@{/menu}" th:object="${menuDTO}" method="post">
+        <form action="#" th:action="@{/owner/menu}" th:object="${menuDTO}" method="post">
 
             <div class="row">
                 <div class="col-md-6">
@@ -13,19 +13,6 @@
                     <div class="form-group">
                         <label for="description">Description:</label>
                         <input type="text" class="form-control" id="description" th:field="*{description}">
-                    </div>
-                </div>
-            </div>
-
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="restaurantNIP">Restaurant nip:</label>
-                        <select id="restaurantNIP" th:name="restaurantNIP">
-                            <option th:each="restaurant: ${allRestaurants}" th:value="${restaurant.nip}"
-                                    th:text="${restaurant.nip}"></option>
-                        </select>
                     </div>
                 </div>
             </div>
