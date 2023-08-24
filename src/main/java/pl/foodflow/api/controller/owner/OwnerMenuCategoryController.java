@@ -3,7 +3,10 @@ package pl.foodflow.api.controller.owner;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.MenuCategoryDTO;
 import pl.foodflow.api.dto.mapper.MenuCategoryMapper;
@@ -45,19 +48,16 @@ public class OwnerMenuCategoryController {
     @PostMapping(value = CATEGORY)
     public String addMenu(
             @ModelAttribute("categoryDTO") MenuCategoryDTO menuCategoryDTO,
-            @RequestParam("menuId") String menuId,
             Authentication authentication
     ) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUser_id();
+        int userId = userService.findByUserName(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
 
         MenuCategory menu = menuCategoryMapper.map(menuCategoryDTO);
-        menuCategoryService.addCategoryToMenu(menuId, menu);
+        menuCategoryService.addCategoryToMenu(owner, menu);
 
-        ModelAndView modelAndView = new ModelAndView("owner_menu_category");
-        modelAndView.addObject("categoryDTO", menuCategoryDTO);
         return "redirect:/owner";
     }
 }

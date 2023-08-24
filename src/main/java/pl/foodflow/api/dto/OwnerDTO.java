@@ -16,4 +16,6 @@ public class OwnerDTO {
     String email;
     String phone;
     AddressDTO address;
+    Integer userId;
+
 }

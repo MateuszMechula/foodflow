@@ -1,0 +1,55 @@
+<div id="items" class="hidden"></div>
+<div class="container">
+    <br>
+    <h2>Create a new Category Item</h2>
+
+    <form th:action="@{/owner/items}" th:object="${categoryItemDTO}" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" th:field="*{name}" id="name"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" th:field="*{description}" id="description"/>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="text" class="form-control" th:field="*{price}" id="price"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="menuCategory">Menu Category:</label>
+                <select class="form-control" th:field="*{menuCategory}" id="menuCategory">
+                    <option value="">Select a category</option>
+                    <option th:each="category : ${allCategories}"
+                            th:value="${category.menuCategoryId}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="imageFile">Image:</label>
+                    <input type="file" class="form-control-file" name="imageFile" id="imageFile"/>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+

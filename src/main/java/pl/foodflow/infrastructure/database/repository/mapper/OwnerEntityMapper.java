@@ -14,10 +14,6 @@ public interface OwnerEntityMapper {
     @Mapping(target = "restaurant", ignore = true)
     OwnerEntity mapToEntity(Owner owner);
 
-//    @Mapping(target = "address", ignore = true)
-//    @Mapping(target = "restaurant", ignore = true)
-//    Owner mapFromEntity(OwnerEntity saved);
-
     default Owner mapFromEntity(OwnerEntity entity) {
         if (entity == null) {
             return null;

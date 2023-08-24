@@ -1,6 +1,7 @@
 package pl.foodflow.business;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import pl.foodflow.business.dao.CategoryItemDAO;
 import pl.foodflow.business.dao.ItemImageDAO;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.ItemImage;
+import pl.foodflow.domain.MenuCategory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,17 +25,15 @@ public class ItemImageService {
     private final CategoryItemDAO categoryItemDAO;
     private final ItemImageDAO itemImageDAO;
 
-    public void uploadImage(Long categoryId, MultipartFile imageFile) throws IOException {
-        CategoryItem categoryItem = categoryItemDAO.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "CategoryItem with id: [%s] not found".formatted(categoryId)
-                ));
+    @Transactional
+    public void uploadImage(CategoryItem categoryItem, MultipartFile imageFile) throws IOException {
 
         String imageUrl = saveImageToFileSystem(imageFile);
 
         ItemImage itemImage = buildItemImage(imageUrl, categoryItem);
-
         itemImageDAO.save(itemImage);
+
+        categoryItemDAO.saveCategoryItem(categoryItem.withItemImage(itemImage));
     }
 
     private String saveImageToFileSystem(MultipartFile imageFile) throws IOException {

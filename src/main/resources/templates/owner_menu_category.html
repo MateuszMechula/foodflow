@@ -16,20 +16,6 @@
                     </div>
                 </div>
             </div>
-
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="menuId">Menu:</label>
-                        <select id="menuId" th:name="menuId">
-                            <option th:each="menu: ${allMenus}" th:value="${menu.menuId}"
-                                    th:text="${menu.menuId}"></option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
             <br>
             <div class="row">
                 <div class="col-md-12">

@@ -30,11 +30,11 @@ public class CategoryItemEntity {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_category_id")
     private MenuCategoryEntity menuCategory;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "categoryItem")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "categoryItem")
     private ItemImageEntity itemImage;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryItem")

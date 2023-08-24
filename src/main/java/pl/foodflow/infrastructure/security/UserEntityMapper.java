@@ -7,7 +7,7 @@ import pl.foodflow.api.dto.mapper.AddressMapper;
 public interface UserEntityMapper {
     default User map(UserEntity entity) {
         return User.builder()
-                .user_id(entity.getId())
+                .userId(entity.getId())
                 .userName(entity.getUserName())
                 .password(entity.getPassword())
                 .active(entity.getActive())

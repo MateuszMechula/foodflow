@@ -17,4 +17,6 @@ public class Owner {
     String phone;
     Address address;
     Restaurant restaurant;
+    Integer userId;
+
 }

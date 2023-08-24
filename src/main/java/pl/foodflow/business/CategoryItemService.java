@@ -1,45 +1,58 @@
 package pl.foodflow.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pl.foodflow.business.dao.CategoryItemDAO;
+import pl.foodflow.business.dao.MenuCategoryDAO;
+import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.MenuCategory;
+import pl.foodflow.domain.Owner;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class CategoryItemService {
 
+    private final MenuCategoryDAO menuCategoryDAO;
     private final MenuCategoryService menuCategoryService;
-    private final MenuService menuService;
+    private final CategoryItemDAO categoryItemDAO;
+    private final ItemImageService itemImageService;
 
     @Transactional
-    public void addItemToMenuCategory(Long menuId, Long categoryId, CategoryItem categoryItem) {
-        Menu menu = menuService.findMenuById(menuId);
+    public void addItemToMenuCategory(
+            Long menuCategoryId,
+            Owner owner,
+            CategoryItem categoryItem,
+            MultipartFile imageFile) throws IOException
+    {
 
-        Set<MenuCategory> menuCategories = menu.getMenuCategories();
+        if (Objects.isNull(owner.getRestaurant().getMenu())) {
+            throw new RestaurantNotFound("To add a category you have to create menu first");
+        }
 
-        MenuCategory menuCategory = menuCategories.stream()
-                .filter(a -> a.getMenuCategoryId().equals(categoryId))
-                .findFirst().orElseThrow();
+        MenuCategory menuCategory = menuCategoryDAO.findCategoryById(menuCategoryId)
+                .orElseThrow(() -> new EntityNotFoundException("MenuCategory with id: [%s] not found".formatted(menuCategoryId)));
 
-        Set<CategoryItem> categoryItems = menuCategory.getCategoryItems();
+        CategoryItem categoryItemSaved = categoryItemDAO.saveCategoryItem(categoryItem.withMenuCategory(menuCategory));
 
-        CategoryItem categoryItemToAdd = buildNewMenuCategoryItem(categoryItem);
-        categoryItems.add(categoryItemToAdd);
+        Menu menu = owner.getRestaurant().getMenu();
+        Set<CategoryItem> categories = menuCategory.getCategories();
+        categories.add(categoryItemSaved.withMenuCategory(menuCategory));
 
-        MenuCategory updatedMenuCategory = menuCategory.withCategoryItems(categoryItems);
-        menuCategoryService.saveMenuCategory(updatedMenuCategory);
-    }
+        MenuCategory updatedMenuCategory = menuCategoryDAO.saveMenuCategory(menuCategory.withCategoryItems(categories))
+                .withMenu(menu);
 
-    private CategoryItem buildNewMenuCategoryItem(CategoryItem categoryItem) {
-        return CategoryItem.builder()
-                .name(categoryItem.getName())
-                .description(categoryItem.getDescription())
-                .price(categoryItem.getPrice())
-                .build();
+        CategoryItem newCategoryItem = categoryItemSaved.withMenuCategory(updatedMenuCategory);
+        System.out.println(newCategoryItem);
+
+        itemImageService.uploadImage(categoryItemSaved.withMenuCategory(updatedMenuCategory), imageFile);
     }
 }

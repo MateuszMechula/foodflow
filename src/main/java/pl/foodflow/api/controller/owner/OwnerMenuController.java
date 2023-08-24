@@ -51,14 +51,12 @@ public class OwnerMenuController {
             Authentication authentication
     ) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUser_id();
+        int userId = userService.findByUserName(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         Menu menu = menuMapper.map(menuDTO);
         menuService.addMenuToRestaurant(owner, menu);
 
-        ModelAndView modelAndView = new ModelAndView("owner_menu");
-        modelAndView.addObject("menuDTO", menuDTO);
         return "redirect:/owner";
     }
 }

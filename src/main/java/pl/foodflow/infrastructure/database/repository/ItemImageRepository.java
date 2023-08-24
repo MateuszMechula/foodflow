@@ -19,7 +19,7 @@ public class ItemImageRepository implements ItemImageDAO {
     @Override
     public ItemImage save(ItemImage itemImage) {
         ItemImageEntity toSave = itemImageEntityMapper.mapToEntity(itemImage);
-        ItemImageEntity saved = itemImageJpaRepository.save(toSave);
+        ItemImageEntity saved = itemImageJpaRepository.saveAndFlush(toSave);
 
         return itemImageEntityMapper.mapFromEntity(saved);
     }
