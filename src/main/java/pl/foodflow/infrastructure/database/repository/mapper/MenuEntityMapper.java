@@ -9,6 +9,7 @@ import pl.foodflow.infrastructure.database.entity.MenuEntity;
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface MenuEntityMapper {
 
+
     MenuEntity mapToEntity(Menu menu);
 
 

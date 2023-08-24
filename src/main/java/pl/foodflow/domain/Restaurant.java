@@ -25,7 +25,6 @@ public class Restaurant {
     BigDecimal deliveryPrice;
     Boolean deliveryOption;
     Address address;
-    String ownerEmail;
     Owner owner;
     Menu menu;
     Set<RestaurantAddress> restaurantAddresses;

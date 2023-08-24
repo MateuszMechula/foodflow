@@ -14,8 +14,13 @@ import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -24,35 +29,62 @@ public class CategoryItemService {
     private final MenuCategoryDAO menuCategoryDAO;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemDAO categoryItemDAO;
-    private final ItemImageService itemImageService;
 
     @Transactional
     public void addItemToMenuCategory(
             Long menuCategoryId,
             Owner owner,
             CategoryItem categoryItem,
-            MultipartFile imageFile) throws IOException
-    {
+            MultipartFile imageFile) throws IOException {
 
         if (Objects.isNull(owner.getRestaurant().getMenu())) {
             throw new RestaurantNotFound("To add a category you have to create menu first");
         }
 
-        MenuCategory menuCategory = menuCategoryDAO.findCategoryById(menuCategoryId)
-                .orElseThrow(() -> new EntityNotFoundException("MenuCategory with id: [%s] not found".formatted(menuCategoryId)));
+        MenuCategory menuCategory = owner.getRestaurant().getMenu().getMenuCategories().stream()
+                .filter(category -> category.getMenuCategoryId().equals(menuCategoryId))
+                .findAny().orElseThrow(() -> new EntityNotFoundException("MenuCategory with id: [%s] not found".formatted(menuCategoryId)));
 
-        CategoryItem categoryItemSaved = categoryItemDAO.saveCategoryItem(categoryItem.withMenuCategory(menuCategory));
-
+        String url = uploadImage(imageFile);
         Menu menu = owner.getRestaurant().getMenu();
-        Set<CategoryItem> categories = menuCategory.getCategories();
-        categories.add(categoryItemSaved.withMenuCategory(menuCategory));
 
-        MenuCategory updatedMenuCategory = menuCategoryDAO.saveMenuCategory(menuCategory.withCategoryItems(categories))
-                .withMenu(menu);
+        CategoryItem updatedCategoryItem = buildCategoryItem(categoryItem, menuCategory, url);
 
-        CategoryItem newCategoryItem = categoryItemSaved.withMenuCategory(updatedMenuCategory);
-        System.out.println(newCategoryItem);
+        Set<CategoryItem> categoryItems = menuCategory.getCategories();
+        categoryItems.add(updatedCategoryItem);
 
-        itemImageService.uploadImage(categoryItemSaved.withMenuCategory(updatedMenuCategory), imageFile);
+        MenuCategory updatedMenuCategory = menuCategory.withCategoryItems(categoryItems).withMenu(menu);
+        categoryItemDAO.saveCategoryItem(updatedCategoryItem.withMenuCategory(updatedMenuCategory));
+        menuCategoryService.saveMenuCategory(updatedMenuCategory);
+    }
+
+    @Transactional
+    public String uploadImage(MultipartFile imageFile) throws IOException {
+        return saveImageToFileSystem(imageFile);
+    }
+
+    private String saveImageToFileSystem(MultipartFile imageFile) throws IOException {
+        String uploadDir = "src/main/resources/static/uploads";
+        String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir, fileName);
+
+        Files.createDirectories(filePath.getParent());
+
+        try (OutputStream os = Files.newOutputStream(filePath)) {
+            os.write(imageFile.getBytes());
+        }
+
+        return fileName;
+    }
+
+    private static CategoryItem buildCategoryItem(CategoryItem categoryItem, MenuCategory menuCategory, String url) {
+        return CategoryItem.builder()
+                .categoryItemId(categoryItem.getCategoryItemId())
+                .name(categoryItem.getName())
+                .description(categoryItem.getDescription())
+                .price(categoryItem.getPrice())
+                .imageUrl(url)
+                .menuCategory(menuCategory)
+                .build();
     }
 }

@@ -30,9 +30,16 @@
                 <label for="menuCategory">Menu Category:</label>
                 <select class="form-control" th:field="*{menuCategory}" id="menuCategory">
                     <option value="">Select a category</option>
-                    <option th:each="category : ${allCategories}"
-                            th:value="${category.menuCategoryId}"
-                            th:text="${category.name}">
+                    <th:block th:if="${allCategories != null && !allCategories.isEmpty()}">
+                        <option th:each="category : ${allCategories}"
+                                th:value="${category.menuCategoryId}"
+                                th:text="${category.name}">
+                        </option>
+                    </th:block>
+                    <option th:unless="${allCategories != null && !allCategories.isEmpty()}"
+                            value=""
+                            disabled="disabled">
+                        Add a category
                     </option>
                 </select>
             </div>

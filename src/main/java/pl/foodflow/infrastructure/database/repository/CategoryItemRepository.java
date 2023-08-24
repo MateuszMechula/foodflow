@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.foodflow.business.dao.CategoryItemDAO;
 import pl.foodflow.domain.CategoryItem;
-import pl.foodflow.infrastructure.database.entity.CategoryEntity;
 import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.CategoryItemJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.CategoryItemEntityMapper;
@@ -28,6 +27,7 @@ public class CategoryItemRepository implements CategoryItemDAO {
     public CategoryItem saveCategoryItem(CategoryItem categoryItem) {
         CategoryItemEntity toSave = categoryItemEntityMapper.mapToEntity(categoryItem);
         CategoryItemEntity saved = categoryItemJpaRepository.save(toSave);
-        return categoryItemEntityMapper.mapFromEntity(saved);
+        CategoryItem toReturn = categoryItemEntityMapper.mapFromEntity(saved);
+        return toReturn;
     }
 }

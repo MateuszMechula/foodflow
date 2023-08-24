@@ -12,6 +12,7 @@ import pl.foodflow.domain.Restaurant;
 @NoArgsConstructor
 public class MenuCategoryDTO {
 
+    Long menuCategoryId;
     String name;
     String description;
     Restaurant restaurant;

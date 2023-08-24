@@ -30,12 +30,12 @@ public class CategoryItemEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_category_id")
     private MenuCategoryEntity menuCategory;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "categoryItem")
-    private ItemImageEntity itemImage;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryItem")
     private Set<OrderItemEntity> orderItems;

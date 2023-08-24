@@ -36,6 +36,7 @@ public class OwnerMenuController {
 
     @GetMapping(value = MENU)
     public ModelAndView menuSection() {
+
         var allRestaurants = restaurantService.findAll();
         Map<String, ?> model = Map.of(
                 "menuDTO", MenuDTO.buildDefault(),

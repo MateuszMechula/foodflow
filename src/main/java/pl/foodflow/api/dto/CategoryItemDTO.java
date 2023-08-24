@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.foodflow.domain.ItemImage;
-import pl.foodflow.domain.MenuCategory;
 
 import java.math.BigDecimal;
 
@@ -20,6 +18,6 @@ public class CategoryItemDTO {
     String name;
     String description;
     BigDecimal price;
+    String imageUrl;
     Long menuCategoryId;
-    ItemImage itemImage;
 }
