@@ -12,12 +12,15 @@ import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.business.RestaurantService;
+import pl.foodflow.domain.CategoryItem;
+import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.infrastructure.security.UserService;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static pl.foodflow.api.controller.owner.OwnerRestaurantController.OWNER;
 
@@ -46,14 +49,26 @@ public class OwnerRestaurantController {
     }
 
     @GetMapping(value = RESTAURANT_DETAILS)
-    public ModelAndView restaurantDetails() {
+    public ModelAndView restaurantDetails(Authentication authentication) {
+        String username = authentication.getName();
+        int userId = userService.findByUserName(username).getUserId();
+        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
-        List<Restaurant> allRestaurants = restaurantService.findAllWithMenuAndCategoriesAndItems();
+        Restaurant restaurant = owner.getRestaurant();
+        Set<MenuCategory> menuCategories = owner.getRestaurant().getMenu().getMenuCategories();
+
+        Map<String, Set<CategoryItem>> menuCategoryItem = menuCategories.stream()
+                .collect(Collectors.toMap(
+                        MenuCategory::getName,
+                        MenuCategory::getCategoryItems
+                ));
 
         Map<String, ?> model = Map.of(
-                "allRestaurants", allRestaurants
+                "owner", owner,
+                "restaurant", restaurant,
+                "menuCategoryItem", menuCategoryItem
         );
-        return new ModelAndView("owner_restaurant_details", model);
+        return new ModelAndView("restaurant_view", model);
     }
 
 

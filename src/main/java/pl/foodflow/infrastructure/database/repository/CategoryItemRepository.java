@@ -27,7 +27,6 @@ public class CategoryItemRepository implements CategoryItemDAO {
     public CategoryItem saveCategoryItem(CategoryItem categoryItem) {
         CategoryItemEntity toSave = categoryItemEntityMapper.mapToEntity(categoryItem);
         CategoryItemEntity saved = categoryItemJpaRepository.save(toSave);
-        CategoryItem toReturn = categoryItemEntityMapper.mapFromEntity(saved);
-        return toReturn;
+        return categoryItemEntityMapper.mapFromEntity(saved);
     }
 }

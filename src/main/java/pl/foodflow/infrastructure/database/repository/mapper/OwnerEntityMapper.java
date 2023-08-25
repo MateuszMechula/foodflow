@@ -105,6 +105,8 @@ public interface OwnerEntityMapper {
                 .categoryItemId(categoryItemEntity.getCategoryItemId())
                 .name(categoryItemEntity.getName())
                 .description(categoryItemEntity.getDescription())
+                .price(categoryItemEntity.getPrice())
+                .imageUrl(categoryItemEntity.getImageUrl())
                 .build();
     }
 }

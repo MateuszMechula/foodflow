@@ -21,7 +21,7 @@ public interface OwnerJpaRepository extends JpaRepository<OwnerEntity, Long> {
             "LEFT JOIN FETCH owner.restaurant restaurant " +
             "LEFT JOIN FETCH restaurant.menu menu " +
             "LEFT JOIN FETCH menu.menuCategories categories " +
-            "LEFT JOIN FETCH categories.categoryItems " +
+            "LEFT JOIN FETCH categories.categoryItems categoryItems " +
             "WHERE owner.userId = :userId")
     Optional<OwnerEntity> findByUserIdWithMenuAndCategoryAndItems(Integer userId);
 }
