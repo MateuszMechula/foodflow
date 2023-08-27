@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetTime;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @With
@@ -30,4 +32,8 @@ public class Restaurant {
     Set<RestaurantAddress> restaurantAddresses;
     Set<RestaurantCategory> restaurantCategories;
     Set<OrderRecord> orderRecords;
+
+    public Set<RestaurantAddress> getRestaurantAddresses() {
+        return Objects.isNull(restaurantAddresses) ? new HashSet<>() : restaurantAddresses;
+    }
 }

@@ -1,0 +1,67 @@
+<div id="restaurant-addresses" class="hidden">
+    <div class="container mt-5">
+        <h2>Add delivery address</h2>
+        <form action="#" th:action="@{/owner/restaurant-addresses}" th:object="${addressDTO}" method="post">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="street">Street:</label>
+                        <input type="text" class="form-control" id="street" th:field="*{street}">
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code:</label>
+                        <input type="text" class="form-control" id="postalCode" th:field="*{postalCode}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" class="form-control" id="city" th:field="*{city}">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <input type="text" class="form-control" id="country" th:field="*{country}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+        <br>
+
+        <div class="container mt-5">
+            <h2>Restaurant Addresses</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Street</th>
+                    <th>Postal Code</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="address : ${allAddresses}">
+                    <td th:text="${address.street}"></td>
+                    <td th:text="${address.postalCode}"></td>
+                    <td th:text="${address.city}"></td>
+                    <td th:text="${address.country}"></td>
+                    <td>
+                        <form th:action="@{/delete-address}" method="post">
+                            <input type="hidden" name="addressId" th:value="${address.addressId}" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

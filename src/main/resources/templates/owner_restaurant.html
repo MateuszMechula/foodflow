@@ -1,7 +1,6 @@
 <div id="restaurant" class="hidden">
-    <br>
-    <h2>Add restaurant</h2>
     <div class="container mt-5">
+        <h2>Add restaurant</h2>
         <form action="#" th:action="@{/owner/restaurant}" th:object="${restaurantDTO}" method="post">
 
             <div class="row">
@@ -44,15 +43,15 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="minimumOrderAmount">Minimum order amount:</label>
-                        <input type="text" class="form-control" id="minimumOrderAmount"
-                               th:field="*{minimumOrderAmount}">
+                        <label for="deliveryPrice">DeliveryPrice:</label>
+                        <input type="text" class="form-control" id="deliveryPrice" th:field="*{deliveryPrice}" disabled>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="deliveryPrice">Delivery price:</label>
-                        <input type="text" class="form-control" id="deliveryPrice" th:field="*{deliveryPrice}">
+                        <label for="minimumOrderAmount">Minimum order amount:</label>
+                        <input type="text" class="form-control" id="minimumOrderAmount"
+                               th:field="*{minimumOrderAmount}">
                     </div>
                 </div>
             </div>
@@ -92,8 +91,8 @@
                     <div class="form-group">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="deliveryOption"
-                                   th:field="*{deliveryOption}">
-                            <label class="form-check-label" for="deliveryOption">delivery option</label>
+                                   th:field="*{deliveryOption}" onchange="toggleDeliveryPrice()">
+                            <label class="form-check-label" for="deliveryOption">Delivery option:</label>
                         </div>
                     </div>
                 </div>

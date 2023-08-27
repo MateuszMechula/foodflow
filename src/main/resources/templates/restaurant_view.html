@@ -1,27 +1,94 @@
 <div id="restaurant-details" class="hidden"></div>
-<div class="container mt-4">
+
+<div class="container mt-4" th:if="${restaurant != null}">
     <h1 th:text="${restaurant.name}" class="mb-3 font-weight-bold"></h1>
     <p th:text="${restaurant.description}" class="mb-4"></p>
 
-    <div th:each="menuCategory : ${menuCategoryItem}" class="mb-4">
-        <h2 th:text="${menuCategory.key}" class="font-weight-bold"></h2>
+    <div class="restaurant-info">
+        <p>
+            <span>
+                <strong>Open hours:</strong>
+                <span th:if="${restaurant.openTime != null && restaurant.closeTime != null}">
+                     <span th:text="${#strings.substring(restaurant.openTime, 0, 5)} + ' - ' + ${#strings.substring(restaurant.closeTime, 0, 5)}"></span>
+                </span>
+                <span th:unless="${restaurant.openTime != null && restaurant.closeTime != null}">
+                    <span>N/A</span>
+                </span>
 
-        <div th:each="categoryItem : ${menuCategory.value}" class="item-card">
-            <div class="text-section">
-                <div class="item-details">
-                    <h5 class="card-title item-name font-weight-bold" th:text="${categoryItem.name}"></h5>
-                    <p class="card-text item-description" th:text="${categoryItem.description}"></p>
-                    <p class="card-text item-price font-weight-bold" th:text="${categoryItem.price} + ' zł'"></p>
+                <span class="bullet">&middot;</span>
+
+                <strong>Phone:</strong>
+                <span th:if="${restaurant.phone != null}">
+                    <span th:text="${restaurant.phone}"></span>
+                </span>
+                <span th:unless="${restaurant.phone != null}">
+                    <span>N/A</span>
+                </span>
+
+                <span class="bullet">&middot;</span>
+
+                <strong>Min.:</strong>
+                <span th:if="${restaurant.minimumOrderAmount != null}">
+                    <span th:text="${restaurant.minimumOrderAmount} + ' zł'"></span>
+                </span>
+                <span th:unless="${restaurant.minimumOrderAmount != null}">
+                    <span>N/A</span>
+                </span>
+
+                <span class="bullet">&middot;</span>
+
+                <strong>Delivery:</strong>
+                <span th:if="${restaurant.deliveryPrice != null}">
+                    <span th:text="${restaurant.deliveryPrice} + ' zł'"></span>
+                </span>
+                <span th:unless="${restaurant.deliveryPrice != null}">
+                    <span>N/A</span>
+                </span>
+
+                <span class="bullet">&middot;</span>
+
+                <strong>Delivery option:</strong>
+                <span th:if="${restaurant.deliveryOption != null}">
+                    <span th:text="${restaurant.deliveryOption ? 'TAK' : 'NIE'}"></span>
+                </span>
+                <span th:unless="${restaurant.deliveryOption != null}">
+                    <span>N/A</span>
+                </span>
+
+            </span>
+        </p>
+        <hr class="my-4">
+
+        <div th:each="menuCategory : ${menuCategoryItem}" class="mb-4">
+            <h2 th:text="${menuCategory.key}" class="font-weight-bold"></h2>
+
+            <div th:each="categoryItem : ${menuCategory.value}" class="item-card">
+                <div class="text-section">
+                    <div class="item-details">
+                        <h5 class="card-title item-name font-weight-bold" th:text="${categoryItem.name}"></h5>
+                        <p class="card-text item-description" th:text="${categoryItem.description}"></p>
+                        <p class="card-text item-price font-weight-bold" th:text="${categoryItem.price} + ' zł'"></p>
+                    </div>
                 </div>
-            </div>
-            <div class="image-section">
-                <div class="image-container">
-                    <img th:src="@{'/uploads/' + ${categoryItem.imageUrl}}" alt="Product Image">
+                <div class="image-section">
+                    <div class="image-container">
+                        <img th:src="@{'/images/' + ${categoryItem.imageUrl}}" alt="Product Image">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="container mt-4" th:unless="${restaurant != null}">
+    <strong><h2>Restaurant is not available.</h2></strong>
+</div>
+
+
+
+
+
+
 
 
 

@@ -8,7 +8,7 @@ CREATE TABLE RESTAURANT
     CLOSE_TIME           TIME WITH TIME ZONE NOT NULL,
     PHONE                VARCHAR(32)         NOT NULL,
     MINIMUM_ORDER_AMOUNT NUMERIC(7, 2)       NOT NULL,
-    DELIVERY_PRICE       NUMERIC(7, 2)       NOT NULL,
+    DELIVERY_PRICE       NUMERIC(7, 2),
     DELIVERY_OPTION      BOOLEAN             NOT NULL,
     OWNER_ID             BIGINT              NOT NULL,
     ADDRESS_ID           BIGINT              NOT NULL,

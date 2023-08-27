@@ -2,14 +2,8 @@ package pl.foodflow.infrastructure.database.repository.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import pl.foodflow.domain.CategoryItem;
-import pl.foodflow.domain.Menu;
-import pl.foodflow.domain.MenuCategory;
-import pl.foodflow.domain.Restaurant;
-import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
-import pl.foodflow.infrastructure.database.entity.MenuCategoryEntity;
-import pl.foodflow.infrastructure.database.entity.MenuEntity;
-import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
+import pl.foodflow.domain.*;
+import pl.foodflow.infrastructure.database.entity.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,11 +12,6 @@ import java.util.stream.Collectors;
 public interface RestaurantEntityMapper {
 
     RestaurantEntity mapToEntity(Restaurant restaurant);
-
-//    @Mapping(target = "ownerEmail", ignore = true)
-//    @Mapping(target = "address", ignore = true)
-//    @Mapping(target = "owner", ignore = true)
-//    Restaurant mapFromEntity(RestaurantEntity saved);
 
     default Restaurant mapFromEntity(RestaurantEntity saved) {
         if (saved == null) {
@@ -41,6 +30,50 @@ public interface RestaurantEntityMapper {
                 .deliveryPrice(saved.getDeliveryPrice())
                 .deliveryOption(saved.getDeliveryOption())
                 .menu(mapMenu(saved.getMenu()))
+                .restaurantAddresses(mapRestaurantAddresses(saved.getRestaurantAddresses()))
+                .address(mapRestaurantAddress(saved))
+                .build();
+    }
+
+    default Address mapRestaurantAddress(RestaurantEntity saved) {
+        return Address.builder()
+                .addressId(saved.getAddress().getAddressId())
+                .street(saved.getAddress().getStreet())
+                .city(saved.getAddress().getCity())
+                .postalCode(saved.getAddress().getPostalCode())
+                .country(saved.getAddress().getCountry())
+                .build();
+    }
+
+    default Set<RestaurantAddress> mapRestaurantAddresses(Set<RestaurantAddressEntity> restaurantAddressesEntities) {
+        if (restaurantAddressesEntities == null) {
+            return null;
+        }
+
+        return restaurantAddressesEntities.stream()
+                .map(this::mapRestaurantAddress)
+                .collect(Collectors.toSet());
+
+
+    }
+
+    default RestaurantAddress mapRestaurantAddress(RestaurantAddressEntity restaurantAddressEntity) {
+        if (restaurantAddressEntity == null) {
+            return null;
+        }
+
+        return RestaurantAddress.builder()
+                .restaurantAddressId(restaurantAddressEntity.getRestaurantAddressId())
+                .restaurant(Restaurant.builder()
+                        .restaurantId(restaurantAddressEntity.getRestaurant().getRestaurantId())
+                        .build())
+                .address(Address.builder()
+                        .addressId(restaurantAddressEntity.getAddress().getAddressId())
+                        .street(restaurantAddressEntity.getAddress().getStreet())
+                        .city(restaurantAddressEntity.getAddress().getCity())
+                        .postalCode(restaurantAddressEntity.getAddress().getPostalCode())
+                        .country(restaurantAddressEntity.getAddress().getCountry())
+                        .build())
                 .build();
     }
 

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.foodflow.business.dao.CategoryItemDAO;
-import pl.foodflow.business.dao.MenuCategoryDAO;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.Menu;
@@ -26,7 +25,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CategoryItemService {
 
-    private final MenuCategoryDAO menuCategoryDAO;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemDAO categoryItemDAO;
 
@@ -64,7 +62,7 @@ public class CategoryItemService {
     }
 
     private String saveImageToFileSystem(MultipartFile imageFile) throws IOException {
-        String uploadDir = "src/main/resources/static/uploads";
+        String uploadDir = "src/main/resources/static/images";
         String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
         Path filePath = Paths.get(uploadDir, fileName);
 

@@ -95,6 +95,11 @@
         .font-weight-bold {
             font-weight: bold;
         }
+
+        .bullet {
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -107,6 +112,7 @@
     <a href="#" data-section="category" onclick="showSection(this)">Category</a>
     <a href="#" data-section="items" onclick="showSection(this)">Category Items</a>
     <a href="#" data-section="restaurant-details" onclick="showSection(this)">Restaurant details</a>
+    <a href="#" data-section="restaurant-addresses" onclick="showSection(this)">Delivery addresses</a>
 </div>
 <div class="content">
     <button class="btn btn-success" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
@@ -117,6 +123,17 @@
 </div>
 
 <script>
+    function toggleDeliveryPrice() {
+        var deliveryOptionCheckbox = document.getElementById("deliveryOption");
+        var deliveryPriceInput = document.getElementById("deliveryPrice");
+
+        if (deliveryOptionCheckbox.checked) {
+            deliveryPriceInput.removeAttribute("disabled");
+        } else {
+            deliveryPriceInput.setAttribute("disabled", "disabled");
+        }
+    }
+
     function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         if (sidebar.style.left === "-250px") {

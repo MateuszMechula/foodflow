@@ -11,8 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressDTO {
 
+    Long addressId;
     String street;
     String postalCode;
     String city;
     String country;
+
+    public static AddressDTO buildDefault() {
+        return AddressDTO.builder()
+                .street("Klonowa")
+                .postalCode("11-400")
+                .city("Kętrzyn")
+                .country("Polska")
+                .build();
+    }
 }

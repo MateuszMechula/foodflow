@@ -46,6 +46,50 @@ public interface OwnerEntityMapper {
                 .deliveryPrice(saved.getDeliveryPrice())
                 .deliveryOption(saved.getDeliveryOption())
                 .menu(mapMenu(saved.getMenu()))
+                .address(mapRestaurantAddresses(saved))
+                .restaurantAddresses(mapRestaurantAddresses(saved.getRestaurantAddresses()))
+                .build();
+    }
+
+    default Set<RestaurantAddress> mapRestaurantAddresses(Set<RestaurantAddressEntity> restaurantAddressesEntities) {
+        if (restaurantAddressesEntities == null) {
+            return null;
+        }
+
+        return restaurantAddressesEntities.stream()
+                .map(this::mapRestaurantAddress)
+                .collect(Collectors.toSet());
+
+
+    }
+
+    default RestaurantAddress mapRestaurantAddress(RestaurantAddressEntity restaurantAddressEntity) {
+        if (restaurantAddressEntity == null) {
+            return null;
+        }
+
+        return RestaurantAddress.builder()
+                .restaurantAddressId(restaurantAddressEntity.getRestaurantAddressId())
+                .restaurant(Restaurant.builder()
+                        .restaurantId(restaurantAddressEntity.getRestaurant().getRestaurantId())
+                        .build())
+                .address(Address.builder()
+                        .addressId(restaurantAddressEntity.getAddress().getAddressId())
+                        .street(restaurantAddressEntity.getAddress().getStreet())
+                        .postalCode(restaurantAddressEntity.getAddress().getPostalCode())
+                        .city(restaurantAddressEntity.getAddress().getCity())
+                        .country(restaurantAddressEntity.getAddress().getCountry())
+                        .build())
+                .build();
+    }
+
+    private static Address mapRestaurantAddresses(RestaurantEntity saved) {
+        return Address.builder()
+                .addressId(saved.getAddress().getAddressId())
+                .street(saved.getAddress().getStreet())
+                .city(saved.getAddress().getCity())
+                .postalCode(saved.getAddress().getPostalCode())
+                .country(saved.getAddress().getCountry())
                 .build();
     }
 
@@ -58,6 +102,7 @@ public interface OwnerEntityMapper {
                 .name(menuEntity.getName())
                 .description(menuEntity.getDescription())
                 .menuCategories(mapMenuCategories(menuEntity.getMenuCategories()))
+                .restaurant(Restaurant.builder().restaurantId(menuEntity.getMenuId()).build())
                 .build();
 
     }

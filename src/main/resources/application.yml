@@ -4,6 +4,19 @@ server:
     context-path: /foodflow
 
 spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/, classpath:/static/
+      cache:
+        period: 0
   servlet:
     multipart:
       max-file-size: 10MB

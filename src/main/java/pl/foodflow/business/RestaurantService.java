@@ -5,10 +5,10 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.foodflow.business.dao.AddressDAO;
+import pl.foodflow.business.dao.RestaurantAddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
-import pl.foodflow.domain.Address;
-import pl.foodflow.domain.Restaurant;
-import pl.foodflow.domain.RestaurantAddress;
+import pl.foodflow.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,8 @@ import java.util.Set;
 public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
-    private final OwnerService ownerService;
+    private final RestaurantAddressDAO restaurantAddressDAO;
+    private final AddressDAO addressDAO;
 
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
@@ -43,24 +44,35 @@ public class RestaurantService {
 
 
     @Transactional
-    public void addDeliveryAddressToRestaurant(String nip, Address address) {
+    public void addDeliveryAddressToRestaurant(Address deliveryAddress, Owner owner) {
 
-        Restaurant existingRestaurant = findRestaurantByNip(nip);
+        Restaurant restaurant = owner.getRestaurant();
+        Menu menu = owner.getRestaurant().getMenu();
+        Address address = owner.getRestaurant().getAddress();
 
-        if (!existingRestaurant.getDeliveryOption()) {
-            throw new RuntimeException("Restaurant with NIP: [%s] do not deliver food");
-        }
+        RestaurantAddress restaurantAddress = buildRestaurantAddress(deliveryAddress, restaurant);
 
-        RestaurantAddress newRestaurantAddress = buildRestaurantAddress(address, existingRestaurant);
+        Address savedAddress = addressDAO.saveAddress(deliveryAddress);
+        RestaurantAddress savedRestaurantAddress = restaurantAddressDAO
+                .saveRestaurantAddress(restaurantAddress.withAddress(savedAddress));
 
-        Set<RestaurantAddress> restaurantAddresses = existingRestaurant.getRestaurantAddresses();
-        restaurantAddresses.add(newRestaurantAddress);
+        Set<RestaurantAddress> restaurantAddresses = restaurant.getRestaurantAddresses();
+        restaurantAddresses.add(savedRestaurantAddress);
 
+        Restaurant updatedRestaurant = restaurant
+                .withMenu(menu)
+                .withAddress(address.withRestaurant(restaurant))
+                .withRestaurantAddresses(restaurantAddresses)
+                .withOwner(owner);
+
+        Restaurant restaurant1 = restaurantDAO.saveRestaurant(updatedRestaurant);
+
+        System.out.println(restaurant1);
     }
 
     private RestaurantAddress buildRestaurantAddress(Address address, Restaurant restaurant) {
         return RestaurantAddress.builder()
-                .restaurantAddressId(restaurant.getRestaurantId())
+                .restaurant(restaurant)
                 .address(address)
                 .build();
     }

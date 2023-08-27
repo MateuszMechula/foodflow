@@ -7,7 +7,6 @@ import pl.foodflow.domain.Address;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
-    @Mapping(target = "addressId", ignore = true)
     @Mapping(target = "owner", ignore = true)
     @Mapping(target = "customer", ignore = true)
     @Mapping(target = "restaurant", ignore = true)

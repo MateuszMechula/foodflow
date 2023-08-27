@@ -35,7 +35,7 @@ public class MenuRepository implements MenuDAO {
     @Override
     public Menu saveMenu(Menu menu) {
         MenuEntity toSave = menuEntityMapper.mapToEntity(menu);
-        MenuEntity saved = menuJpaRepository.save(toSave);
+        MenuEntity saved = menuJpaRepository.saveAndFlush(toSave);
         return menuEntityMapper.mapFromEntity(saved);
     }
 }
