@@ -18,10 +18,7 @@ import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.*;
 import pl.foodflow.infrastructure.security.UserService;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.foodflow.api.controller.owner.OwnerRestaurantController.OWNER;
@@ -95,7 +92,10 @@ public class OwnerRestaurantController {
         int userId = userService.findByUserName(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
-        Set<RestaurantAddress> restaurantAddresses = owner.getRestaurant().getRestaurantAddresses();
+        Set<RestaurantAddress> restaurantAddresses = Optional.ofNullable(owner)
+                .map(Owner::getRestaurant)
+                .map(Restaurant::getRestaurantAddresses)
+                .orElse(Collections.emptySet());
 
         Set<Address> allAddresses = restaurantAddresses.stream()
                 .map(RestaurantAddress::getAddress)
