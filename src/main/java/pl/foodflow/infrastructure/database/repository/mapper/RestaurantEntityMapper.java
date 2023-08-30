@@ -12,6 +12,7 @@ import pl.foodflow.infrastructure.database.entity.RestaurantEntity;
 public interface RestaurantEntityMapper {
 
     RestaurantEntity mapToEntity(Restaurant restaurant);
+
     @Mapping(target = "owner", ignore = true)
     @Mapping(target = "restaurantCategories", ignore = true)
     @Mapping(target = "orderRecords", ignore = true)

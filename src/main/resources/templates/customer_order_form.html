@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Restaurant Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .item-card {
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .text-section {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .image-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .image-container {
+            max-width: 100px;
+            max-height: 100px;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        .bullet {
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4" th:if="${restaurant != null}">
+        <h1 th:text="${restaurant.name}" class="mb-3 font-weight-bold"></h1>
+        <p th:text="${restaurant.description}" class="mb-4"></p>
+
+            <div class="restaurant-info">
+                <p>
+                    <strong>Open hours:</strong>
+                    <span th:if="${restaurant.openTime != null && restaurant.closeTime != null}">
+                        <span th:text="${#strings.substring(restaurant.openTime, 0, 5)} + ' - ' + ${#strings.substring(restaurant.closeTime, 0, 5)}"></span>
+                    </span>
+                    <span th:unless="${restaurant.openTime != null && restaurant.closeTime != null}">
+                        <span>N/A</span>
+                    </span>
+
+                    <span class="bullet">&middot;</span>
+
+                    <strong>Phone:</strong>
+                    <span th:if="${restaurant.phone != null}">
+                        <span th:text="${restaurant.phone}"></span>
+                    </span>
+                    <span th:unless="${restaurant.phone != null}">
+                        <span>N/A</span>
+                    </span>
+
+                    <span class="bullet">&middot;</span>
+
+                    <strong>Min.:</strong>
+                    <span th:if="${restaurant.minimumOrderAmount != null}">
+                        <span th:text="${restaurant.minimumOrderAmount} + ' zł'"></span>
+                    </span>
+                    <span th:unless="${restaurant.minimumOrderAmount != null}">
+                        <span>N/A</span>
+                    </span>
+
+                    <span class="bullet">&middot;</span>
+
+                    <strong>Delivery:</strong>
+                    <span th:if="${restaurant.deliveryPrice != null}">
+                        <span th:text="${restaurant.deliveryPrice} + ' zł'"></span>
+                    </span>
+                    <span th:unless="${restaurant.deliveryPrice != null}">
+                     <span>N/A</span>
+                    </span>
+
+                    <span class="bullet">&middot;</span>
+
+                    <strong>Delivery option:</strong>
+                    <span th:if="${restaurant.deliveryOption != null}">
+                        <span th:text="${restaurant.deliveryOption ? 'YES' : 'NO'}"></span>
+                    </span>
+                    <span th:unless="${restaurant.deliveryOption != null}">
+                        <span>N/A</span>
+                    </span>
+                </p>
+                <hr class="my-4">
+
+                <form th:object="${orderDTO}" method="post">
+                    <div th:each="menuCategory, menuCategoryStat : ${restaurant.menu.menuCategories}" class="mb-4">
+                        <h2 th:text="${menuCategory.name}" class="font-weight-bold"></h2>
+
+                        <div th:each="categoryItem, itemStat : ${menuCategory.categoryItems}" class="item-card">
+                            <div class="text-section">
+                                <div class="item-details">
+                                    <h5 class="card-title item-name font-weight-bold" th:text="${categoryItem.name}"></h5>
+                                    <p class="card-text item-description" th:text="${categoryItem.description}"></p>
+                                    <p class="card-text item-price font-weight-bold" th:text="${categoryItem.price} + ' zł'"></p>
+                                </div>
+                            </div>
+                            <div class="image-section">
+                                <div class="image-container">
+                                    <img th:src="@{'/images/' + ${categoryItem.imageUrl}}" alt="Product Image">
+                                </div>
+                            </div>
+
+                            <label th:for="${'orderItems__' + categoryItem.categoryItemId}" th:text="${'Quantity for ' + categoryItem.name + ':'}"></label>
+                            <label>
+                                <input type="number" th:id="${'orderItems__' + categoryItem.categoryItemId}" th:field="*{orderItems[__${categoryItem.categoryItemId}__]}" min="0">
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <label for="orderNotes">Order Notes:</label>
+                    <input type="text" id="orderNotes" th:field="*{orderNotes}">
+
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+
+                    <div class="form-group">
+                        <label for="deliveryAddress">Delivery Address:</label>
+                        <input type="text" class="form-control" id="deliveryAddress"
+                               th:value="${searchAddressDTO.street + ', ' + searchAddressDTO.postalCode + ' ' + searchAddressDTO.city}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deliveryType">Delivery Type</label>
+                        <select class="form-control" id="deliveryType" name="deliveryDTO" th:field="*{deliveryDTO}">
+                            <option th:if="${restaurant.deliveryOption}" value="DELIVERY">DELIVERY</option>
+                            <option value="OWN_COLLECTION">OWN_COLLECTION</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Place Order</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4" th:unless="${restaurant != null}">
+        <strong><h2>Restaurant is not available.</h2></strong>
+    </div>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 package pl.foodflow.api.controller.owner;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,7 @@ import java.util.Set;
 
 import static pl.foodflow.api.controller.owner.OwnerCategoryItemController.OWNER;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = OWNER)
@@ -35,40 +38,54 @@ public class OwnerCategoryItemController {
     private final CategoryItemMapper categoryItemMapper;
 
     @GetMapping(value = CATEGORY_ITEM)
-    public String createCategoryItemForm(
-            Model model,
-            Authentication authentication) {
-        String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+    public String showCreateCategoryItemForm(Model model, Authentication authentication) {
+        log.info("Displaying create category item form.");
+        prepareCreateCategoryItemFormModel(model, authentication);
 
-        Set<MenuCategory> allCategories = owner != null &&
-                owner.getRestaurant() != null &&
-                owner.getRestaurant().getMenu() != null &&
-                owner.getRestaurant().getMenu().getMenuCategories() != null
-                ? owner.getRestaurant().getMenu().getMenuCategories()
-                : new HashSet<>();
-
-        model.addAttribute("categoryItemDTO", new CategoryItemEntity());
-        model.addAttribute("allCategories", allCategories);
         return "owner_category_item";
     }
 
     @PostMapping(value = CATEGORY_ITEM)
     public String addCategoryItem(
-            @ModelAttribute("categoryItemDTO") CategoryItemDTO categoryItemDTO,
+            @ModelAttribute("categoryItemDTO") @Valid CategoryItemDTO categoryItemDTO,
             @RequestParam("imageFile") MultipartFile imageFile,
             @RequestParam("menuCategory") Long menuCategoryId,
             Authentication authentication
+
     ) throws IOException {
         String username = authentication.getName();
         int userId = userService.findByUserName(username).getUserId();
         Owner owner = ownerService.findByUserId(userId);
 
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
-
         categoryItemService.addItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
 
-        return "redirect:" + OWNER;
+        log.info("Added a new Category Item: [{}]", categoryItem.getName());
+        return "redirect:/owner#";
+    }
+
+    private void prepareCreateCategoryItemFormModel(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        Owner owner = getOwnerByUsername(username);
+
+        Set<MenuCategory> allCategories = getAllCategoriesFromOwner(owner);
+
+        model.addAttribute("categoryItemDTO", new CategoryItemEntity());
+        model.addAttribute("allCategories", allCategories);
+    }
+
+    private Owner getOwnerByUsername(String username) {
+        int userId = userService.findByUserName(username).getUserId();
+        return ownerService.findByUserId(userId);
+    }
+
+    private Set<MenuCategory> getAllCategoriesFromOwner(Owner owner) {
+        if (owner != null && owner.getRestaurant() != null
+                && owner.getRestaurant().getMenu() != null
+                && owner.getRestaurant().getMenu().getMenuCategories() != null) {
+
+            return owner.getRestaurant().getMenu().getMenuCategories();
+        }
+        return new HashSet<>();
     }
 }

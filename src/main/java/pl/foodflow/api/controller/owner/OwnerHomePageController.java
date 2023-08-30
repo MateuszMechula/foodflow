@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @AllArgsConstructor
-public class OwnerHomeController {
+public class OwnerHomePageController {
 
     public static final String OWNER = "/owner";
 

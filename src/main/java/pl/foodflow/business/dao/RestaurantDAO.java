@@ -14,4 +14,6 @@ public interface RestaurantDAO {
     List<Restaurant> findAll();
 
     List<Restaurant> findAllWithMenuAndCategoriesAndItems();
+
+    Optional<Restaurant> findById(Long id);
 }

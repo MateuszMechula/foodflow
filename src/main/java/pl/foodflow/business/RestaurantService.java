@@ -23,8 +23,14 @@ public class RestaurantService {
     private final RestaurantAddressDAO restaurantAddressDAO;
     private final AddressDAO addressDAO;
 
+    @Transactional
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
+    }
+
+    @Transactional
+    public Restaurant findById(Long id) {
+        return restaurantDAO.findById(id).orElseThrow();
     }
 
     @Transactional

@@ -6,11 +6,9 @@
             <charset>UTF-8</charset>
             <pattern>[%t] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
-
     </appender>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-
     </root>
 </configuration>

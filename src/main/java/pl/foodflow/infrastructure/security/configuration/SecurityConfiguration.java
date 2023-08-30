@@ -9,7 +9,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,10 +54,12 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/login", "/error", "/images/oh_no.png").permitAll()
-                                .requestMatchers("/**").hasAnyAuthority("OWNER")
+                        .requestMatchers("", "/login", "/error", "/fail.jpg", "/images/**").permitAll()
+                        .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
+                        .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(formLogin -> formLogin
+                        .successHandler(new CustomAuthenticationSuccessHandler()))
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
