@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
 import pl.foodflow.business.dao.RestaurantAddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
+import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.*;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class RestaurantService {
     }
 
     @Transactional
-    public Restaurant findById(Long id) {
-        return restaurantDAO.findById(id).orElseThrow();
+    public Restaurant findById(Long restaurantId) {
+        return restaurantDAO.findById(restaurantId).orElseThrow(() ->
+                new RestaurantNotFound("Restaurant with ID: [%s] not found".formatted(restaurantId)));
     }
 
     @Transactional

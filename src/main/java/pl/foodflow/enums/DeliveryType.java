@@ -1,9 +1,9 @@
-package pl.foodflow.api.dto;
+package pl.foodflow.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum DeliveryDTO {
+public enum DeliveryType {
     DELIVERY,
     OWN_COLLECTION
 }

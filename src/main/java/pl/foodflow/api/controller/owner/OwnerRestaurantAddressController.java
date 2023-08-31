@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.foodflow.business.RestaurantAddressService;
-import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.Address;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.domain.RestaurantAddress;
@@ -23,6 +22,7 @@ public class OwnerRestaurantAddressController {
     public static final String DELETE_ADDRESS = "/delete-address";
 
     private final RestaurantAddressService restaurantAddressService;
+
     @PostMapping(value = DELETE_ADDRESS)
     public String deleteRestaurantAddress(@RequestParam Long addressId) {
         RestaurantAddress restaurantAddress = restaurantAddressService.findByAddressId(addressId);

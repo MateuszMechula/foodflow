@@ -4,7 +4,6 @@ package pl.foodflow.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -35,9 +34,6 @@ public class OrderRecordEntity {
     @Column(name = "order_notes")
     private String orderNotes;
 
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
-
     @Column(name = "contact_phone")
     private String contactPhone;
 
@@ -45,7 +41,7 @@ public class OrderRecordEntity {
     private String deliveryAddress;
 
     @Column(name = "delivery_type")
-    private Boolean deliveryType;
+    private String deliveryType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")

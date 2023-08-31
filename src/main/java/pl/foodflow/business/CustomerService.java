@@ -10,6 +10,7 @@ import pl.foodflow.domain.Customer;
 public class CustomerService {
 
     private final CustomerDAO customerDAO;
+
     public Customer findByUserId(Long userId) {
         return customerDAO.findByUserId(userId).orElseThrow();
     }

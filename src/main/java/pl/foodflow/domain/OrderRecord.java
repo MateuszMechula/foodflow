@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @With
@@ -22,8 +24,12 @@ public class OrderRecord {
     BigDecimal totalAmount;
     String contactPhone;
     String deliveryAddress;
-    Boolean deliveryType;
+    String deliveryType;
     Customer customer;
     Restaurant restaurant;
     Set<OrderItem> orderItems;
+
+    public Set<OrderItem> getOrderItems() {
+        return Objects.isNull(orderItems) ? new HashSet<>() : orderItems;
+    }
 }

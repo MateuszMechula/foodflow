@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.foodflow.enums.DeliveryType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,5 +19,5 @@ public class OrderDTO {
     private String orderNotes;
     private String contactPhone;
     private String deliveryAddress;
-    private DeliveryDTO deliveryDTO;
+    private DeliveryType deliveryType;
 }

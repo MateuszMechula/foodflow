@@ -9,13 +9,16 @@ import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface CategoryItemEntityMapper {
 
-    @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "orderItems.categoryItem", ignore = true)
+    @Mapping(target = "orderItems.orderItem", ignore = true)
     @Mapping(target = "menuCategory.categoryItems", ignore = true)
     @Mapping(target = "menuCategory.menu.restaurant", ignore = true)
     @Mapping(target = "menuCategory.menu.menuCategories", ignore = true)
     CategoryItemEntity mapToEntity(CategoryItem entity);
 
-    @Mapping(target = "menuCategory", ignore = true)
-    @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "menuCategory.menu", ignore = true)
+    @Mapping(target = "menuCategory.categoryItems", ignore = true)
+    @Mapping(target = "orderItems.categoryItem", ignore = true)
+    @Mapping(target = "orderItems.orderRecord", ignore = true)
     CategoryItem mapFromEntity(CategoryItemEntity entity);
 }

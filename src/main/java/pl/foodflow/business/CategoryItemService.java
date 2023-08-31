@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,6 +28,25 @@ public class CategoryItemService {
 
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemDAO categoryItemDAO;
+
+    @Transactional
+    public CategoryItem findById(Long categoryItemId) {
+        return categoryItemDAO.findById(categoryItemId).orElseThrow();
+    }
+
+    @Transactional
+    public void updateCategoryItem(CategoryItem updatedCategoryItem) {
+        if (updatedCategoryItem.getCategoryItemId() == null) {
+            throw new IllegalArgumentException("CategoryItem ID cannot be NULL");
+        }
+        CategoryItem existingCategoryItem = categoryItemDAO.findById(updatedCategoryItem.getCategoryItemId()).orElseThrow(() ->
+                new EntityNotFoundException(
+                        "CategoryItem with ID [%s] doesnt exists.".formatted(updatedCategoryItem.getCategoryItemId())));
+
+        CategoryItem updatedItem = buildUpdatedCategoryItem(updatedCategoryItem, existingCategoryItem);
+
+        categoryItemDAO.saveCategoryItem(updatedItem);
+    }
 
     @Transactional
     public void addItemToMenuCategory(
@@ -73,6 +93,18 @@ public class CategoryItemService {
         }
 
         return fileName;
+    }
+
+    private static CategoryItem buildUpdatedCategoryItem(CategoryItem updatedCategoryItem, CategoryItem existingCategoryItem) {
+        return CategoryItem.builder()
+                .categoryItemId(existingCategoryItem.getCategoryItemId())
+                .name(Optional.ofNullable(updatedCategoryItem.getName()).orElse(existingCategoryItem.getName()))
+                .description(Optional.ofNullable(updatedCategoryItem.getDescription()).orElse(existingCategoryItem.getDescription()))
+                .price(Optional.ofNullable(updatedCategoryItem.getPrice()).orElse(existingCategoryItem.getPrice()))
+                .imageUrl(Optional.ofNullable(updatedCategoryItem.getImageUrl()).orElse(existingCategoryItem.getImageUrl()))
+                .menuCategory(Optional.ofNullable(updatedCategoryItem.getMenuCategory()).orElse(existingCategoryItem.getMenuCategory()))
+                .orderItems(Optional.ofNullable(updatedCategoryItem.getOrderItems()).orElse(existingCategoryItem.getOrderItems()))
+                .build();
     }
 
     private static CategoryItem buildCategoryItem(CategoryItem categoryItem, MenuCategory menuCategory, String url) {

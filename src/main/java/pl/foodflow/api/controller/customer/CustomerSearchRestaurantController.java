@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.foodflow.api.dto.SearchAddressDTO;
 import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.Restaurant;

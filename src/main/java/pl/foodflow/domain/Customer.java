@@ -16,5 +16,6 @@ public class Customer {
     String email;
     String phone;
     Address address;
+    Integer userId;
     Set<OrderRecord> orderRecords;
 }
