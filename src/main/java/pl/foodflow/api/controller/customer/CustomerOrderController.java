@@ -12,6 +12,7 @@ import pl.foodflow.business.CustomerService;
 import pl.foodflow.business.OrderProcessingService;
 import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.Customer;
+import pl.foodflow.domain.OrderRecord;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.infrastructure.security.UserService;
 
@@ -62,7 +63,8 @@ public class CustomerOrderController {
         String deliveryAddress = searchAddressDTO.getStreet() + ", " + searchAddressDTO.getPostalCode() + " " + searchAddressDTO.getCity();
         orderDTO.setDeliveryAddress(deliveryAddress);
 
-        orderProcessingService.processAndCreateOrder(restaurantId, customer.withUserId((int) userId), orderDTO);
+        OrderRecord savedOrderRecord = orderProcessingService
+                .processAndCreateOrder(restaurantId, customer.withUserId((int) userId), orderDTO);
 
         return "order_information";
     }

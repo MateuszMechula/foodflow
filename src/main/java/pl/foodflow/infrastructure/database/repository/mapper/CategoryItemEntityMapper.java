@@ -18,7 +18,6 @@ public interface CategoryItemEntityMapper {
 
     @Mapping(target = "menuCategory.menu", ignore = true)
     @Mapping(target = "menuCategory.categoryItems", ignore = true)
-    @Mapping(target = "orderItems.categoryItem", ignore = true)
-    @Mapping(target = "orderItems.orderRecord", ignore = true)
+    @Mapping(target = "orderItems", ignore = true)
     CategoryItem mapFromEntity(CategoryItemEntity entity);
 }

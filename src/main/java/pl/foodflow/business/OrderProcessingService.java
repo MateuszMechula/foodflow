@@ -22,7 +22,7 @@ public class OrderProcessingService {
     private final OrderItemService orderItemService;
 
     @Transactional
-    public void processAndCreateOrder(Long restaurantId, Customer customer, OrderDTO orderDTO) {
+    public OrderRecord processAndCreateOrder(Long restaurantId, Customer customer, OrderDTO orderDTO) {
         Restaurant orderProcessingRestaurant = restaurantService.findById(restaurantId);
 
         OrderRecord orderRecord = buildOrderRecord(customer, orderDTO, orderProcessingRestaurant);
@@ -48,9 +48,10 @@ public class OrderProcessingService {
             orderRecordItems.add(savedOrderItem);
 
             categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
-            orderRecordService.updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
+            savedOrderRecord = orderRecordService
+                    .updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
         }
-
+        return savedOrderRecord;
     }
 
     private String generateOrderNumber(Restaurant restaurant) {

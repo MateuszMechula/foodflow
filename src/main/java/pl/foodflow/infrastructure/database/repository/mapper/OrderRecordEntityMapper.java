@@ -10,7 +10,7 @@ import pl.foodflow.infrastructure.database.entity.OrderRecordEntity;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface OrderRecordEntityMapper {
 
-    OrderRecord mapFromEntity(OrderRecordEntity entity);
-
     OrderRecordEntity mapToEntity(OrderRecord orderRecord);
+
+    OrderRecord mapFromEntity(OrderRecordEntity entity);
 }

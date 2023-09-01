@@ -21,7 +21,7 @@ public class OrderRecordService {
     }
 
     @Transactional
-    public void updateOrderRecord(OrderRecord orderRecord) {
+    public OrderRecord updateOrderRecord(OrderRecord orderRecord) {
         if (orderRecord.getOrderRecordId() == null) {
             throw new IllegalArgumentException("OrderRecord ID cannot be NULL");
         }
@@ -31,7 +31,7 @@ public class OrderRecordService {
 
         OrderRecord updatedRecord = buildUpdatedOrderRecord(orderRecord, existingOrderRecord);
 
-        orderRecordDAO.saveOrderRecord(updatedRecord);
+        return orderRecordDAO.saveOrderRecord(updatedRecord);
     }
 
     private static OrderRecord buildUpdatedOrderRecord(OrderRecord orderRecord, OrderRecord existingOrderRecord) {
