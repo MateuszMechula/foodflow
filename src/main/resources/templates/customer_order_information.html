@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .bold-text {
+            font-weight: bold;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .vertical-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .full-height {
+            height: 100%;
+        }
+
+        .header {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .button-bottom {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+
+        .order-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .order-info-item {
+            width: 49%;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5 text-center vertical-center">
+    <h1 class="mb-4 header full-height">Order Information</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="order-info">
+                <div class="order-info-item">
+                    <p>Delivery Type:</p>
+                    <p class="bold-text" th:text="${orderRecord.deliveryType}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Order Number:</p>
+                    <p class="bold-text" th:text="${orderRecord.orderNumber}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Order Date and Time:</p>
+                    <p class="bold-text"
+                       th:text="${#temporals.format(orderRecord.orderDateTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Order Status:</p>
+                    <p class="bold-text" th:text="${orderRecord.orderStatus}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Order Notes:</p>
+                    <p class="bold-text" th:text="${orderRecord.orderNotes}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Contact Phone:</p>
+                    <p class="bold-text" th:text="${orderRecord.contactPhone}"></p>
+                </div>
+                <div class="order-info-item">
+                    <p>Delivery Address:</p>
+                    <p class="bold-text" th:text="${orderRecord.deliveryAddress}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-5">Order Items</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th><strong>Unit Price (PLN)</strong></th>
+            <th><strong>Quantity</strong></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderItem : ${orderRecord.orderItems}">
+            <td><strong th:text="${orderItem.unitPrice} + ' zł'"></strong></td>
+            <td th:text="${orderItem.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="bold-text">Total Amount: <span th:text="${orderRecord.totalAmount} + ' zł'"></span></p>
+    <br>
+    <a href="/foodflow/customer" class="btn btn-primary mt-3 button-bottom">Go back to the main page</a>
+</div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+

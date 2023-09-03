@@ -3,7 +3,9 @@ package pl.foodflow.infrastructure.database.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.foodflow.infrastructure.database.converters.OffsetDateTimeAttributeConverter;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -25,6 +27,7 @@ public class OrderRecordEntity {
     @Column(name = "order_number", unique = true)
     private String orderNumber;
 
+    @Convert(converter = OffsetDateTimeAttributeConverter.class)
     @Column(name = "order_date_time")
     private OffsetDateTime orderDateTime;
 
@@ -33,6 +36,9 @@ public class OrderRecordEntity {
 
     @Column(name = "order_notes")
     private String orderNotes;
+
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
     @Column(name = "contact_phone")
     private String contactPhone;

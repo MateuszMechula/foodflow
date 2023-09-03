@@ -48,6 +48,37 @@
             font-weight: bold;
             margin: 0 0.5rem;
         }
+
+        /* Dodane style dla Order Notes */
+        #orderNotes {
+            height: 100px;
+            width: 100%;
+        }
+
+        /* Flexbox dla Order Notes i Contact Phone */
+        .notes-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notes-section label,
+        .notes-section input {
+            width: 100%;
+        }
+
+        /* Styl przycisku */
+        .submit-button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px; /* Dodany padding od dołu i góry */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: darkgreen;
+        }
     </style>
 </head>
 <body>
@@ -59,51 +90,51 @@
         <p>
             <strong>Open hours:</strong>
             <span th:if="${restaurant.openTime != null && restaurant.closeTime != null}">
-                        <span th:text="${#strings.substring(restaurant.openTime, 0, 5)} + ' - ' + ${#strings.substring(restaurant.closeTime, 0, 5)}"></span>
-                    </span>
+                <span th:text="${#strings.substring(restaurant.openTime, 0, 5)} + ' - ' + ${#strings.substring(restaurant.closeTime, 0, 5)}"></span>
+            </span>
             <span th:unless="${restaurant.openTime != null && restaurant.closeTime != null}">
-                        <span>N/A</span>
-                    </span>
+                <span>N/A</span>
+            </span>
 
             <span class="bullet">&middot;</span>
 
             <strong>Phone:</strong>
             <span th:if="${restaurant.phone != null}">
-                        <span th:text="${restaurant.phone}"></span>
-                    </span>
+                <span th:text="${restaurant.phone}"></span>
+            </span>
             <span th:unless="${restaurant.phone != null}">
-                        <span>N/A</span>
-                    </span>
+                <span>N/A</span>
+            </span>
 
             <span class="bullet">&middot;</span>
 
             <strong>Min.:</strong>
             <span th:if="${restaurant.minimumOrderAmount != null}">
-                        <span th:text="${restaurant.minimumOrderAmount} + ' zł'"></span>
-                    </span>
+                <span th:text="${restaurant.minimumOrderAmount} + ' zł'"></span>
+            </span>
             <span th:unless="${restaurant.minimumOrderAmount != null}">
-                        <span>N/A</span>
-                    </span>
+                <span>N/A</span>
+            </span>
 
             <span class="bullet">&middot;</span>
 
             <strong>Delivery:</strong>
             <span th:if="${restaurant.deliveryPrice != null}">
-                        <span th:text="${restaurant.deliveryPrice} + ' zł'"></span>
-                    </span>
+                <span th:text="${restaurant.deliveryPrice} + ' zł'"></span>
+            </span>
             <span th:unless="${restaurant.deliveryPrice != null}">
-                     <span>N/A</span>
-                    </span>
+                <span>N/A</span>
+            </span>
 
             <span class="bullet">&middot;</span>
 
             <strong>Delivery option:</strong>
             <span th:if="${restaurant.deliveryOption != null}">
-                        <span th:text="${restaurant.deliveryOption ? 'YES' : 'NO'}"></span>
-                    </span>
+                <span th:text="${restaurant.deliveryOption ? 'YES' : 'NO'}"></span>
+            </span>
             <span th:unless="${restaurant.deliveryOption != null}">
-                        <span>N/A</span>
-                    </span>
+                <span>N/A</span>
+            </span>
         </p>
         <hr class="my-4">
 
@@ -130,34 +161,35 @@
                            th:text="${'Quantity for ' + categoryItem.name + ':'}"></label>
                     <label>
                         <input type="number" th:id="${'orderItems__' + categoryItem.categoryItemId}"
-                               th:field="*{orderItems[__${categoryItem.categoryItemId}__]}" min="0">
+                               th:field="*{orderItems[__${categoryItem.categoryItemId}__]}" min="0"
+                               style="width: 50px;">
                     </label>
-
                 </div>
             </div>
 
-            <label for="orderNotes">Order Notes:</label>
-            <input type="text" id="orderNotes" th:field="*{orderNotes}">
+            <div class="notes-section">
+                <div class="form-group">
+                    <label for="orderNotes">Order Notes:</label>
+                    <input type="text" id="orderNotes" th:field="*{orderNotes}">
+                </div>
 
-            <label for="contactPhone">Contact Phone:</label>
-            <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                <div class="form-group" style="width: 200px;">
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                </div>
 
-            <div class="form-group">
-                <label for="deliveryAddress">Delivery Address:</label>
-                <input type="text" class="form-control" id="deliveryAddress"
-                       th:value="${searchAddressDTO.street + ', ' + searchAddressDTO.postalCode + ' ' + searchAddressDTO.city}"
-                       readonly>
+                <div class="form-group">
+                    <label for="deliveryType">Delivery Type</label>
+                    <select class="form-control" id="deliveryType" name="deliveryType" th:field="*{deliveryType}">
+                        <option th:if="${restaurant.deliveryOption}" value="DELIVERY">DELIVERY</option>
+                        <option value="TAKEOUT">TAKEOUT</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-button">Place Order</button>
+                <br>
+                <br>
             </div>
-
-            <div class="form-group">
-                <label for="deliveryType">Delivery Type</label>
-                <select class="form-control" id="deliveryType" name="deliveryType" th:field="*{deliveryType}">
-                    <option th:if="${restaurant.deliveryOption}" value="DELIVERY">DELIVERY</option>
-                    <option value="OWN_COLLECTION">OWN_COLLECTION</option>
-                </select>
-            </div>
-
-            <button type="submit">Place Order</button>
         </form>
 
     </div>

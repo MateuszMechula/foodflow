@@ -20,6 +20,7 @@ public class RestaurantAddressService {
         restaurantAddressDAO.deleteRestaurantAddress(restaurantAddress);
     }
 
+    @Transactional
     public RestaurantAddress findByAddressId(Long addressId) {
         return restaurantAddressDAO.findByAddressId(addressId).orElseThrow();
     }

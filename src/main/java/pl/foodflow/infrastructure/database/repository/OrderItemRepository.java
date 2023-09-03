@@ -21,4 +21,9 @@ public class OrderItemRepository implements OrderItemDAO {
         OrderItemEntity saved = orderItemJpaRepository.save(toSave);
         return orderItemEntityMapper.mapFromEntity(saved);
     }
+
+    @Override
+    public void deleteByOrderRecordId(Long orderRecordId) {
+        orderItemJpaRepository.deleteByOrderRecordId(orderRecordId);
+    }
 }

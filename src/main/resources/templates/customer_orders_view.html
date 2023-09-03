@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Order List (In Progress)</h1>
+
+    <div th:if="${successMessage}">
+        <div class="alert alert-success" th:text="${successMessage}"></div>
+    </div>
+    <div th:if="${errorMessage}">
+        <div class="alert alert-danger" th:text="${errorMessage}"></div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Date and Time</th>
+            <th>Notes</th>
+            <th>Amount</th>
+            <th>Contact Phone</th>
+            <th>Delivery Address</th>
+            <th>Delivery Type</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${allOrdersWithOrderStatusInProgress != null}"
+            th:each="order : ${allOrdersWithOrderStatusInProgress}">
+            <td th:text="${order.orderNumber}"></td>
+            <td th:text="${#temporals.format(order.orderDateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${order.orderNotes}"></td>
+            <td th:text="${order.totalAmount + ' zł'}"></td>
+            <td th:text="${order.contactPhone}"></td>
+            <td th:text="${order.deliveryAddress}"></td>
+            <td th:text="${order.deliveryType}"></td>
+            <td>
+                <form th:action="@{/customer/check-orders}" method="post">
+                    <input type="hidden" name="orderRecordId" th:value="${order.orderRecordId}"/>
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+
+        </tr>
+        <tr th:if="${allOrdersWithOrderStatusInProgress == null}">
+            <td colspan="7">No orders in progress</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h1>Completed Orders</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Date and Time</th>
+            <th>Notes</th>
+            <th>Amount</th>
+            <th>Contact Phone</th>
+            <th>Delivery Address</th>
+            <th>Delivery Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${allOrdersWithOrderStatusCompleted != null}" th:each="order : ${allOrdersWithOrderStatusCompleted}">
+            <td th:text="${order.orderNumber}"></td>
+            <td th:text="${#temporals.format(order.orderDateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${order.orderNotes}"></td>
+            <td th:text="${order.totalAmount + ' zł'}"></td>
+            <td th:text="${order.contactPhone}"></td>
+            <td th:text="${order.deliveryAddress}"></td>
+            <td th:text="${order.deliveryType}"></td>
+        </tr>
+        <tr th:if="${allOrdersWithOrderStatusCompleted == null}">
+            <td colspan="7">No completed orders</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/foodflow/customer" class="btn btn-primary mt-3 button-bottom">Go back to the main page</a>
+</div>
+</body>
+</html>
+

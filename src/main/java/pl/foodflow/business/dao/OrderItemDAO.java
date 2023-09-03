@@ -5,4 +5,6 @@ import pl.foodflow.domain.OrderItem;
 public interface OrderItemDAO {
 
     OrderItem saveOrderItem(OrderItem orderItem);
+
+    void deleteByOrderRecordId(Long orderRecordId);
 }
