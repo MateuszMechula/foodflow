@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Restaurant</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Update Restaurant</h2>
+    <form action="#" th:action="@{/owner/restaurant-update}" th:object="${existingRestaurant}" method="post">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nip">NIP:</label>
+                    <input type="text" class="form-control" id="nip" th:field="*{nip}" placeholder="1234567890"
+                           pattern="[0-9]{10}">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" id="description" th:field="*{description}">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" class="form-control" id="phone" th:field="*{phone}">
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="openTime">Open Time:</label>
+                    <input type="text" class="form-control" id="openTime" th:field="*{openTime}"
+                           required pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+                           placeholder="HH:mm:ss (e.g. 09:30:00)">
+                </div>
+                <div class="form-group">
+                    <label for="closeTime">Close Time:</label>
+                    <input type="text" class="form-control" id="closeTime" th:field="*{closeTime}"
+                           required pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+                           placeholder="HH:mm:ss (e.g. 18:00:00)">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryPrice">DeliveryPrice:</label>
+                    <input type="text" class="form-control" id="deliveryPrice" th:field="*{deliveryPrice}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="minimumOrderAmount">Minimum order amount:</label>
+                    <input type="text" class="form-control" id="minimumOrderAmount"
+                           th:field="*{minimumOrderAmount}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="street">Street:</label>
+                    <input type="text" class="form-control" id="street" th:field="*{address.street}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="postalCode">Postal Code:</label>
+                    <input type="text" class="form-control" id="postalCode" th:field="*{address.postalCode}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" th:field="*{address.city}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" class="form-control" id="country" th:field="*{address.country}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="deliveryOption"
+                               th:field="*{deliveryOption}" onchange="toggleDeliveryPrice()">
+                        <label class="form-check-label" for="deliveryOption">Delivery option:</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+<br>
+
+<div class="container mt-3">
+    <a href="/foodflow/owner" class="btn btn-success">Back to the main page</a>
+</div>
+<br>
+<script>
+    function toggleDeliveryPrice() {
+        var deliveryOptionCheckbox = document.getElementById("deliveryOption");
+        var deliveryPriceInput = document.getElementById("deliveryPrice");
+
+        if (deliveryOptionCheckbox.checked) {
+            deliveryPriceInput.removeAttribute("disabled");
+        } else {
+            deliveryPriceInput.setAttribute("disabled", "disabled");
+        }
+    }
+</script>
+</body>
+</html>

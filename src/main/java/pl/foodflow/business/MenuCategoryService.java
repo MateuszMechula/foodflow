@@ -5,11 +5,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pl.foodflow.business.dao.CategoryItemDAO;
 import pl.foodflow.business.dao.MenuCategoryDAO;
 import pl.foodflow.business.exceptions.MenuCategoryNotFoundException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.domain.*;
+import pl.foodflow.domain.CategoryItem;
+import pl.foodflow.domain.Menu;
+import pl.foodflow.domain.MenuCategory;
+import pl.foodflow.domain.Owner;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -45,8 +47,8 @@ public class MenuCategoryService {
     }
 
     @Transactional
-    public void deleteMenuCategory(MenuCategory menuCategory) {
-        menuCategoryDAO.deleteMenuCategory(menuCategory);
+    public void deleteMenuCategoryById(Long menuCategoryId) {
+        menuCategoryDAO.deleteMenuCategoryById(menuCategoryId);
     }
 
     @Transactional
@@ -79,20 +81,7 @@ public class MenuCategoryService {
 
     @Transactional
     public void deleteCategoryItemFromMenuCategory(Long categoryItemId) {
-
-        CategoryItem categoryItem = categoryItemService.findById(categoryItemId);
-
-        Long menuCategoryId = categoryItem.getMenuCategory().getMenuCategoryId();
-        MenuCategory menuCategory = findById(menuCategoryId);
-        Set<CategoryItem> categoryItems = menuCategory.getCategoryItems();
-        categoryItems.remove(categoryItem);
-
-        saveMenuCategory(menuCategory);
-
-        List<OrderItem> orderItems = orderItemService.findOrdersByCategoryItemId(categoryItemId);
-        orderItems.forEach(orderItemService::deleteOrderItem);
-
-        categoryItemService.deleteCategoryItem(categoryItem);
+        categoryItemService.deleteCategoryItem(categoryItemId);
     }
 
     @Transactional
@@ -112,16 +101,6 @@ public class MenuCategoryService {
         }
 
         return fileName;
-    }
-
-
-    @Transactional
-    public void processMenuCategoryDeletion(Long menuCategoryId) {
-        MenuCategory menuCategory = findById(menuCategoryId);
-
-        menuCategory.getCategoryItems().forEach(categoryItemService::deleteCategoryItem);
-
-        deleteMenuCategory(menuCategory);
     }
 
     private static CategoryItem buildCategoryItem(CategoryItem categoryItem, MenuCategory menuCategory, String url) {

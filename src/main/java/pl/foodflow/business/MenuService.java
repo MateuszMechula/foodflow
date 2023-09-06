@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.MenuDAO;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
+import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
+import pl.foodflow.domain.Restaurant;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,7 @@ public class MenuService {
     private final MenuDAO menuDAO;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemService categoryItemService;
+    private final RestaurantService restaurantService;
 
     public List<Menu> findAll() {
         return menuDAO.findAll();
@@ -51,19 +54,27 @@ public class MenuService {
     }
 
     @Transactional
+    public void addMenuToRestaurant(Owner owner, Menu menu) {
+        if (Objects.isNull(owner.getRestaurant())) {
+            throw new RestaurantNotFound("To add a menu you have to create restaurant first");
+        }
+        Restaurant restaurant = owner.getRestaurant();
+
+        if (Objects.nonNull(restaurant.getMenu())) {
+            throw new ThatRestaurantHasAMenu
+                    ("Restaurant with nip [%s] has a menu. You can't create more than one"
+                            .formatted(restaurant.getNip()));
+        }
+        saveMenu(menu.withRestaurant(restaurant));
+    }
+
+    @Transactional
     public void saveMenu(Menu menu) {
         menuDAO.saveMenu(menu);
     }
 
     @Transactional
     public void deleteMenu(Long menuId) {
-        Menu menuToDelete = findMenuById(menuId);
-
-        menuToDelete.getMenuCategories().forEach(menuCategory ->
-                menuCategory.getCategoryItems().forEach(categoryItemService::deleteCategoryItem));
-
-        menuToDelete.getMenuCategories().forEach(menuCategoryService::deleteMenuCategory);
-
-        menuDAO.deleteMenu(menuId);
+        menuDAO.deleteMenuById(menuId);
     }
 }

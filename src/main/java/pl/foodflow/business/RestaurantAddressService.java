@@ -22,6 +22,7 @@ public class RestaurantAddressService {
     public RestaurantAddress findRestaurantAddressByAddressId(Long addressId) {
         return restaurantAddressDAO.findRestaurantAddressByAddressId(addressId).orElseThrow();
     }
+
     @Transactional
     public void deleteRestaurantAddress(RestaurantAddress restaurantAddress) {
         restaurantAddressDAO.deleteRestaurantAddress(restaurantAddress);
@@ -29,6 +30,6 @@ public class RestaurantAddressService {
 
     @Transactional
     public RestaurantAddress saveRestaurantAddress(RestaurantAddress restaurantAddress) {
-       return restaurantAddressDAO.saveRestaurantAddress(restaurantAddress);
+        return restaurantAddressDAO.saveRestaurantAddress(restaurantAddress);
     }
 }

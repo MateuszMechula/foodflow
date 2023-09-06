@@ -1,6 +1,5 @@
 package pl.foodflow.business;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;

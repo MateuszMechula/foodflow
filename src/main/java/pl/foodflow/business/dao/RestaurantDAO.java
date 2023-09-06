@@ -8,6 +8,12 @@ import java.util.Optional;
 public interface RestaurantDAO {
 
     List<Restaurant> findAll();
+
     Optional<Restaurant> findById(Long id);
-    Restaurant saveRestaurant(Restaurant restaurant);
+
+    void saveRestaurant(Restaurant restaurant);
+
+    void deleteRestaurantById(Long restaurantId);
+
+    Optional<Restaurant> findRestaurantByNip(String nip);
 }

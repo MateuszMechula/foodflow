@@ -36,7 +36,7 @@ public class OwnerRestaurantAddressController {
     private final AddressMapper addressMapper;
     private final UserService userService;
     private final RestaurantService restaurantService;
-    private  final OwnerService ownerService;
+    private final OwnerService ownerService;
 
     @GetMapping(value = RESTAURANT_ADDRESSES)
     public ModelAndView addDeliveryAddressToRestaurantForm(Authentication authentication) {

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Order List</title>
+    <title>Owner orders view</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
@@ -61,7 +61,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${allOwnerOrdersWithOrderStatusCompleted != null}" th:each="order : ${allOwnerOrdersWithOrderStatusCompleted}">
+        <tr th:if="${allOwnerOrdersWithOrderStatusCompleted != null}"
+            th:each="order : ${allOwnerOrdersWithOrderStatusCompleted}">
             <td th:text="${order.orderNumber}"></td>
             <td th:text="${#temporals.format(order.orderDateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${order.orderNotes}"></td>

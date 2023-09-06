@@ -33,8 +33,8 @@ public class CategoryItemService {
     }
 
     @Transactional
-    public void deleteCategoryItem(CategoryItem categoryItem) {
-        categoryItemDAO.deleteCategoryItem(categoryItem);
+    public void deleteCategoryItem(Long categoryItemId) {
+        categoryItemDAO.deleteCategoryItemById(categoryItemId);
     }
 
     private static CategoryItem buildUpdatedCategoryItem(CategoryItem updatedCategoryItem, CategoryItem existingCategoryItem) {

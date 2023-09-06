@@ -31,8 +31,7 @@ public class CategoryItemRepository implements CategoryItemDAO {
     }
 
     @Override
-    public void deleteCategoryItem(CategoryItem categoryItem) {
-        CategoryItemEntity toDelete = categoryItemEntityMapper.mapToEntity(categoryItem);
-        categoryItemJpaRepository.delete(toDelete);
+    public void deleteCategoryItemById(Long categoryItemId) {
+        categoryItemJpaRepository.deleteById(categoryItemId);
     }
 }

@@ -33,7 +33,7 @@ public class MenuRepository implements MenuDAO {
     }
 
     @Override
-    public void deleteMenu(Long menuId) {
+    public void deleteMenuById(Long menuId) {
         menuJpaRepository.deleteById(menuId);
     }
 

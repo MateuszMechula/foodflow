@@ -51,10 +51,10 @@ public class OwnerMenuCategoryController {
                 return new ModelAndView("owner_menu_category", model);
             }
         }
-            Map<String, ?> model = Map.of(
-                    "categoryDTO", MenuCategoryDTO.buildDefault()
-            );
-            return new ModelAndView("owner_menu_category", model);
+        Map<String, ?> model = Map.of(
+                "categoryDTO", MenuCategoryDTO.buildDefault()
+        );
+        return new ModelAndView("owner_menu_category", model);
     }
 
     @PostMapping(value = CATEGORY)
@@ -76,7 +76,7 @@ public class OwnerMenuCategoryController {
     @PostMapping(value = DELETE_CATEGORY)
     public String deleteMenuCategory(@RequestParam Long menuCategoryId) {
 
-        menuCategoryService.processMenuCategoryDeletion(menuCategoryId);
+        menuCategoryService.deleteMenuCategoryById(menuCategoryId);
         log.info("MenuCategory with ID: [%s] was delete".formatted(menuCategoryId));
         return "redirect:/owner/category";
     }

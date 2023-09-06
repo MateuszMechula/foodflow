@@ -11,7 +11,7 @@ public interface MenuCategoryDAO {
 
     Optional<MenuCategory> findCategoryById(Long menuCategoryId);
 
-    void deleteMenuCategory(MenuCategory menuCategory);
+    void deleteMenuCategoryById(Long menuCategoryId);
 
     List<MenuCategory> findAllByMenuId(Long menuId);
 }

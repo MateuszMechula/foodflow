@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
@@ -35,6 +32,8 @@ public class OwnerRestaurantController {
     public static final String OWNER = "/owner";
     public static final String RESTAURANT = "/restaurant";
     public static final String RESTAURANT_DETAILS = "/restaurant-details";
+    public static final String RESTAURANT_DELETE = "/restaurant-delete";
+    public static final String RESTAURANT_UPDATE = "/restaurant-update";
 
     private final RestaurantService restaurantService;
     private final RestaurantMapper restaurantMapper;
@@ -55,22 +54,7 @@ public class OwnerRestaurantController {
             model.addAttribute("existingRestaurant", owner.getRestaurant());
         }
 
-        return "owner_add_restaurant";
-    }
-
-    @PostMapping(value = RESTAURANT)
-    public String addRestaurant(
-            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
-            Authentication authentication
-    ) {
-        String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
-        Owner owner = ownerService.findByUserId(userId);
-
-        Restaurant restaurant = restaurantMapper.map(restaurantDTO);
-        restaurantService.createRestaurant(restaurant.withOwner(owner));
-
-        return "redirect:/owner";
+        return "owner_restaurant_form";
     }
 
     @GetMapping(value = RESTAURANT_DETAILS)
@@ -106,6 +90,51 @@ public class OwnerRestaurantController {
                 "menuCategoryItem", menuCategoryItem
         );
         return new ModelAndView("owner_restaurant_view", model);
+    }
+
+    @GetMapping(value = RESTAURANT_UPDATE)
+    public String updateRestaurantForm(
+            @RequestParam Long restaurantId,
+            Model model) {
+        Restaurant existingRestaurant = restaurantService.findById(restaurantId);
+        model.addAttribute("existingRestaurant", existingRestaurant);
+        return "owner_restaurant_update";
+    }
+
+    @PostMapping(value = RESTAURANT)
+    public String addRestaurant(
+            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        int userId = userService.findByUserName(username).getUserId();
+        Owner owner = ownerService.findByUserId(userId);
+
+        Restaurant restaurant = restaurantMapper.map(restaurantDTO);
+        restaurantService.createRestaurant(restaurant.withOwner(owner));
+
+        return "redirect:/owner/restaurant";
+    }
+
+    @PostMapping(value = RESTAURANT_UPDATE)
+    public String updateRestaurant(
+            @ModelAttribute("existingRestaurant") RestaurantDTO restaurantDTO,
+            Authentication authentication) {
+        String username = authentication.getName();
+        int userId = userService.findByUserName(username).getUserId();
+        Owner owner = ownerService.findByUserId(userId);
+
+        Restaurant updatedRestaurant = restaurantMapper.map(restaurantDTO);
+        restaurantService.updateRestaurant(updatedRestaurant.withOwner(owner));
+        return "redirect:/owner/restaurant";
+    }
+
+    @PostMapping(value = RESTAURANT_DELETE)
+    public String getDeleteRestaurant(
+            @RequestParam Long restaurantId
+    ) {
+        restaurantService.deleteRestaurantById(restaurantId);
+        return "redirect:/owner/restaurant";
     }
 
 }

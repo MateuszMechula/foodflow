@@ -29,10 +29,12 @@ public class OrderRecordService {
                 .orElseThrow(() -> new OrderRecordNotFoundException(
                         "Order Record with ID: [%s] not found".formatted(orderRecordId)));
     }
+
     @Transactional
     public List<OrderRecord> findAll() {
         return orderRecordDAO.findAll();
     }
+
     @Transactional
     public List<OrderRecord> getAllCustomerOrdersWithOrderStatusInProgress(long userId) {
         Customer customer = customerService.findByUserId(userId);
@@ -129,6 +131,7 @@ public class OrderRecordService {
         categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
         updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
     }
+
     private static OrderRecord buildUpdatedOrderRecord(OrderRecord orderRecord, OrderRecord existingOrderRecord) {
         return OrderRecord.builder()
                 .orderRecordId(existingOrderRecord.getOrderRecordId())

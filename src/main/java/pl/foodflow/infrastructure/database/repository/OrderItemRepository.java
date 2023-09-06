@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.foodflow.business.dao.OrderItemDAO;
 import pl.foodflow.domain.OrderItem;
-import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
 import pl.foodflow.infrastructure.database.entity.OrderItemEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.OrderItemJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.OrderItemEntityMapper;

@@ -9,5 +9,5 @@ public interface CategoryItemDAO {
 
     void saveCategoryItem(CategoryItem categoryItem);
 
-    void deleteCategoryItem(CategoryItem categoryItem);
+    void deleteCategoryItemById(Long categoryItemId);
 }

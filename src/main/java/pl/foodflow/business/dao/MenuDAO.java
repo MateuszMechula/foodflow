@@ -13,5 +13,5 @@ public interface MenuDAO {
 
     List<Menu> findAll();
 
-    void deleteMenu(Long menuId);
+    void deleteMenuById(Long menuId);
 }

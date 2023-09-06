@@ -62,12 +62,12 @@ public class RestaurantEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "restaurant")
     private MenuEntity menu;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.REMOVE)
     private Set<RestaurantAddressEntity> restaurantAddresses;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<RestaurantCategoryEntity> restaurantCategories;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.REMOVE)
     private Set<OrderRecordEntity> orderRecords;
 }

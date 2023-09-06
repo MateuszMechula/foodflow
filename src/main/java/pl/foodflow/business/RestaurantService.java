@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.*;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -22,7 +21,6 @@ public class RestaurantService {
     private final RestaurantDAO restaurantDAO;
     private final RestaurantAddressService restaurantAddressService;
     private final AddressDAO addressDAO;
-    private final MenuService menuService;
 
     public Restaurant findById(Long restaurantId) {
         return restaurantDAO.findById(restaurantId).orElseThrow(() -> new RestaurantNotFound
@@ -38,22 +36,6 @@ public class RestaurantService {
         restaurantDAO.saveRestaurant(restaurant);
         log.info("Restaurant added successfully.");
     }
-
-    @Transactional
-    public void addMenuToRestaurant(Owner owner, Menu menu) {
-        if (Objects.isNull(owner.getRestaurant())) {
-            throw new RestaurantNotFound("To add a menu you have to create restaurant first");
-        }
-        Restaurant restaurant = owner.getRestaurant();
-
-        if (Objects.nonNull(restaurant.getMenu())) {
-            throw new ThatRestaurantHasAMenu
-                    ("Restaurant with nip [%s] has a menu. You can't create more than one"
-                            .formatted(restaurant.getNip()));
-        }
-        menuService.saveMenu(menu.withRestaurant(restaurant));
-    }
-
 
     @Transactional
     public void addDeliveryAddressToRestaurant(Address deliveryAddress, Owner owner) {
@@ -85,5 +67,46 @@ public class RestaurantService {
                 .restaurant(restaurant)
                 .address(address)
                 .build();
+    }
+
+    public void updateRestaurant(Restaurant updatedRestaurant) {
+        Restaurant existingRestaurant = findRestaurantByNip(updatedRestaurant.getNip());
+
+        if (existingRestaurant != null) {
+            Restaurant toSave = buildUpdatedRestaurant(updatedRestaurant, existingRestaurant);
+
+            restaurantDAO.saveRestaurant(toSave);
+        }
+    }
+
+    private Restaurant findRestaurantByNip(String nip) {
+        return restaurantDAO.findRestaurantByNip(nip).orElseThrow(() -> new RestaurantNotFound(
+                "Restaurant with NIP: [%s] not found".formatted(nip)));
+    }
+
+    private static Restaurant buildUpdatedRestaurant(Restaurant updatedRestaurant, Restaurant existingRestaurant) {
+        return Restaurant.builder()
+                .restaurantId(Optional.ofNullable(updatedRestaurant.getRestaurantId())
+                        .orElse(existingRestaurant.getRestaurantId()))
+                .nip(Optional.ofNullable(updatedRestaurant.getNip()).orElse(existingRestaurant.getNip()))
+                .name(Optional.ofNullable(updatedRestaurant.getName()).orElse(existingRestaurant.getName()))
+                .deliveryOption(Optional.ofNullable(updatedRestaurant.getDeliveryOption())
+                        .orElse(existingRestaurant.getDeliveryOption()))
+                .openTime(Optional.ofNullable(updatedRestaurant.getOpenTime()).orElse(existingRestaurant.getOpenTime()))
+                .closeTime(Optional.ofNullable(updatedRestaurant.getCloseTime()).orElse(existingRestaurant.getCloseTime()))
+                .phone(Optional.ofNullable(updatedRestaurant.getPhone()).orElse(existingRestaurant.getPhone()))
+                .minimumOrderAmount(Optional.ofNullable(updatedRestaurant.getMinimumOrderAmount())
+                        .orElse(existingRestaurant.getMinimumOrderAmount()))
+                .deliveryPrice(Optional.ofNullable(updatedRestaurant.getDeliveryPrice())
+                        .orElse(existingRestaurant.getDeliveryPrice()))
+                .deliveryOption(Optional.ofNullable(updatedRestaurant.getDeliveryOption())
+                        .orElse(existingRestaurant.getDeliveryOption()))
+                .address(Optional.ofNullable(updatedRestaurant.getAddress()).orElse(existingRestaurant.getAddress()))
+                .owner(Optional.ofNullable(updatedRestaurant.getOwner()).orElse(existingRestaurant.getOwner()))
+                .build();
+    }
+
+    public void deleteRestaurantById(Long restaurantId) {
+        restaurantDAO.deleteRestaurantById(restaurantId);
     }
 }

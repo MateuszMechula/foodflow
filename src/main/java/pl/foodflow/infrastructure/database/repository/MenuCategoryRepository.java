@@ -32,9 +32,8 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     }
 
     @Override
-    public void deleteMenuCategory(MenuCategory menuCategory) {
-        MenuCategoryEntity toDelete = menuCategoryEntityMapper.mapToEntity(menuCategory);
-        menuCategoryJpaRepository.delete(toDelete);
+    public void deleteMenuCategoryById(Long menuCategoryId) {
+        menuCategoryJpaRepository.deleteById(menuCategoryId);
     }
 
     @Override
