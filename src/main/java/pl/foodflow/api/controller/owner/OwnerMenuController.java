@@ -3,10 +3,7 @@ package pl.foodflow.api.controller.owner;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.foodflow.api.dto.MenuDTO;
 import pl.foodflow.api.dto.mapper.MenuMapper;
@@ -28,20 +25,32 @@ public class OwnerMenuController {
 
     public static final String OWNER = "/owner";
     public static final String MENU = "/menu";
+    public static final String DELETE_MENU = "/delete-menu";
+
     private final MenuMapper menuMapper;
     private final MenuService menuService;
-    private final RestaurantService restaurantService;
     private final UserService userService;
     private final OwnerService ownerService;
+    private final RestaurantService restaurantService;
 
     @GetMapping(value = MENU)
-    public ModelAndView menuSection() {
+    public ModelAndView menuSection(Authentication authentication) {
+        String username = authentication.getName();
+        int userId = userService.findByUserName(username).getUserId();
+        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
-        var allRestaurants = restaurantService.findAll();
-        Map<String, ?> model = Map.of(
-                "menuDTO", MenuDTO.buildDefault(),
-                "allRestaurants", allRestaurants
-        );
+        Menu menu = (owner != null && owner.getRestaurant() != null) ? owner.getRestaurant().getMenu() : null;
+
+
+        Map<String, ?> model;
+        if (menu != null) {
+            model = Map.of(
+                    "menuDTO", MenuDTO.buildDefault(),
+                    "menu", menu
+            );
+        } else {
+            model = Map.of("menuDTO", MenuDTO.buildDefault());
+        }
 
         return new ModelAndView("owner_menu", model);
     }
@@ -56,8 +65,17 @@ public class OwnerMenuController {
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         Menu menu = menuMapper.map(menuDTO);
-        menuService.addMenuToRestaurant(owner, menu);
+        restaurantService.addMenuToRestaurant(owner, menu);
 
-        return "redirect:/owner";
+        return "redirect:/owner/menu";
+    }
+
+    @PostMapping(value = DELETE_MENU)
+    public String deleteMenu(
+            @RequestParam Long menuId) {;
+
+        menuService.deleteMenu(menuId);
+
+        return "redirect:/owner/menu";
     }
 }

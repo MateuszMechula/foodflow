@@ -8,17 +8,19 @@
 <div class="container mt-4">
     <h1>Search Restaurants by Address</h1>
     <form th:action="@{/customer/search-restaurants}" method="post" th:object="${searchAddressDTO}">
-        <div class="form-group">
-            <label for="street">Street:</label>
-            <input type="text" class="form-control" id="street" th:field="*{street}">
-        </div>
-        <div class="form-group">
-            <label for="postalCode">Postal Code:</label>
-            <input type="text" class="form-control" id="postalCode" th:field="*{postalCode}">
-        </div>
-        <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" class="form-control" id="city" th:field="*{city}">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="street">Street:</label>
+                <input type="text" class="form-control" id="street" th:field="*{street}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="postalCode">Postal Code:</label>
+                <input type="text" class="form-control" id="postalCode" th:field="*{postalCode}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="city">City:</label>
+                <input type="text" class="form-control" id="city" th:field="*{city}">
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
@@ -34,7 +36,7 @@
         <tbody>
         <tr th:each="restaurant : ${matchingRestaurants}">
             <td th:text="${restaurant.name}"></td>
-            <td th:text="${restaurant.restaurantAddresses[0].address}"></td>
+            <td th:text="${restaurant.description}"></td>
             <td>
                 <a th:href="@{/customer/order/{id}(id=${restaurant.restaurantId}, address=${restaurant.restaurantAddresses[0].address})}"
                    class="btn btn-primary">Restaurant Details</a>
@@ -42,7 +44,11 @@
         </tr>
         </tbody>
     </table>
+    <br>
+    <a th:href="@{/customer}" class="btn btn-success">Back to the main page</a>
+    <br>
 </div>
 </body>
 </html>
+
 

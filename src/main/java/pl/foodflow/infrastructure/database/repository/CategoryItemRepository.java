@@ -24,9 +24,15 @@ public class CategoryItemRepository implements CategoryItemDAO {
     }
 
     @Override
-    public CategoryItem saveCategoryItem(CategoryItem categoryItem) {
+    public void saveCategoryItem(CategoryItem categoryItem) {
         CategoryItemEntity toSave = categoryItemEntityMapper.mapToEntity(categoryItem);
         CategoryItemEntity saved = categoryItemJpaRepository.save(toSave);
-        return categoryItemEntityMapper.mapFromEntity(saved);
+        categoryItemEntityMapper.mapFromEntity(saved);
+    }
+
+    @Override
+    public void deleteCategoryItem(CategoryItem categoryItem) {
+        CategoryItemEntity toDelete = categoryItemEntityMapper.mapToEntity(categoryItem);
+        categoryItemJpaRepository.delete(toDelete);
     }
 }

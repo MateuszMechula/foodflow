@@ -37,7 +37,7 @@ public class RestaurantAddressRepository implements RestaurantAddressDAO {
     }
 
     @Override
-    public Optional<RestaurantAddress> findByAddressId(Long addressId) {
+    public Optional<RestaurantAddress> findRestaurantAddressByAddressId(Long addressId) {
         return restaurantAddressJpaRepository.findByAddressId(addressId).map(restaurantAddressMapper::mapFromEntity);
     }
 }

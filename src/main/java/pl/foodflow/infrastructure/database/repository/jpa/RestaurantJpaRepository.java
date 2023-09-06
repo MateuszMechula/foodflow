@@ -12,12 +12,4 @@ import java.util.Optional;
 @Repository
 public interface RestaurantJpaRepository extends JpaRepository<RestaurantEntity, Long> {
 
-    @Query("SELECT r FROM RestaurantEntity r JOIN FETCH r.owner WHERE r.nip = :nip")
-    Optional<RestaurantEntity> findByNip(@Param("nip") String nip);
-
-    @Query("SELECT DISTINCT r FROM RestaurantEntity r " +
-            "LEFT JOIN FETCH r.menu m " +
-            "LEFT JOIN FETCH m.menuCategories mc " +
-            "LEFT JOIN FETCH mc.categoryItems ci")
-    List<RestaurantEntity> findAllWithMenuAndCategoriesAndItems();
 }

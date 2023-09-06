@@ -25,12 +25,6 @@ public class RestaurantRepository implements RestaurantDAO {
     }
 
     @Override
-    public Optional<Restaurant> findByNip(String nip) {
-        return restaurantJpaRepository.findByNip(nip)
-                .map(restaurantEntityMapper::mapFromEntity);
-    }
-
-    @Override
     public Restaurant saveRestaurant(Restaurant restaurant) {
         RestaurantEntity toSave = restaurantEntityMapper.mapToEntity(restaurant);
         RestaurantEntity saved = restaurantJpaRepository.save(toSave);
@@ -43,13 +37,6 @@ public class RestaurantRepository implements RestaurantDAO {
         List<Restaurant> list = all.stream().map(restaurantEntityMapper::mapFromEntity).toList();
 
         return restaurantJpaRepository.findAll().stream()
-                .map(restaurantEntityMapper::mapFromEntity)
-                .toList();
-    }
-
-    @Override
-    public List<Restaurant> findAllWithMenuAndCategoriesAndItems() {
-        return restaurantJpaRepository.findAllWithMenuAndCategoriesAndItems().stream()
                 .map(restaurantEntityMapper::mapFromEntity)
                 .toList();
     }

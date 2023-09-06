@@ -18,28 +18,31 @@ public class OwnerService {
 
     private final OwnerDAO ownerDAO;
 
-    @Transactional
-    public Owner findByEmail(String email) {
-        return ownerDAO.findByEmail(email);
-    }
-
-    @Transactional
     public Owner findById(Long ownerId) {
         return ownerDAO.findById(ownerId).orElseThrow();
     }
 
-    @Transactional
     public Owner findByUserId(Integer userId) {
         return ownerDAO.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "OwnerEntity with userId: [%s] not found".formatted(userId)
-                ));
+                        "OwnerEntity with userId: [%s] not found".formatted(userId)));
+    }
+
+    public Owner findByEmail(String email) {
+        return ownerDAO.findByEmail(email);
     }
 
     public List<Owner> findAll() {
         List<Owner> allOwners = ownerDAO.findAll();
         log.info("Owners : [{}]", allOwners.size());
         return allOwners;
+    }
+
+    @Transactional
+    public Owner findByUserIdWithMenuAndCategoryAndItems(int userId) {
+        return ownerDAO.findByUserIdWithMenuAndCategoryAndItems(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "OwnerEntity with userId: [%s] not found".formatted(userId)));
     }
 
     @Transactional
@@ -61,13 +64,5 @@ public class OwnerService {
                 .withRestaurant(owner.getRestaurant());
 
         ownerDAO.saveOwner(updatedOwner);
-    }
-
-    @Transactional
-    public Owner findByUserIdWithMenuAndCategoryAndItems(int userId) {
-        return ownerDAO.findByUserIdWithMenuAndCategoryAndItems(userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "OwnerEntity with userId: [%s] not found".formatted(userId)
-                ));
     }
 }

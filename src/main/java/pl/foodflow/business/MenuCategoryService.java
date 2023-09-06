@@ -1,42 +1,42 @@
 package pl.foodflow.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pl.foodflow.business.dao.CategoryItemDAO;
 import pl.foodflow.business.dao.MenuCategoryDAO;
-import pl.foodflow.business.dao.MenuDAO;
+import pl.foodflow.business.exceptions.MenuCategoryNotFoundException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.domain.Menu;
-import pl.foodflow.domain.MenuCategory;
-import pl.foodflow.domain.Owner;
+import pl.foodflow.domain.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class MenuCategoryService {
 
-    private final MenuDAO menuDAO;
-    private final MenuService menuService;
     private final MenuCategoryDAO menuCategoryDAO;
+    private final CategoryItemService categoryItemService;
+    private final OrderItemService orderItemService;
 
+    public MenuCategory findById(Long menuCategoryId) {
+        return menuCategoryDAO.findCategoryById(menuCategoryId)
+                .orElseThrow(() -> new MenuCategoryNotFoundException
+                        ("MenuCategory with ID: [%s] not found".formatted(menuCategoryId)));
+    }
 
-    @Transactional
-    public void addCategoryToMenu(Owner owner, MenuCategory menuCategory) {
-
-        if (Objects.isNull(owner.getRestaurant().getMenu().getMenuId())) {
-            throw new RestaurantNotFound("To add a category you have to create menu first");
-        }
-
-        Long menuId = owner.getRestaurant().getMenu().getMenuId();
-        Menu menu = menuService.findMenuById(menuId);
-
-        Set<MenuCategory> menuCategories = menu.getCategories();
-        menuCategories.add(menuCategory);
-
-        menuDAO.saveMenu(menu.withMenuCategories(menuCategories));
-        menuCategoryDAO.saveMenuCategory(menuCategory.withMenu(menu));
+    public List<MenuCategory> findAllByMenuId(Long menuId) {
+        return menuCategoryDAO.findAllByMenuId(menuId);
     }
 
     @Transactional
@@ -44,4 +44,94 @@ public class MenuCategoryService {
         menuCategoryDAO.saveMenuCategory(menuCategory);
     }
 
+    @Transactional
+    public void deleteMenuCategory(MenuCategory menuCategory) {
+        menuCategoryDAO.deleteMenuCategory(menuCategory);
+    }
+
+    @Transactional
+    public void addItemToMenuCategory(
+            Long menuCategoryId,
+            Owner owner,
+            CategoryItem categoryItem,
+            MultipartFile imageFile) throws IOException {
+
+        if (Objects.isNull(owner.getRestaurant().getMenu())) {
+            throw new RestaurantNotFound("To add a category you have to create menu first");
+        }
+
+        MenuCategory menuCategory = owner.getRestaurant().getMenu().getMenuCategories().stream()
+                .filter(category -> category.getMenuCategoryId().equals(menuCategoryId))
+                .findAny().orElseThrow(() -> new EntityNotFoundException("MenuCategory with id: [%s] not found".formatted(menuCategoryId)));
+
+        String url = uploadImage(imageFile);
+        Menu menu = owner.getRestaurant().getMenu();
+
+        CategoryItem updatedCategoryItem = buildCategoryItem(categoryItem, menuCategory, url);
+
+        Set<CategoryItem> categoryItems = menuCategory.getCategories();
+        categoryItems.add(updatedCategoryItem);
+
+        MenuCategory updatedMenuCategory = menuCategory.withCategoryItems(categoryItems).withMenu(menu);
+        categoryItemService.saveCategoryItem(updatedCategoryItem.withMenuCategory(updatedMenuCategory));
+        saveMenuCategory(updatedMenuCategory);
+    }
+
+    @Transactional
+    public void deleteCategoryItemFromMenuCategory(Long categoryItemId) {
+
+        CategoryItem categoryItem = categoryItemService.findById(categoryItemId);
+
+        Long menuCategoryId = categoryItem.getMenuCategory().getMenuCategoryId();
+        MenuCategory menuCategory = findById(menuCategoryId);
+        Set<CategoryItem> categoryItems = menuCategory.getCategoryItems();
+        categoryItems.remove(categoryItem);
+
+        saveMenuCategory(menuCategory);
+
+        List<OrderItem> orderItems = orderItemService.findOrdersByCategoryItemId(categoryItemId);
+        orderItems.forEach(orderItemService::deleteOrderItem);
+
+        categoryItemService.deleteCategoryItem(categoryItem);
+    }
+
+    @Transactional
+    public String uploadImage(MultipartFile imageFile) throws IOException {
+        return saveImageToFileSystem(imageFile);
+    }
+
+    private String saveImageToFileSystem(MultipartFile imageFile) throws IOException {
+        String uploadDir = "src/main/resources/static/images";
+        String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir, fileName);
+
+        Files.createDirectories(filePath.getParent());
+
+        try (OutputStream os = Files.newOutputStream(filePath)) {
+            os.write(imageFile.getBytes());
+        }
+
+        return fileName;
+    }
+
+
+    @Transactional
+    public void processMenuCategoryDeletion(Long menuCategoryId) {
+        MenuCategory menuCategory = findById(menuCategoryId);
+
+        menuCategory.getCategoryItems().forEach(categoryItemService::deleteCategoryItem);
+
+        deleteMenuCategory(menuCategory);
+    }
+
+    private static CategoryItem buildCategoryItem(CategoryItem categoryItem, MenuCategory menuCategory, String url) {
+        return CategoryItem.builder()
+                .categoryItemId(categoryItem.getCategoryItemId())
+                .name(categoryItem.getName())
+                .description(categoryItem.getDescription())
+                .price(categoryItem.getPrice())
+                .imageUrl(url)
+                .menuCategory(menuCategory)
+                .build();
+    }
 }

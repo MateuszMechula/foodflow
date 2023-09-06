@@ -14,7 +14,6 @@ public class AddressService {
 
     private final AddressDAO addressDAO;
 
-    @Transactional
     public Set<Address> findAddressByRestaurantId(Long restaurantId) {
         return addressDAO.findAddressByRestaurantId(restaurantId);
     }

@@ -49,13 +49,11 @@
             margin: 0 0.5rem;
         }
 
-        /* Dodane style dla Order Notes */
         #orderNotes {
             height: 100px;
             width: 100%;
         }
 
-        /* Flexbox dla Order Notes i Contact Phone */
         .notes-section {
             display: flex;
             flex-direction: column;
@@ -70,7 +68,7 @@
         .submit-button {
             background-color: green;
             color: white;
-            padding: 10px 20px; /* Dodany padding od dołu i góry */
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -186,8 +184,9 @@
                     </select>
                 </div>
 
-                <button type="submit" class="submit-button">Place Order</button>
+                <button type="submit" class="btn btn-primary">Place Order</button>
                 <br>
+                <a th:href="@{/customer/search-restaurants}" class="btn btn-success">Back to the search</a>
                 <br>
             </div>
         </form>
@@ -199,6 +198,5 @@
 <div class="container mt-4" th:unless="${restaurant != null}">
     <strong><h2>Restaurant is not available.</h2></strong>
 </div>
-
 </body>
 </html>

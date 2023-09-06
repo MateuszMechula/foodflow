@@ -4,7 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.foodflow.api.dto.OrderDTO;
+import pl.foodflow.business.dao.CategoryItemDAO;
+import pl.foodflow.business.dao.RestaurantDAO;
+import pl.foodflow.business.exceptions.CategoryItemNotFoundException;
 import pl.foodflow.business.exceptions.OrderItemsNotFoundException;
+import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.*;
 import pl.foodflow.enums.OrderStatus;
 
@@ -13,19 +17,20 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class OrderProcessingService {
-    private final RestaurantService restaurantService;
-    private final CategoryItemService categoryItemService;
+    private final RestaurantDAO restaurantDAO;
+    private final CategoryItemDAO categoryItemDAO;
     private final OrderRecordService orderRecordService;
-    private final OrderItemService orderItemService;
 
     @Transactional
     public OrderRecord processAndCreateOrder(Long restaurantId, Customer customer, OrderDTO orderDTO) {
-        Restaurant orderProcessingRestaurant = restaurantService.findById(restaurantId);
+        Restaurant orderProcessingRestaurant = restaurantDAO.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFound(
+                        "Restaurant with ID: [%s] not found".formatted(restaurantId)));
+
         OrderRecord orderRecord = buildOrderRecord(customer, orderDTO, orderProcessingRestaurant);
         OrderRecord savedOrderRecord = orderRecordService.saveOrderRecord(orderRecord);
 
@@ -37,11 +42,12 @@ public class OrderProcessingService {
         for (Map.Entry<Long, Integer> entry : orderItems.entrySet()) {
             Long categoryItemId = entry.getKey();
             Integer quantity = entry.getValue();
-            CategoryItem categoryItem = categoryItemService.findById(categoryItemId);
-            OrderItem orderItem = createOrderItem(categoryItem, quantity, savedOrderRecord);
+            CategoryItem categoryItem = categoryItemDAO.findById(categoryItemId)
+                    .orElseThrow(() -> new CategoryItemNotFoundException(
+                            "CategoryItem with ID: [%s] not found".formatted(categoryItemId)));
 
-            OrderItem savedOrderItem = orderItemService.saveOrderItem(orderItem);
-            updateCategoryItemAndOrderRecord(categoryItem, savedOrderItem, savedOrderRecord);
+            OrderItem orderItem = createOrderItem(categoryItem, quantity, savedOrderRecord);
+            orderRecordService.updateCategoryItemAndOrderRecord(categoryItem, orderItem, savedOrderRecord);
         }
 
         BigDecimal totalAmount = calculateTotalAmount(savedOrderRecord);
@@ -66,21 +72,6 @@ public class OrderProcessingService {
                 .map(orderItem -> orderItem.getUnitPrice()
                         .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private void updateCategoryItemAndOrderRecord(
-            CategoryItem categoryItem,
-            OrderItem savedOrderItem,
-            OrderRecord savedOrderRecord) {
-
-        Set<OrderItem> categoryItemOrderItems = categoryItem.getOrderItems();
-        categoryItemOrderItems.add(savedOrderItem);
-
-        Set<OrderItem> orderRecordItems = savedOrderRecord.getOrderItems();
-        orderRecordItems.add(savedOrderItem);
-
-        categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
-        orderRecordService.updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
     }
 
     private static OrderItem createOrderItem(

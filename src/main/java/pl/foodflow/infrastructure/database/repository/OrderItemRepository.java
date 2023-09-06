@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.foodflow.business.dao.OrderItemDAO;
 import pl.foodflow.domain.OrderItem;
+import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
 import pl.foodflow.infrastructure.database.entity.OrderItemEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.OrderItemJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.OrderItemEntityMapper;
+
+import java.util.List;
 
 @Repository
 @AllArgsConstructor
@@ -23,7 +26,20 @@ public class OrderItemRepository implements OrderItemDAO {
     }
 
     @Override
-    public void deleteByOrderRecordId(Long orderRecordId) {
+    public void deleteOrderItemByOrderRecordId(Long orderRecordId) {
         orderItemJpaRepository.deleteByOrderRecordId(orderRecordId);
+    }
+
+    @Override
+    public List<OrderItem> findOrdersByCategoryItemId(Long categoryItemId) {
+        return orderItemJpaRepository.findOrderItemEntitiesByCategoryItemCategoryItemId(categoryItemId).stream()
+                .map(orderItemEntityMapper::mapFromEntity)
+                .toList();
+    }
+
+    @Override
+    public void deleteOrderItem(OrderItem orderItem) {
+        OrderItemEntity toDelete = orderItemEntityMapper.mapToEntity(orderItem);
+        orderItemJpaRepository.delete(toDelete);
     }
 }

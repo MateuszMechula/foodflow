@@ -14,6 +14,7 @@ public interface MenuCategoryEntityMapper {
     @Mapping(target = "categoryItems", ignore = true)
     MenuCategoryEntity mapToEntity(MenuCategory menuCategory);
 
-    @Mapping(target = "menu", ignore = true)
+    @Mapping(target = "menu.restaurant", ignore = true)
+    @Mapping(target = "menu.menuCategories", ignore = true)
     MenuCategory mapFromEntity(MenuCategoryEntity entity);
 }

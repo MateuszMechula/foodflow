@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a new Category Item</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 <div id="items" class="hidden"></div>
 <div class="container">
     <br>
@@ -57,6 +66,54 @@
             </div>
         </div>
     </form>
+    <br>
+    <div class="container mt-5">
+        <h2>Your Items</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Menu Category</th>
+                <th>Category Items</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${menuCategoryItems.entrySet()}">
+                <td th:text="${entry.key.name}"></td>
+                <td>
+                    <ul>
+                        <li th:each="categoryItem : ${entry.value}" class="category-item">
+                            <span th:text="${categoryItem.name}"></span>
+                            <form th:action="@{/owner/category-items}" method="post">
+                                <input type="hidden" name="categoryItemId" th:value="${categoryItem.categoryItemId}"/>
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="container mt-3">
+        <a href="/foodflow/owner" class="btn btn-success">Back to the main page</a>
+    </div>
+    <br>
 </div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style>
+    .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .category-item button {
+        margin-left: 10px;
+    }
+</style>
+</body>
+</html>
 
 

@@ -12,5 +12,5 @@ public interface RestaurantAddressDAO {
 
     void deleteRestaurantAddress(RestaurantAddress restaurantAddress);
 
-    Optional<RestaurantAddress> findByAddressId(Long addressId);
+    Optional<RestaurantAddress> findRestaurantAddressByAddressId(Long addressId);
 }

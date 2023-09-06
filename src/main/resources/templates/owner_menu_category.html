@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Restaurant</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
 <div id="category" class="hidden">
     <div class="container mt-5">
         <h2>Add Category</h2>
@@ -22,5 +31,40 @@
                 </div>
             </div>
         </form>
+
+        <br>
+        <div class="container mt-5">
+            <h2>Your Categories</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Menu Category</th>
+                    <th>Description</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="menuCategory : ${allMenuCategories}">
+                    <td th:text="${menuCategory.name}"></td>
+                    <td th:text="${menuCategory.description}"></td>
+                    <td>
+                        <form th:action="@{/owner/delete-category}" method="post">
+                            <input type="hidden" name="menuCategoryId" th:value="${menuCategory.menuCategoryId}"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="container mt-3">
+            <a href="/foodflow/owner" class="btn btn-success">Back to the main page</a>
+        </div>
+        <br>
     </div>
 </div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

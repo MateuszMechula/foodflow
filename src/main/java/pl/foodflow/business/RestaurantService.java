@@ -1,18 +1,17 @@
 package pl.foodflow.business;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
-import pl.foodflow.business.dao.RestaurantAddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
+import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -21,33 +20,38 @@ import java.util.Set;
 public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
-    private final RestaurantAddressDAO restaurantAddressDAO;
+    private final RestaurantAddressService restaurantAddressService;
     private final AddressDAO addressDAO;
+    private final MenuService menuService;
 
-    @Transactional
+    public Restaurant findById(Long restaurantId) {
+        return restaurantDAO.findById(restaurantId).orElseThrow(() -> new RestaurantNotFound
+                ("Restaurant with ID: [%s] not found".formatted(restaurantId)));
+    }
+
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
-    }
-
-    @Transactional
-    public Restaurant findById(Long restaurantId) {
-        return restaurantDAO.findById(restaurantId).orElseThrow(() ->
-                new RestaurantNotFound("Restaurant with ID: [%s] not found".formatted(restaurantId)));
-    }
-
-    @Transactional
-    public Restaurant findRestaurantByNip(String nip) {
-        final Optional<Restaurant> restaurant = restaurantDAO.findByNip(nip);
-        if (restaurant.isEmpty()) {
-            throw new EntityNotFoundException("Could not find Restaurant by nip: [%s]".formatted(nip));
-        }
-        return restaurant.get();
     }
 
     @Transactional
     public void createRestaurant(Restaurant restaurant) {
         restaurantDAO.saveRestaurant(restaurant);
         log.info("Restaurant added successfully.");
+    }
+
+    @Transactional
+    public void addMenuToRestaurant(Owner owner, Menu menu) {
+        if (Objects.isNull(owner.getRestaurant())) {
+            throw new RestaurantNotFound("To add a menu you have to create restaurant first");
+        }
+        Restaurant restaurant = owner.getRestaurant();
+
+        if (Objects.nonNull(restaurant.getMenu())) {
+            throw new ThatRestaurantHasAMenu
+                    ("Restaurant with nip [%s] has a menu. You can't create more than one"
+                            .formatted(restaurant.getNip()));
+        }
+        menuService.saveMenu(menu.withRestaurant(restaurant));
     }
 
 
@@ -61,7 +65,7 @@ public class RestaurantService {
         RestaurantAddress restaurantAddress = buildRestaurantAddress(deliveryAddress, restaurant);
 
         Address savedAddress = addressDAO.saveAddress(deliveryAddress);
-        RestaurantAddress savedRestaurantAddress = restaurantAddressDAO
+        RestaurantAddress savedRestaurantAddress = restaurantAddressService
                 .saveRestaurantAddress(restaurantAddress.withAddress(savedAddress));
 
         Set<RestaurantAddress> restaurantAddresses = restaurant.getRestaurantAddresses();
@@ -73,9 +77,7 @@ public class RestaurantService {
                 .withRestaurantAddresses(restaurantAddresses)
                 .withOwner(owner);
 
-        Restaurant restaurant1 = restaurantDAO.saveRestaurant(updatedRestaurant);
-
-        System.out.println(restaurant1);
+        restaurantDAO.saveRestaurant(updatedRestaurant);
     }
 
     private RestaurantAddress buildRestaurantAddress(Address address, Restaurant restaurant) {
@@ -83,9 +85,5 @@ public class RestaurantService {
                 .restaurant(restaurant)
                 .address(address)
                 .build();
-    }
-
-    public List<Restaurant> findAllWithMenuAndCategoriesAndItems() {
-        return restaurantDAO.findAllWithMenuAndCategoriesAndItems();
     }
 }

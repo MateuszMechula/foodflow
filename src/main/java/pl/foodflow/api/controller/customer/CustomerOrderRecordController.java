@@ -29,7 +29,7 @@ public class CustomerOrderRecordController {
 
     public static final String CUSTOMER = "/customer";
     public static final String CUSTOMER_ORDER = "/order";
-    public static final String CHECK_ORDERS = "/check-orders";
+    public static final String CUSTOMER_ORDERS = "/check-orders";
 
     private final OrderProcessingService orderProcessingService;
     private final OrderRecordService orderRecordService;
@@ -53,15 +53,15 @@ public class CustomerOrderRecordController {
         return "customer_order_form";
     }
 
-    @GetMapping(value = CHECK_ORDERS)
-    public String checkOrders(
+    @GetMapping(value = CUSTOMER_ORDERS)
+    public String checkCustomerOrders(
             Authentication auth,
             Model model) {
 
         return getOrders(auth, model);
     }
 
-    @PostMapping(value = CHECK_ORDERS)
+    @PostMapping(value = CUSTOMER_ORDERS)
     public String deleteOrderRecord(
             @RequestParam Long orderRecordId,
             Authentication auth,
@@ -127,9 +127,9 @@ public class CustomerOrderRecordController {
         long userId = getUserIdFromAuthentication(username);
 
         List<OrderRecord> allOrdersWithOrderStatusInProgress =
-                orderRecordService.getAllOrdersWithOrderStatusInProgress(userId);
+                orderRecordService.getAllCustomerOrdersWithOrderStatusInProgress(userId);
         List<OrderRecord> allOrdersWithOrderStatusCompleted =
-                orderRecordService.getAllOrdersWithOrderStatusCompleted(userId);
+                orderRecordService.getAllCustomerOrdersWithOrderStatusCompleted(userId);
 
         model.addAttribute("allOrdersWithOrderStatusInProgress", allOrdersWithOrderStatusInProgress);
         model.addAttribute("allOrdersWithOrderStatusCompleted", allOrdersWithOrderStatusCompleted);

@@ -8,6 +8,7 @@ import pl.foodflow.infrastructure.database.entity.MenuCategoryEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.MenuCategoryJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.MenuCategoryEntityMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,15 +19,28 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     private final MenuCategoryEntityMapper menuCategoryEntityMapper;
 
     @Override
-    public MenuCategory saveMenuCategory(MenuCategory menuCategory) {
+    public void saveMenuCategory(MenuCategory menuCategory) {
         MenuCategoryEntity toSave = menuCategoryEntityMapper.mapToEntity(menuCategory);
         MenuCategoryEntity saved = menuCategoryJpaRepository.save(toSave);
-        return menuCategoryEntityMapper.mapFromEntity(saved);
+        menuCategoryEntityMapper.mapFromEntity(saved);
     }
 
     @Override
     public Optional<MenuCategory> findCategoryById(Long menuCategoryId) {
         return menuCategoryJpaRepository.findById(menuCategoryId)
                 .map(menuCategoryEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public void deleteMenuCategory(MenuCategory menuCategory) {
+        MenuCategoryEntity toDelete = menuCategoryEntityMapper.mapToEntity(menuCategory);
+        menuCategoryJpaRepository.delete(toDelete);
+    }
+
+    @Override
+    public List<MenuCategory> findAllByMenuId(Long menuId) {
+        return menuCategoryJpaRepository.findAllByMenu_MenuId(menuId).stream()
+                .map(menuCategoryEntityMapper::mapFromEntity)
+                .toList();
     }
 }

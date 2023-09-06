@@ -1,28 +1,40 @@
 package pl.foodflow.business;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.OrderRecordDAO;
 import pl.foodflow.business.exceptions.OrderRecordNotFoundException;
-import pl.foodflow.domain.Customer;
-import pl.foodflow.domain.OrderRecord;
+import pl.foodflow.domain.*;
 import pl.foodflow.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class OrderRecordService {
+
     private final OrderRecordDAO orderRecordDAO;
     private final CustomerService customerService;
+    private final CategoryItemService categoryItemService;
     private final OrderItemService orderItemService;
+    private final OwnerService ownerService;
 
     @Transactional
-    public List<OrderRecord> getAllOrdersWithOrderStatusInProgress(long userId) {
+    public OrderRecord findById(Long orderRecordId) {
+        return orderRecordDAO.findById(orderRecordId)
+                .orElseThrow(() -> new OrderRecordNotFoundException(
+                        "Order Record with ID: [%s] not found".formatted(orderRecordId)));
+    }
+    @Transactional
+    public List<OrderRecord> findAll() {
+        return orderRecordDAO.findAll();
+    }
+    @Transactional
+    public List<OrderRecord> getAllCustomerOrdersWithOrderStatusInProgress(long userId) {
         Customer customer = customerService.findByUserId(userId);
 
         return findAll().stream()
@@ -32,7 +44,7 @@ public class OrderRecordService {
     }
 
     @Transactional
-    public List<OrderRecord> getAllOrdersWithOrderStatusCompleted(long userId) {
+    public List<OrderRecord> getAllCustomerOrdersWithOrderStatusCompleted(long userId) {
         Customer customer = customerService.findByUserId(userId);
 
         return findAll().stream()
@@ -42,15 +54,32 @@ public class OrderRecordService {
     }
 
     @Transactional
-    public OrderRecord findById(Long orderRecordId) {
-        return orderRecordDAO.findById(orderRecordId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Order Record with ID: [%s] not found".formatted(orderRecordId)));
+    public List<OrderRecord> getAllOwnerOrdersWithOrderStatusInProgress(long userId) {
+        Owner owner = ownerService.findByUserId((int) userId);
+
+        return findAll().stream()
+                .filter(orderRecord ->
+                        orderRecord.getRestaurant().getOwner().getOwnerId().equals(owner.getOwnerId()))
+                .filter(orderRecord -> OrderStatus.IN_PROGRESS.toString().equals(orderRecord.getOrderStatus()))
+                .toList();
     }
 
     @Transactional
-    public List<OrderRecord> findAll() {
-        return orderRecordDAO.findAll();
+    public List<OrderRecord> getAllOwnerOrdersWithOrderStatusCompleted(long userId) {
+
+        Owner owner = ownerService.findByUserId((int) userId);
+
+        return findAll().stream()
+                .filter(orderRecord ->
+                        orderRecord.getRestaurant().getOwner().getOwnerId().equals(owner.getOwnerId()))
+                .filter(orderRecord -> OrderStatus.COMPLETED.toString().equals(orderRecord.getOrderStatus()))
+                .toList();
+    }
+
+    @Transactional
+    public void changeOrderStatusToCompleted(Long orderRecordId) {
+        OrderRecord orderRecord = findById(orderRecordId);
+        saveOrderRecord(orderRecord.withOrderStatus(String.valueOf(OrderStatus.COMPLETED)));
     }
 
     @Transactional
@@ -63,13 +92,10 @@ public class OrderRecordService {
         if (orderRecord.getOrderRecordId() == null) {
             throw new IllegalArgumentException("OrderRecord ID cannot be NULL");
         }
-        OrderRecord existingOrderRecord = orderRecordDAO.findById(orderRecord.getOrderRecordId()).orElseThrow(() ->
-                new EntityNotFoundException(
-                        "OrderRecord with ID: [%s] doesnt exists".formatted(orderRecord.getOrderRecordId())));
-
+        OrderRecord existingOrderRecord = findById(orderRecord.getOrderRecordId());
         OrderRecord updatedRecord = buildUpdatedOrderRecord(orderRecord, existingOrderRecord);
 
-        orderRecordDAO.saveOrderRecord(updatedRecord);
+        saveOrderRecord(updatedRecord);
     }
 
     @Transactional
@@ -82,11 +108,27 @@ public class OrderRecordService {
         if (orderDateTime.isBefore(fiveMinutesAgo)) {
             return false;
         }
-        orderItemService.deleteByOrderRecordId(orderRecordId);
+        orderItemService.deleteOrderItemByOrderRecordId(orderRecordId);
         orderRecordDAO.delete(orderRecord);
         return true;
     }
 
+    @Transactional
+    public void updateCategoryItemAndOrderRecord(
+            CategoryItem categoryItem,
+            OrderItem orderItem,
+            OrderRecord savedOrderRecord) {
+        OrderItem savedOrderItem = orderItemService.saveOrderItem(orderItem);
+
+        Set<OrderItem> categoryItemOrderItems = categoryItem.getOrderItems();
+        categoryItemOrderItems.add(savedOrderItem);
+
+        Set<OrderItem> orderRecordItems = savedOrderRecord.getOrderItems();
+        orderRecordItems.add(savedOrderItem);
+
+        categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
+        updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
+    }
     private static OrderRecord buildUpdatedOrderRecord(OrderRecord orderRecord, OrderRecord existingOrderRecord) {
         return OrderRecord.builder()
                 .orderRecordId(existingOrderRecord.getOrderRecordId())

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
 import pl.foodflow.business.CategoryItemService;
+import pl.foodflow.business.MenuCategoryService;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.MenuCategory;
@@ -20,7 +21,9 @@ import pl.foodflow.infrastructure.security.UserService;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static pl.foodflow.api.controller.owner.OwnerCategoryItemController.OWNER;
 
@@ -31,8 +34,10 @@ import static pl.foodflow.api.controller.owner.OwnerCategoryItemController.OWNER
 public class OwnerCategoryItemController {
     public static final String OWNER = "/owner";
     public static final String CATEGORY_ITEM = "/items";
+    public static final String DELETE_CATEGORY_ITEM = "/category-items";
 
     private final CategoryItemService categoryItemService;
+    private final MenuCategoryService menuCategoryService;
     private final UserService userService;
     private final OwnerService ownerService;
     private final CategoryItemMapper categoryItemMapper;
@@ -58,10 +63,19 @@ public class OwnerCategoryItemController {
         Owner owner = ownerService.findByUserId(userId);
 
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
-        categoryItemService.addItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
+        menuCategoryService.addItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
 
         log.info("Added a new Category Item: [{}]", categoryItem.getName());
-        return "redirect:/owner#";
+        return "redirect:/owner/items";
+    }
+
+    @PostMapping(value = DELETE_CATEGORY_ITEM)
+    public String deleteCategoryItem(
+            @RequestParam Long categoryItemId) {
+
+        menuCategoryService.deleteCategoryItemFromMenuCategory(categoryItemId);
+        log.info("CategoryItem with ID: [%s] was delete".formatted(categoryItemId));
+        return "redirect:/owner/items";
     }
 
     private void prepareCreateCategoryItemFormModel(Model model, Authentication authentication) {
@@ -69,9 +83,15 @@ public class OwnerCategoryItemController {
         Owner owner = getOwnerByUsername(username);
 
         Set<MenuCategory> allCategories = getAllCategoriesFromOwner(owner);
+        Map<MenuCategory, Set<CategoryItem>> menuCategoryItems = allCategories.stream()
+                .collect(Collectors.toMap(
+                        menuCategory -> menuCategory,
+                        MenuCategory::getCategoryItems
+                ));
 
         model.addAttribute("categoryItemDTO", new CategoryItemEntity());
         model.addAttribute("allCategories", allCategories);
+        model.addAttribute("menuCategoryItems", menuCategoryItems);
     }
 
     private Owner getOwnerByUsername(String username) {

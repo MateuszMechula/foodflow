@@ -9,7 +9,9 @@ public interface MenuDAO {
 
     Optional<Menu> findById(Long menuId);
 
-    Menu saveMenu(Menu menu);
+    void saveMenu(Menu menu);
 
     List<Menu> findAll();
+
+    void deleteMenu(Long menuId);
 }

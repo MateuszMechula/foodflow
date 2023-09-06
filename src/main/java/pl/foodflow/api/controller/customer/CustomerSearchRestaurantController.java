@@ -46,6 +46,7 @@ public class CustomerSearchRestaurantController {
 
         model.addAttribute("matchingRestaurants", matchingRestaurants);
         session.setAttribute("searchAddressDTO", searchAddressDTO);
+
         return "customer_search_restaurant";
     }
 }

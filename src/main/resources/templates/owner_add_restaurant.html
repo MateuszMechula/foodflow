@@ -100,10 +100,43 @@
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary" th:disabled="${existingRestaurant != null}">Create</button>
                 </div>
             </div>
         </form>
+
+        <div class="container mt-5">
+            <h2>Your Restaurant</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${existingRestaurant.name}"></td>
+                    <td th:text="${existingRestaurant.description}"></td>
+                    <td>
+                        <form th:action="@{/owner/}" method="post">
+                            <input type="hidden" name="restaurantId" th:value="${existingRestaurant.restaurantId}"/>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/owner/}" method="post">
+                            <input type="hidden" name="restaurantId" th:value="${existingRestaurant.restaurantId}"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     </div>
 </div>
 

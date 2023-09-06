@@ -7,5 +7,7 @@ import java.util.Optional;
 public interface CategoryItemDAO {
     Optional<CategoryItem> findById(Long categoryId);
 
-    CategoryItem saveCategoryItem(CategoryItem categoryItem);
+    void saveCategoryItem(CategoryItem categoryItem);
+
+    void deleteCategoryItem(CategoryItem categoryItem);
 }
