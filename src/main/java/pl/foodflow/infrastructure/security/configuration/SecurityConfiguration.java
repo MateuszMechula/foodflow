@@ -54,15 +54,19 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("", "/login", "/error", "/fail.jpg", "/images/**").permitAll()
+                        .requestMatchers("/", "/registration/**").permitAll()
+                        .requestMatchers("/login", "/error", "/fail.jpg", "/images/**").permitAll()
                         .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
                 )
                 .formLogin(formLogin -> formLogin
-                        .successHandler(new CustomAuthenticationSuccessHandler()))
+                        .successHandler(new CustomAuthenticationSuccessHandler())
+                        .loginPage("/login")
+                        .usernameParameter("username"))
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutSuccessUrl("/login")
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )

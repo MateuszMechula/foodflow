@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container offset-sm-3 col-md-8 mt-lg-5">
+    <form th:action="@{/login}" method="post" class="px-4 mt-lg-5">
+        <div class="row mt-2">
+            <div th:if="${param.error}" class="col-sm-8">
+                <p class="alert alert-danger">Invalid username or password</p>
+            </div>
+        </div>
+
+        <div th:if="${param.verified}" class="col-sm-8">
+            <p class="alert alert-info">This account already been verified, please log in here</p>
+        </div>
+
+        <div th:if="${param.valid}" class="col-sm-8">
+            <p class="alert alert-info">Email verified successfully, please log in here</p>
+        </div>
+
+        <div th:if="${param.logout}" class="col-sm-8">
+            <p class="alert alert-warning">You have been logged out</p>
+        </div>
+
+        <h2 class="mb-4">User Login Form</h2>
+        <div class="mb-3 row">
+            <label for="username" class="col-sm-2 col-form-label">username</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="username" name="username"
+                       required autofocus="autofocus">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="password" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" name="password" id="password" required
+                       autofocus="autofocus">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" name="login" class="btn btn-success">Login</button>
+            <span> Not registered yet? <a href="#" th:href="@{/registration/registration-form}">Register.</a> </span>
+            <div class="vr"></div>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -17,7 +17,7 @@ import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.infrastructure.database.entity.CategoryItemEntity;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -59,7 +59,7 @@ public class OwnerCategoryItemController {
 
     ) throws IOException {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserId(userId);
 
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
@@ -95,7 +95,7 @@ public class OwnerCategoryItemController {
     }
 
     private Owner getOwnerByUsername(String username) {
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         return ownerService.findByUserId(userId);
     }
 

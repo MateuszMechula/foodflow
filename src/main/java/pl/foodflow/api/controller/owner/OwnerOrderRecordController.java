@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.foodflow.business.OrderRecordService;
 import pl.foodflow.domain.OrderRecord;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.List;
 
@@ -60,6 +60,6 @@ public class OwnerOrderRecordController {
     }
 
     private long getUserIdFromAuthentication(String username) {
-        return Long.parseLong(String.valueOf(userService.findByUserName(username).getUserId()));
+        return Long.parseLong(String.valueOf(userService.findByUsername(username).getUserId()));
     }
 }

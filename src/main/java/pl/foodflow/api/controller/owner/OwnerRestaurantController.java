@@ -14,7 +14,7 @@ import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class OwnerRestaurantController {
         model.addAttribute("restaurantDTO", RestaurantDTO.buildDefault());
 
         String username = auth.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserId(userId);
 
         if (owner.getRestaurant() != null) {
@@ -60,7 +60,7 @@ public class OwnerRestaurantController {
     @GetMapping(value = RESTAURANT_DETAILS)
     public ModelAndView restaurantDetails(Authentication authentication) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         if (Objects.isNull(owner)) {
@@ -107,7 +107,7 @@ public class OwnerRestaurantController {
             Authentication authentication
     ) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserId(userId);
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
@@ -121,7 +121,7 @@ public class OwnerRestaurantController {
             @ModelAttribute("existingRestaurant") RestaurantDTO restaurantDTO,
             Authentication authentication) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserId(userId);
 
         Restaurant updatedRestaurant = restaurantMapper.map(restaurantDTO);

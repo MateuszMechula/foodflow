@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface OwnerDAO {
 
-    Owner saveOwner(Owner owner);
+    void saveOwner(Owner owner);
 
     List<Owner> findAll();
 

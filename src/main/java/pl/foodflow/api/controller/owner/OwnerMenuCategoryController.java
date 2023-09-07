@@ -13,7 +13,7 @@ import pl.foodflow.business.MenuService;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class OwnerMenuCategoryController {
     @GetMapping(value = CATEGORY)
     public ModelAndView menuCategorySection(Authentication authentication) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         if (owner != null && owner.getRestaurant() != null && owner.getRestaurant().getMenu() != null) {
@@ -63,7 +63,7 @@ public class OwnerMenuCategoryController {
             Authentication authentication
     ) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
 

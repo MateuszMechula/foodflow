@@ -14,7 +14,7 @@ import pl.foodflow.domain.Address;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
 import pl.foodflow.domain.RestaurantAddress;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.Collections;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class OwnerRestaurantAddressController {
     @GetMapping(value = RESTAURANT_ADDRESSES)
     public ModelAndView addDeliveryAddressToRestaurantForm(Authentication authentication) {
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         Set<RestaurantAddress> restaurantAddresses = Optional.ofNullable(owner)
@@ -66,7 +66,7 @@ public class OwnerRestaurantAddressController {
             Authentication authentication) {
 
         String username = authentication.getName();
-        int userId = userService.findByUserName(username).getUserId();
+        int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         Address address = addressMapper.map(addressDTO);

@@ -1,4 +1,4 @@
-package pl.foodflow.infrastructure.security;
+package pl.foodflow.infrastructure.security.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserEntityJpaRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.userName = :username")
-    Optional<UserEntity> findByUserName(@Param("username") String userName);
+    Optional<UserEntity> findByUsername(@Param("username") String userName);
 }

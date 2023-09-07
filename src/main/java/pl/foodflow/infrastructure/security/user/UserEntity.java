@@ -1,8 +1,9 @@
-package pl.foodflow.infrastructure.security;
+package pl.foodflow.infrastructure.security.user;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import pl.foodflow.infrastructure.security.role.RoleEntity;
 
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int id;
+    private int userId;
 
     @Column(name = "user_name")
     @Length(min = 5)

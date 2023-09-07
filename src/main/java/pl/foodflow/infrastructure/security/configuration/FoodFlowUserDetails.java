@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.foodflow.infrastructure.security.UserEntity;
+import pl.foodflow.infrastructure.security.user.UserEntity;
 
 import java.util.Collection;
 import java.util.List;

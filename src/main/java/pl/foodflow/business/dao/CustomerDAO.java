@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface CustomerDAO {
 
     Optional<Customer> findByUserId(Long userId);
+
+    void saveCustomer(Customer customer);
 }

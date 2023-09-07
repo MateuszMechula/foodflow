@@ -20,10 +20,9 @@ public class OwnerRepository implements OwnerDAO {
 
 
     @Override
-    public Owner saveOwner(Owner owner) {
+    public void saveOwner(Owner owner) {
         OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);
-        OwnerEntity saved = ownerJpaRepository.save(toSave);
-        return ownerEntityMapper.mapFromEntity(saved);
+        ownerJpaRepository.save(toSave);
     }
 
     @Override

@@ -12,4 +12,6 @@ public interface CustomerEntityMapper {
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "orderRecords", ignore = true)
     Customer mapFromEntity(CustomerEntity entity);
+
+    CustomerEntity mapToEntity(Customer customer);
 }

@@ -14,4 +14,8 @@ public class CustomerService {
     public Customer findByUserId(Long userId) {
         return customerDAO.findByUserId(userId).orElseThrow();
     }
+
+    public void saveCustomer(Customer customer) {
+        customerDAO.saveCustomer(customer);
+    }
 }

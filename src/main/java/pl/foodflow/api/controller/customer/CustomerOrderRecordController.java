@@ -16,7 +16,7 @@ import pl.foodflow.business.exceptions.OrderRecordNotFoundException;
 import pl.foodflow.domain.Customer;
 import pl.foodflow.domain.OrderRecord;
 import pl.foodflow.domain.Restaurant;
-import pl.foodflow.infrastructure.security.UserService;
+import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class CustomerOrderRecordController {
     }
 
     private long getUserIdFromAuthentication(String username) {
-        return Long.parseLong(String.valueOf(userService.findByUserName(username).getUserId()));
+        return Long.parseLong(String.valueOf(userService.findByUsername(username).getUserId()));
     }
 
     private Customer getCustomerByUserId(long userId) {
