@@ -1,6 +1,7 @@
 package pl.foodflow.api.controller.customer;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -84,7 +85,7 @@ public class CustomerOrderRecordController {
     @PostMapping(value = CUSTOMER_ORDER + "/{restaurantId}")
     public String submitOrder(
             @PathVariable Long restaurantId,
-            @ModelAttribute("orderDTO") OrderDTO orderDTO,
+            @Valid @ModelAttribute("orderDTO") OrderDTO orderDTO,
             HttpSession session,
             Authentication auth,
             Model model

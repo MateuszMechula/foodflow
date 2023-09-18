@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/login", "/error", "/fail.jpg", "/images/**").permitAll()
                         .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
+                        .requestMatchers("/redirect-home").authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .successHandler(new CustomAuthenticationSuccessHandler())

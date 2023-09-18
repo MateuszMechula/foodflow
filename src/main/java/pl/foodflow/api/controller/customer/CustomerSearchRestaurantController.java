@@ -1,6 +1,7 @@
 package pl.foodflow.api.controller.customer;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +38,7 @@ public class CustomerSearchRestaurantController {
 
     @PostMapping(value = SEARCH_RESTAURANTS)
     public String searchRestaurants(
-            @ModelAttribute SearchAddressDTO searchAddressDTO,
+            @Valid @ModelAttribute SearchAddressDTO searchAddressDTO,
             HttpSession session,
             Model model) {
         List<Restaurant> allRestaurants = restaurantService.findAll();
