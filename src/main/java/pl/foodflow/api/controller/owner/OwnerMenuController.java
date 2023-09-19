@@ -1,5 +1,6 @@
 package pl.foodflow.api.controller.owner;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,6 @@ import pl.foodflow.api.dto.MenuDTO;
 import pl.foodflow.api.dto.mapper.MenuMapper;
 import pl.foodflow.business.MenuService;
 import pl.foodflow.business.OwnerService;
-import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.infrastructure.security.user.UserService;
@@ -31,7 +31,6 @@ public class OwnerMenuController {
     private final MenuService menuService;
     private final UserService userService;
     private final OwnerService ownerService;
-    private final RestaurantService restaurantService;
 
     @GetMapping(value = MENU)
     public ModelAndView menuSection(Authentication authentication) {
@@ -57,7 +56,7 @@ public class OwnerMenuController {
 
     @PostMapping(value = MENU)
     public String addMenu(
-            @ModelAttribute("menuDTO") MenuDTO menuDTO,
+            @Valid @ModelAttribute("menuDTO") MenuDTO menuDTO,
             Authentication authentication
     ) {
         String username = authentication.getName();

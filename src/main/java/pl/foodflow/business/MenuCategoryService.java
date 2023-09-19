@@ -1,12 +1,12 @@
 package pl.foodflow.business;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.foodflow.business.dao.MenuCategoryDAO;
 import pl.foodflow.business.exceptions.MenuCategoryNotFoundException;
+import pl.foodflow.business.exceptions.MissingImageFileException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.Menu;
@@ -29,7 +29,6 @@ public class MenuCategoryService {
 
     private final MenuCategoryDAO menuCategoryDAO;
     private final CategoryItemService categoryItemService;
-    private final OrderItemService orderItemService;
 
     public MenuCategory findById(Long menuCategoryId) {
         return menuCategoryDAO.findCategoryById(menuCategoryId)
@@ -61,10 +60,17 @@ public class MenuCategoryService {
         if (Objects.isNull(owner.getRestaurant().getMenu())) {
             throw new RestaurantNotFound("To add a category you have to create menu first");
         }
+        if (imageFile == null || imageFile.isEmpty()) {
+            throw new MissingImageFileException("Image file is empty or missing");
+        }
+        if (menuCategoryId == null) {
+            throw new MenuCategoryNotFoundException("You need to choose category");
+        }
 
         MenuCategory menuCategory = owner.getRestaurant().getMenu().getMenuCategories().stream()
                 .filter(category -> category.getMenuCategoryId().equals(menuCategoryId))
-                .findAny().orElseThrow(() -> new EntityNotFoundException("MenuCategory with id: [%s] not found".formatted(menuCategoryId)));
+                .findAny().orElseThrow(() -> new MenuCategoryNotFoundException("MenuCategory with id: [%s] not found"
+                        .formatted(menuCategoryId)));
 
         String url = uploadImage(imageFile);
         Menu menu = owner.getRestaurant().getMenu();

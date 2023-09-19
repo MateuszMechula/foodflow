@@ -45,10 +45,8 @@
                                 th:text="${category.name}">
                         </option>
                     </th:block>
-                    <option th:unless="${allCategories != null && !allCategories.isEmpty()}"
-                            value=""
-                            disabled="disabled">
-                        Add a category
+                    <option th:value="null" th:unless="${allCategories != null && !allCategories.isEmpty()}">
+                        No category selected
                     </option>
                 </select>
             </div>

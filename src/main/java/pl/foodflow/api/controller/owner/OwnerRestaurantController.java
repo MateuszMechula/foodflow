@@ -1,5 +1,6 @@
 package pl.foodflow.api.controller.owner;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -103,7 +104,7 @@ public class OwnerRestaurantController {
 
     @PostMapping(value = RESTAURANT)
     public String addRestaurant(
-            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
+            @Valid @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
             Authentication authentication
     ) {
         String username = authentication.getName();

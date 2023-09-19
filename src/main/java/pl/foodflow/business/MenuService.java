@@ -39,7 +39,8 @@ public class MenuService {
     @Transactional
     public void addCategoryToMenu(Owner owner, MenuCategory menuCategory) {
 
-        if (Objects.isNull(owner.getRestaurant().getMenu().getMenuId())) {
+        if (Objects.isNull(owner.getRestaurant()) ||
+                Objects.isNull(owner.getRestaurant().getMenu().getMenuId())) {
             throw new RestaurantNotFound("To add a category you have to create menu first");
         }
 

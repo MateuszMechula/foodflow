@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
-import pl.foodflow.business.CategoryItemService;
 import pl.foodflow.business.MenuCategoryService;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.CategoryItem;
@@ -32,11 +31,11 @@ import static pl.foodflow.api.controller.owner.OwnerCategoryItemController.OWNER
 @AllArgsConstructor
 @RequestMapping(value = OWNER)
 public class OwnerCategoryItemController {
+
     public static final String OWNER = "/owner";
     public static final String CATEGORY_ITEM = "/items";
     public static final String DELETE_CATEGORY_ITEM = "/category-items";
 
-    private final CategoryItemService categoryItemService;
     private final MenuCategoryService menuCategoryService;
     private final UserService userService;
     private final OwnerService ownerService;
@@ -52,9 +51,9 @@ public class OwnerCategoryItemController {
 
     @PostMapping(value = CATEGORY_ITEM)
     public String addCategoryItem(
-            @ModelAttribute("categoryItemDTO") @Valid CategoryItemDTO categoryItemDTO,
+            @Valid @ModelAttribute("categoryItemDTO") CategoryItemDTO categoryItemDTO,
             @RequestParam("imageFile") MultipartFile imageFile,
-            @RequestParam("menuCategory") Long menuCategoryId,
+            @RequestParam(value = "menuCategory", required = false) Long menuCategoryId,
             Authentication authentication
 
     ) throws IOException {

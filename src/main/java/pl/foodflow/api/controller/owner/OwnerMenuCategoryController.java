@@ -1,5 +1,6 @@
 package pl.foodflow.api.controller.owner;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -59,7 +60,7 @@ public class OwnerMenuCategoryController {
 
     @PostMapping(value = CATEGORY)
     public String addMenuCategory(
-            @ModelAttribute("categoryDTO") MenuCategoryDTO menuCategoryDTO,
+            @Valid @ModelAttribute("categoryDTO") MenuCategoryDTO menuCategoryDTO,
             Authentication authentication
     ) {
         String username = authentication.getName();

@@ -6,12 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
+import pl.foodflow.business.exceptions.InvalidAddressException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @Slf4j
@@ -33,8 +36,19 @@ public class RestaurantService {
 
     @Transactional
     public void createRestaurant(Restaurant restaurant) {
-        restaurantDAO.saveRestaurant(restaurant);
-        log.info("Restaurant added successfully.");
+        Address address = restaurant.getAddress();
+        if (address != null &&
+                isNotBlank(address.getCity()) &&
+                isNotBlank(address.getPostalCode()) &&
+                isNotBlank(address.getStreet()) &&
+                isNotBlank(address.getCountry())) {
+
+            restaurantDAO.saveRestaurant(restaurant);
+            log.info("Restaurant added successfully.");
+        } else {
+            log.error("Invalid restaurant address. Restaurant not saved.");
+            throw new InvalidAddressException("Invalid restaurant address.");
+        }
     }
 
     @Transactional

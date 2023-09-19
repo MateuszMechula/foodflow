@@ -1,9 +1,10 @@
 package pl.foodflow.api.dto;
 
 
-import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,14 +19,17 @@ import java.math.BigDecimal;
 public class CategoryItemDTO {
 
     Long categoryItemId;
-    @Nonnull
+    @NotBlank(message = "Name is required")
     String name;
-    @Nonnull
+
+    @Size(max = 255, message = "Description must be less than or equal to 255 characters")
     String description;
-    @NotNull
+
+    @NotNull(message = "Price is required")
     @DecimalMin(value = "0.01", inclusive = false)
     BigDecimal price;
-    @Nonnull
+
     String imageUrl;
+
     Long menuCategoryId;
 }
