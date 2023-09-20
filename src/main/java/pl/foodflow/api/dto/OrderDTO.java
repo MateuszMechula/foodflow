@@ -31,6 +31,5 @@ public class OrderDTO {
     private String contactPhone;
 
     private String deliveryAddress;
-
     private DeliveryType deliveryType;
 }

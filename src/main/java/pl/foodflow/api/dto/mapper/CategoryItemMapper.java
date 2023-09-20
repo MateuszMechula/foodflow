@@ -7,7 +7,6 @@ import pl.foodflow.domain.CategoryItem;
 
 @Mapper(componentModel = "spring")
 public interface CategoryItemMapper {
-
     @Mapping(target = "menuCategory", ignore = true)
     @Mapping(target = "orderItems", ignore = true)
     CategoryItem map(CategoryItemDTO entity);

@@ -17,6 +17,11 @@ public class RestaurantAddressRepository implements RestaurantAddressDAO {
     private final RestaurantAddressMapper restaurantAddressMapper;
 
     @Override
+    public Optional<RestaurantAddress> findRestaurantAddressByAddressId(Long addressId) {
+        return restaurantAddressJpaRepository.findByAddressId(addressId).map(restaurantAddressMapper::mapFromEntity);
+    }
+
+    @Override
     public RestaurantAddress saveRestaurantAddress(RestaurantAddress address) {
         RestaurantAddressEntity toSave = restaurantAddressMapper.mapToEntity(address);
         RestaurantAddressEntity saved = restaurantAddressJpaRepository.save(toSave);
@@ -27,10 +32,5 @@ public class RestaurantAddressRepository implements RestaurantAddressDAO {
     public void deleteRestaurantAddress(RestaurantAddress restaurantAddress) {
         RestaurantAddressEntity toDelete = restaurantAddressMapper.mapToEntity(restaurantAddress);
         restaurantAddressJpaRepository.delete(toDelete);
-    }
-
-    @Override
-    public Optional<RestaurantAddress> findRestaurantAddressByAddressId(Long addressId) {
-        return restaurantAddressJpaRepository.findByAddressId(addressId).map(restaurantAddressMapper::mapFromEntity);
     }
 }

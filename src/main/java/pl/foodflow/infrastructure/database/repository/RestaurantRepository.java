@@ -19,9 +19,22 @@ public class RestaurantRepository implements RestaurantDAO {
     private final RestaurantEntityMapper restaurantEntityMapper;
 
     @Override
-    public Optional<Restaurant> findById(Long restaurantId) {
+    public Optional<Restaurant> findRestaurantById(Long restaurantId) {
         return restaurantJpaRepository.findById(restaurantId)
                 .map(restaurantEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public Optional<Restaurant> findRestaurantByNip(String nip) {
+        return restaurantJpaRepository.findByNip(nip)
+                .map(restaurantEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public List<Restaurant> findAllRestaurants() {
+        return restaurantJpaRepository.findAll().stream()
+                .map(restaurantEntityMapper::mapFromEntity)
+                .toList();
     }
 
     @Override
@@ -34,18 +47,5 @@ public class RestaurantRepository implements RestaurantDAO {
     @Override
     public void deleteRestaurantById(Long restaurantId) {
         restaurantJpaRepository.deleteById(restaurantId);
-    }
-
-    @Override
-    public Optional<Restaurant> findRestaurantByNip(String nip) {
-        return restaurantJpaRepository.findByNip(nip)
-                .map(restaurantEntityMapper::mapFromEntity);
-    }
-
-    @Override
-    public List<Restaurant> findAll() {
-        return restaurantJpaRepository.findAll().stream()
-                .map(restaurantEntityMapper::mapFromEntity)
-                .toList();
     }
 }

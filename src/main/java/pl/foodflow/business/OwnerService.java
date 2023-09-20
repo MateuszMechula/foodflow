@@ -20,14 +20,14 @@ public class OwnerService {
     private final OwnerDAO ownerDAO;
 
     public Owner findOwnerByUserId(Integer userId) {
-        return ownerDAO.findByUserId(userId)
+        return ownerDAO.findOwnerByUserId(userId)
                 .orElseThrow(() -> new OwnerNotFoundException(
                         ErrorMessages.OWNER_NOT_FOUND.formatted(userId)));
     }
 
     public List<Owner> findAll() {
         log.info("Fetching all Owners");
-        return ownerDAO.findAll();
+        return ownerDAO.findAllOwners();
     }
 
     @Transactional

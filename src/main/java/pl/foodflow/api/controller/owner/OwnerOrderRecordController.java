@@ -1,6 +1,7 @@
 package pl.foodflow.api.controller.owner;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static pl.foodflow.api.controller.owner.OwnerOrderRecordController.OWNER;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = OWNER)
@@ -32,6 +34,7 @@ public class OwnerOrderRecordController {
             Authentication auth,
             Model model
     ) {
+        log.info("Fetching owner orders for user: {}", auth.getName());
         return getOrders(auth, model);
     }
 
@@ -41,6 +44,7 @@ public class OwnerOrderRecordController {
             Authentication auth,
             Model model
     ) {
+        log.info("Marking order as completed: {}", orderRecordId);
         orderRecordService.changeOrderStatusToCompleted(orderRecordId);
         return getOrders(auth, model);
     }

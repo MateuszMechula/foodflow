@@ -13,6 +13,7 @@ import pl.foodflow.domain.Customer;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.infrastructure.security.role.RoleEntity;
 import pl.foodflow.infrastructure.security.role.RoleEnum;
+import pl.foodflow.utils.ErrorMessages;
 
 import java.util.Collections;
 import java.util.Set;
@@ -27,11 +28,10 @@ public class UserService {
     private final OwnerService ownerService;
     private final CustomerService customerService;
 
-    @Transactional
     public User findByUsername(String userName) {
         return userDAO.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "User with username: [%s] not found".formatted(userName)));
+                        ErrorMessages.USER_WITH_USERNAME_NOT_FOUND.formatted(userName)));
     }
 
     @Transactional
@@ -46,6 +46,7 @@ public class UserService {
             Customer customer = buildNewCustomer(userDTO);
             customerService.saveCustomer(customer.withUserId(savedUser.getUserId()));
         }
+        log.info("User registered successfully: {}", userDTO.getUsername());
     }
 
     private Customer buildNewCustomer(UserDTO userDTO) {

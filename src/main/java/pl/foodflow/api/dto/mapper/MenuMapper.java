@@ -7,7 +7,6 @@ import pl.foodflow.domain.Menu;
 
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
-
     @Mapping(target = "menuCategories", ignore = true)
     Menu map(MenuDTO menuDTO);
 }

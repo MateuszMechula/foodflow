@@ -2,6 +2,7 @@ package pl.foodflow.api.controller.owner;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static pl.foodflow.api.controller.owner.OwnerRestaurantAddressController.OWNER;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = OWNER)
@@ -33,11 +35,11 @@ public class OwnerRestaurantAddressController {
     public static final String DELETE_ADDRESS = "/delete-address";
     private static final String RESTAURANT_ADDRESSES = "/restaurant-addresses";
 
-    private final RestaurantAddressService restaurantAddressService;
-    private final AddressMapper addressMapper;
     private final UserService userService;
-    private final RestaurantService restaurantService;
     private final OwnerService ownerService;
+    private final AddressMapper addressMapper;
+    private final RestaurantService restaurantService;
+    private final RestaurantAddressService restaurantAddressService;
 
     @GetMapping(value = RESTAURANT_ADDRESSES)
     public ModelAndView addDeliveryAddressToRestaurantForm(Authentication authentication) {
@@ -45,6 +47,7 @@ public class OwnerRestaurantAddressController {
         int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
+        log.info("Fetching restaurant addresses for owner: {}", username);
         Set<RestaurantAddress> restaurantAddresses = Optional.ofNullable(owner)
                 .map(Owner::getRestaurant)
                 .map(Restaurant::getRestaurantAddresses)
@@ -73,6 +76,7 @@ public class OwnerRestaurantAddressController {
         Address address = addressMapper.map(addressDTO);
 
         restaurantService.addDeliveryAddressToRestaurant(address, owner);
+        log.info("Delivery address added to restaurant NIP: {}", owner.getRestaurant().getNip());
 
         return "redirect:/owner/restaurant-addresses";
     }
@@ -91,6 +95,7 @@ public class OwnerRestaurantAddressController {
         restaurantRestaurantAddresses.remove(restaurantAddress);
 
         restaurantAddressService.deleteRestaurantAddress(restaurantAddress);
+        log.info("Deleting restaurant address with ID: {} was succesfully", addressId);
 
         return "redirect:/owner/restaurant-addresses";
     }

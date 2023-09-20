@@ -28,7 +28,7 @@ public class RestaurantService {
 
     public Restaurant getRestaurantById(Long restaurantId) {
         log.info("Fetching restaurant with ID: {}", restaurantId);
-        return restaurantDAO.findById(restaurantId).orElseThrow(() -> new RestaurantNotFound
+        return restaurantDAO.findRestaurantById(restaurantId).orElseThrow(() -> new RestaurantNotFound
                 (ErrorMessages.RESTAURANT_BY_ID_NOT_FOUND.formatted(restaurantId)));
     }
 
@@ -40,7 +40,7 @@ public class RestaurantService {
 
     public List<Restaurant> findAll() {
         log.info("Fetching all restaurants");
-        return restaurantDAO.findAll();
+        return restaurantDAO.findAllRestaurants();
     }
 
     @Transactional

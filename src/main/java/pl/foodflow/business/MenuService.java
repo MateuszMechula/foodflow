@@ -1,51 +1,43 @@
 package pl.foodflow.business;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.MenuDAO;
+import pl.foodflow.business.exceptions.MenuNotFoundException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
+import pl.foodflow.utils.ErrorMessages;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MenuService {
 
     private final MenuDAO menuDAO;
     private final MenuCategoryService menuCategoryService;
-    private final CategoryItemService categoryItemService;
-    private final RestaurantService restaurantService;
 
-    public List<Menu> findAll() {
-        return menuDAO.findAll();
-    }
-
-    public Menu findMenuById(Long menuId) {
-        return menuDAO.findById(menuId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Menu with id: [%s] not found".formatted(menuId)
-                ));
+    public Menu getMenuById(Long menuId) {
+        log.info("Fetching menu by ID: {}", menuId);
+        return menuDAO.findMenuById(menuId)
+                .orElseThrow(() -> new MenuNotFoundException(ErrorMessages.MENU_NOT_FOUND.formatted(menuId)));
     }
 
     @Transactional
-    public void addCategoryToMenu(Owner owner, MenuCategory menuCategory) {
-
-        if (Objects.isNull(owner.getRestaurant()) ||
-                Objects.isNull(owner.getRestaurant().getMenu().getMenuId())) {
-            throw new RestaurantNotFound("To add a category you have to create menu first");
-        }
+    public void addMenuCategoryToMenu(Owner owner, MenuCategory menuCategory) {
+        validateOwnerAndMenu(owner);
+        log.info("Adding category to menu.");
 
         Long menuId = owner.getRestaurant().getMenu().getMenuId();
-        Menu menu = findMenuById(menuId);
+        Menu menu = getMenuById(menuId);
 
         Set<MenuCategory> menuCategories = menu.getCategories();
         menuCategories.add(menuCategory);
@@ -55,27 +47,39 @@ public class MenuService {
     }
 
     @Transactional
-    public void addMenuToRestaurant(Owner owner, Menu menu) {
-        if (Objects.isNull(owner.getRestaurant())) {
-            throw new RestaurantNotFound("To add a menu you have to create restaurant first");
-        }
-        Restaurant restaurant = owner.getRestaurant();
+    public void createMenuForRestaurant(Owner owner, Menu menu) {
+        validateOwnerAndMenuNotExist(owner);
+        log.info("Adding menu to restaurant.");
 
-        if (Objects.nonNull(restaurant.getMenu())) {
-            throw new ThatRestaurantHasAMenu
-                    ("Restaurant with nip [%s] has a menu. You can't create more than one"
-                            .formatted(restaurant.getNip()));
-        }
+        Restaurant restaurant = owner.getRestaurant();
         saveMenu(menu.withRestaurant(restaurant));
     }
 
     @Transactional
     public void saveMenu(Menu menu) {
+        log.info("Saving menu.");
         menuDAO.saveMenu(menu);
     }
 
     @Transactional
     public void deleteMenu(Long menuId) {
+        log.info("Deleting menu with ID: {}", menuId);
         menuDAO.deleteMenuById(menuId);
+    }
+
+    private void validateOwnerAndMenu(Owner owner) {
+        if (Objects.isNull(owner.getRestaurant()) || Objects.isNull(owner.getRestaurant().getMenu())) {
+            throw new RestaurantNotFound(ErrorMessages.RESTAURANT_AND_MENU_NOT_CREATED);
+        }
+    }
+
+    private void validateOwnerAndMenuNotExist(Owner owner) {
+        if (Objects.isNull(owner.getRestaurant())) {
+            throw new RestaurantNotFound(ErrorMessages.RESTAURANT_NOT_CREATED);
+        }
+        if (Objects.nonNull(owner.getRestaurant().getMenu())) {
+            throw new ThatRestaurantHasAMenu
+                    (ErrorMessages.RESTAURANT_ALREADY_HAS_MENU.formatted(owner.getRestaurant().getNip()));
+        }
     }
 }

@@ -20,7 +20,7 @@ public class CategoryItemService {
 
     public CategoryItem getCategoryItemById(Long categoryItemId) {
         log.info("Fetching CategoryItem by ID: {}", categoryItemId);
-        return categoryItemDAO.findById(categoryItemId)
+        return categoryItemDAO.findCategoryItemById(categoryItemId)
                 .orElseThrow(() -> new CategoryItemNotFoundException
                         (ErrorMessages.CATEGORY_ITEM_NOT_FOUND.formatted(categoryItemId)));
     }

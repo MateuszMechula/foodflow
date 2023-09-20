@@ -36,13 +36,9 @@ public class RestaurantDTO {
     String phone;
 
     BigDecimal minimumOrderAmount;
-
     BigDecimal deliveryPrice;
-
     Boolean deliveryOption;
-
     AddressDTO address;
-
     String ownerEmail;
 
     public static RestaurantDTO buildDefault() {

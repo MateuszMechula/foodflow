@@ -25,4 +25,6 @@ public class ErrorMessages {
     public static final String RESTAURANT_ADDRESS_WITH_ADDRESS_ID_NOT_FOUND =
             "RestaurantAddress with address ID: [%s] not found";
 
+    public static final String USER_WITH_USERNAME_NOT_FOUND = "User with username: [%s] not found";
+
 }

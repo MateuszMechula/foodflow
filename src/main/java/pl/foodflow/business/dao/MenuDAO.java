@@ -5,8 +5,7 @@ import pl.foodflow.domain.Menu;
 import java.util.Optional;
 
 public interface MenuDAO {
-
-    Optional<Menu> findById(Long menuId);
+    Optional<Menu> findMenuById(Long menuId);
 
     void saveMenu(Menu menu);
 

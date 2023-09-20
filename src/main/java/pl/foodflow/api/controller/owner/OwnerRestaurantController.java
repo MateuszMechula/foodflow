@@ -2,6 +2,7 @@ package pl.foodflow.api.controller.owner;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static pl.foodflow.api.controller.owner.OwnerRestaurantController.OWNER;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = OWNER)
@@ -36,10 +38,10 @@ public class OwnerRestaurantController {
     public static final String RESTAURANT_DELETE = "/restaurant-delete";
     public static final String RESTAURANT_UPDATE = "/restaurant-update";
 
-    private final RestaurantService restaurantService;
-    private final RestaurantMapper restaurantMapper;
-    private final OwnerService ownerService;
     private final UserService userService;
+    private final OwnerService ownerService;
+    private final RestaurantMapper restaurantMapper;
+    private final RestaurantService restaurantService;
 
     @GetMapping(value = RESTAURANT)
     public String restaurantForm(
@@ -54,7 +56,7 @@ public class OwnerRestaurantController {
         if (owner.getRestaurant() != null) {
             model.addAttribute("existingRestaurant", owner.getRestaurant());
         }
-
+        log.info("Loaded restaurant form for user: {}", username);
         return "owner_restaurant_form";
     }
 
@@ -90,6 +92,7 @@ public class OwnerRestaurantController {
                 "restaurant", restaurant,
                 "menuCategoryItem", menuCategoryItem
         );
+        log.info("Loaded restaurant details for user: {}", username);
         return new ModelAndView("owner_restaurant_view", model);
     }
 
@@ -113,6 +116,7 @@ public class OwnerRestaurantController {
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.addRestaurant(restaurant.withOwner(owner));
+        log.info("Added a new restaurant for user: {}", username);
 
         return "redirect:/owner/restaurant";
     }
@@ -127,15 +131,15 @@ public class OwnerRestaurantController {
 
         Restaurant updatedRestaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.updateRestaurant(updatedRestaurant.withOwner(owner));
+
+        log.info("Updated restaurant details for user: {}", username);
         return "redirect:/owner/restaurant";
     }
 
     @PostMapping(value = RESTAURANT_DELETE)
-    public String getDeleteRestaurant(
-            @RequestParam Long restaurantId
-    ) {
+    public String getDeleteRestaurant(@RequestParam Long restaurantId) {
         restaurantService.deleteRestaurantById(restaurantId);
+        log.info("Deleted restaurant with ID: {}", restaurantId);
         return "redirect:/owner/restaurant";
     }
-
 }

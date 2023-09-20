@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OwnerDAO {
+    Optional<Owner> findOwnerByUserId(Integer userId);
 
-    void saveOwner(Owner owner);
-
-    List<Owner> findAll();
-
-    Optional<Owner> findByUserId(Integer userId);
+    List<Owner> findAllOwners();
 
     Optional<Owner> findByUserIdWithMenuAndCategoryAndItems(int userId);
+
+    void saveOwner(Owner owner);
 }

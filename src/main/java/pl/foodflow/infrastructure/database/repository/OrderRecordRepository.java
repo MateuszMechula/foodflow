@@ -14,19 +14,18 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class OrderRecordRepository implements OrderRecordDAO {
+
     private final OrderRecordJpaRepository orderRecordJpaRepository;
     private final OrderRecordEntityMapper orderRecordEntityMapper;
 
     @Override
-    public Optional<OrderRecord> findById(Long orderRecordId) {
+    public Optional<OrderRecord> findOrderRecordById(Long orderRecordId) {
         return orderRecordJpaRepository.findById(orderRecordId)
                 .map(orderRecordEntityMapper::mapFromEntity);
     }
 
     @Override
-    public List<OrderRecord> findAll() {
-        List<OrderRecordEntity> all = orderRecordJpaRepository.findAll();
-
+    public List<OrderRecord> findAllOrderRecords() {
         return orderRecordJpaRepository.findAll().stream()
                 .map(orderRecordEntityMapper::mapFromEntity)
                 .toList();
@@ -41,7 +40,7 @@ public class OrderRecordRepository implements OrderRecordDAO {
     }
 
     @Override
-    public void delete(OrderRecord orderRecord) {
+    public void deleteOrderRecord(OrderRecord orderRecord) {
         OrderRecordEntity orderRecordEntity = orderRecordEntityMapper.mapToEntity(orderRecord);
         orderRecordJpaRepository.delete(orderRecordEntity);
     }

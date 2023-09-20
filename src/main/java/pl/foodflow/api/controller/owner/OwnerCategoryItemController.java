@@ -36,10 +36,10 @@ public class OwnerCategoryItemController {
     public static final String CATEGORY_ITEM = "/items";
     public static final String DELETE_CATEGORY_ITEM = "/category-items";
 
-    private final MenuCategoryService menuCategoryService;
     private final UserService userService;
     private final OwnerService ownerService;
     private final CategoryItemMapper categoryItemMapper;
+    private final MenuCategoryService menuCategoryService;
 
     @GetMapping(value = CATEGORY_ITEM)
     public String showCreateCategoryItemForm(Model model, Authentication authentication) {

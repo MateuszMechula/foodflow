@@ -30,6 +30,5 @@ public class CategoryItemDTO {
     BigDecimal price;
 
     String imageUrl;
-
     Long menuCategoryId;
 }

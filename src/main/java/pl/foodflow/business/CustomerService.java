@@ -18,7 +18,7 @@ public class CustomerService {
 
     public Customer getCustomerByUserId(Long userId) {
         log.info("Fetching Customer by user ID: {}", userId);
-        return customerDAO.findByUserId(userId)
+        return customerDAO.findCustomerByUserId(userId)
                 .orElseThrow(() -> new CustomerNotFoundException(
                         ErrorMessages.CUSTOMER_NOT_FOUND.formatted(userId)));
     }

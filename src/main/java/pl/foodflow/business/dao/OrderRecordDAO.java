@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRecordDAO {
+    Optional<OrderRecord> findOrderRecordById(Long orderRecordId);
+
+    List<OrderRecord> findAllOrderRecords();
+
     OrderRecord saveOrderRecord(OrderRecord orderRecord);
 
-    Optional<OrderRecord> findById(Long orderRecordId);
-
-    List<OrderRecord> findAll();
-
-    void delete(OrderRecord orderRecord);
+    void deleteOrderRecord(OrderRecord orderRecord);
 }

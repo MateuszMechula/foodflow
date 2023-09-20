@@ -3,6 +3,7 @@ package pl.foodflow.api.controller.customer;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ import java.util.List;
 
 import static pl.foodflow.api.controller.customer.CustomerSearchRestaurantController.CUSTOMER;
 
-
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = CUSTOMER)
@@ -32,6 +33,7 @@ public class CustomerSearchRestaurantController {
 
     @GetMapping(value = SEARCH_RESTAURANTS)
     public String showSearchForm(Model model) {
+        log.info("Received request to show restaurant search form.");
         model.addAttribute("searchAddressDTO", new SearchAddressDTO());
         return "customer_search_restaurant";
     }
@@ -41,6 +43,8 @@ public class CustomerSearchRestaurantController {
             @Valid @ModelAttribute SearchAddressDTO searchAddressDTO,
             HttpSession session,
             Model model) {
+        log.info("Received request to search for restaurants based on address");
+
         List<Restaurant> allRestaurants = restaurantService.findAll();
         List<Restaurant> matchingRestaurants = searchRestaurantService.filterMatchingRestaurants
                 (searchAddressDTO, allRestaurants);

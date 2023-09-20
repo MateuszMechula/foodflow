@@ -64,7 +64,7 @@ public class OwnerMenuController {
         Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
 
         Menu menu = menuMapper.map(menuDTO);
-        menuService.addMenuToRestaurant(owner, menu);
+        menuService.createMenuForRestaurant(owner, menu);
 
         return "redirect:/owner/menu";
     }
@@ -72,8 +72,6 @@ public class OwnerMenuController {
     @PostMapping(value = DELETE_MENU)
     public String deleteMenu(
             @RequestParam Long menuId) {
-        ;
-
         menuService.deleteMenu(menuId);
 
         return "redirect:/owner/menu";

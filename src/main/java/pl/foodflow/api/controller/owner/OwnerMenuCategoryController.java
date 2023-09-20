@@ -29,11 +29,11 @@ public class OwnerMenuCategoryController {
     public static final String CATEGORY = "/category";
     public static final String DELETE_CATEGORY = "/delete-category";
 
-    private final MenuCategoryService menuCategoryService;
     private final MenuService menuService;
-    private final MenuCategoryMapper menuCategoryMapper;
     private final UserService userService;
     private final OwnerService ownerService;
+    private final MenuCategoryMapper menuCategoryMapper;
+    private final MenuCategoryService menuCategoryService;
 
     @GetMapping(value = CATEGORY)
     public ModelAndView menuCategorySection(Authentication authentication) {

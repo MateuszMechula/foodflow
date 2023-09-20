@@ -18,6 +18,13 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     private final MenuCategoryEntityMapper menuCategoryEntityMapper;
 
     @Override
+    public List<MenuCategory> findAllByMenuCategoryId(Long menuId) {
+        return menuCategoryJpaRepository.findAllByMenu_MenuId(menuId).stream()
+                .map(menuCategoryEntityMapper::mapFromEntity)
+                .toList();
+    }
+
+    @Override
     public void saveMenuCategory(MenuCategory menuCategory) {
         MenuCategoryEntity toSave = menuCategoryEntityMapper.mapToEntity(menuCategory);
         MenuCategoryEntity saved = menuCategoryJpaRepository.save(toSave);
@@ -27,12 +34,5 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     @Override
     public void deleteMenuCategoryById(Long menuCategoryId) {
         menuCategoryJpaRepository.deleteById(menuCategoryId);
-    }
-
-    @Override
-    public List<MenuCategory> findAllByMenuCategoryId(Long menuId) {
-        return menuCategoryJpaRepository.findAllByMenu_MenuId(menuId).stream()
-                .map(menuCategoryEntityMapper::mapFromEntity)
-                .toList();
     }
 }

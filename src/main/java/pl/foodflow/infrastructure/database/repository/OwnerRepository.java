@@ -20,27 +20,27 @@ public class OwnerRepository implements OwnerDAO {
 
 
     @Override
-    public void saveOwner(Owner owner) {
-        OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);
-        ownerJpaRepository.save(toSave);
+    public Optional<Owner> findOwnerByUserId(Integer userId) {
+        return ownerJpaRepository.findByUserId(userId)
+                .map(ownerEntityMapper::mapFromEntity);
     }
 
     @Override
-    public List<Owner> findAll() {
+    public List<Owner> findAllOwners() {
         return ownerJpaRepository.findAll().stream()
                 .map(ownerEntityMapper::mapFromEntity)
                 .toList();
     }
 
     @Override
-    public Optional<Owner> findByUserId(Integer userId) {
-        return ownerJpaRepository.findByUserId(userId)
+    public Optional<Owner> findByUserIdWithMenuAndCategoryAndItems(int userId) {
+        return ownerJpaRepository.findByUserIdWithMenuAndCategoryAndItems(userId)
                 .map(ownerEntityMapper::mapFromEntity);
     }
 
     @Override
-    public Optional<Owner> findByUserIdWithMenuAndCategoryAndItems(int userId) {
-        return ownerJpaRepository.findByUserIdWithMenuAndCategoryAndItems(userId)
-                .map(ownerEntityMapper::mapFromEntity);
+    public void saveOwner(Owner owner) {
+        OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);
+        ownerJpaRepository.save(toSave);
     }
 }

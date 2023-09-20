@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RestaurantDAO {
+    Optional<Restaurant> findRestaurantById(Long id);
 
-    List<Restaurant> findAll();
+    List<Restaurant> findAllRestaurants();
 
-    Optional<Restaurant> findById(Long id);
+    Optional<Restaurant> findRestaurantByNip(String nip);
 
     void saveRestaurant(Restaurant restaurant);
 
     void deleteRestaurantById(Long restaurantId);
-
-    Optional<Restaurant> findRestaurantByNip(String nip);
 }

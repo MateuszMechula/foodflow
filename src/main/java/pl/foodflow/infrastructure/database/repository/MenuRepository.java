@@ -19,14 +19,9 @@ public class MenuRepository implements MenuDAO {
 
 
     @Override
-    public Optional<Menu> findById(Long menuId) {
+    public Optional<Menu> findMenuById(Long menuId) {
         return menuJpaRepository.findById(menuId)
                 .map(menuEntityMapper::mapFromEntity);
-    }
-
-    @Override
-    public void deleteMenuById(Long menuId) {
-        menuJpaRepository.deleteById(menuId);
     }
 
     @Override
@@ -34,5 +29,10 @@ public class MenuRepository implements MenuDAO {
         MenuEntity toSave = menuEntityMapper.mapToEntity(menu);
         MenuEntity saved = menuJpaRepository.saveAndFlush(toSave);
         menuEntityMapper.mapFromEntity(saved);
+    }
+
+    @Override
+    public void deleteMenuById(Long menuId) {
+        menuJpaRepository.deleteById(menuId);
     }
 }

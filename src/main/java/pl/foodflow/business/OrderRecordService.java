@@ -29,14 +29,14 @@ public class OrderRecordService {
 
     public OrderRecord getOrderRecordById(Long orderRecordId) {
         log.info("Fetching OrderRecord by OrderRecordID: {}", orderRecordId);
-        return orderRecordDAO.findById(orderRecordId)
+        return orderRecordDAO.findOrderRecordById(orderRecordId)
                 .orElseThrow(() -> new OrderRecordNotFoundException(
                         ErrorMessages.ORDER_RECORD_NOT_FOUND.formatted(orderRecordId)));
     }
 
     public List<OrderRecord> findAll() {
         log.info("Fetching all OrderRecords");
-        return orderRecordDAO.findAll();
+        return orderRecordDAO.findAllOrderRecords();
     }
 
     public List<OrderRecord> getAllCustomerOrdersWithStatus(long userId, OrderStatus status) {
@@ -100,7 +100,7 @@ public class OrderRecordService {
             return false;
         }
         orderItemService.deleteOrderItemByOrderRecordId(orderRecordId);
-        orderRecordDAO.delete(orderRecord);
+        orderRecordDAO.deleteOrderRecord(orderRecord);
         return true;
     }
 

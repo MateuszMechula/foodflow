@@ -5,7 +5,7 @@ import pl.foodflow.domain.CategoryItem;
 import java.util.Optional;
 
 public interface CategoryItemDAO {
-    Optional<CategoryItem> findById(Long categoryId);
+    Optional<CategoryItem> findCategoryItemById(Long categoryId);
 
     void saveCategoryItem(CategoryItem categoryItem);
 
