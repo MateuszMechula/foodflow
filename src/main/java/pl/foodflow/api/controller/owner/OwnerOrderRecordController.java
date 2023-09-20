@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.foodflow.business.OrderRecordService;
 import pl.foodflow.domain.OrderRecord;
+import pl.foodflow.enums.OrderStatus;
 import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.List;
@@ -49,9 +50,9 @@ public class OwnerOrderRecordController {
         long userId = getUserIdFromAuthentication(username);
 
         List<OrderRecord> allOwnerOrdersWithStatusInProgress =
-                orderRecordService.getAllOwnerOrdersWithOrderStatusInProgress(userId);
+                orderRecordService.getAllOwnerOrdersWithStatus(userId, OrderStatus.IN_PROGRESS);
         List<OrderRecord> allOwnerOrdersWithOrderStatusCompleted =
-                orderRecordService.getAllOwnerOrdersWithOrderStatusCompleted(userId);
+                orderRecordService.getAllOwnerOrdersWithStatus(userId, OrderStatus.COMPLETED);
 
         model.addAttribute("allOwnerOrdersWithStatusInProgress", allOwnerOrdersWithStatusInProgress);
         model.addAttribute("allOwnerOrdersWithOrderStatusCompleted", allOwnerOrdersWithOrderStatusCompleted);

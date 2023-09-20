@@ -33,18 +33,6 @@ public class OwnerRepository implements OwnerDAO {
     }
 
     @Override
-    public Owner findByEmail(String email) {
-        OwnerEntity ownerEntity = ownerJpaRepository.findByEmail(email);
-        return ownerEntityMapper.mapFromEntity(ownerEntity);
-    }
-
-    @Override
-    public Optional<Owner> findById(Long ownerId) {
-        return ownerJpaRepository.findById(ownerId)
-                .map(ownerEntityMapper::mapFromEntity);
-    }
-
-    @Override
     public Optional<Owner> findByUserId(Integer userId) {
         return ownerJpaRepository.findByUserId(userId)
                 .map(ownerEntityMapper::mapFromEntity);

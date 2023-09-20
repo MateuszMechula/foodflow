@@ -49,7 +49,7 @@ public class OwnerRestaurantController {
 
         String username = auth.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserId(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         if (owner.getRestaurant() != null) {
             model.addAttribute("existingRestaurant", owner.getRestaurant());
@@ -97,7 +97,7 @@ public class OwnerRestaurantController {
     public String updateRestaurantForm(
             @RequestParam Long restaurantId,
             Model model) {
-        Restaurant existingRestaurant = restaurantService.findById(restaurantId);
+        Restaurant existingRestaurant = restaurantService.getRestaurantById(restaurantId);
         model.addAttribute("existingRestaurant", existingRestaurant);
         return "owner_restaurant_update";
     }
@@ -109,10 +109,10 @@ public class OwnerRestaurantController {
     ) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserId(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
-        restaurantService.createRestaurant(restaurant.withOwner(owner));
+        restaurantService.addRestaurant(restaurant.withOwner(owner));
 
         return "redirect:/owner/restaurant";
     }
@@ -123,7 +123,7 @@ public class OwnerRestaurantController {
             Authentication authentication) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserId(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         Restaurant updatedRestaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.updateRestaurant(updatedRestaurant.withOwner(owner));

@@ -8,8 +8,6 @@ public interface RestaurantAddressDAO {
 
     RestaurantAddress saveRestaurantAddress(RestaurantAddress address);
 
-    Optional<RestaurantAddress> findById(Long addressId);
-
     void deleteRestaurantAddress(RestaurantAddress restaurantAddress);
 
     Optional<RestaurantAddress> findRestaurantAddressByAddressId(Long addressId);

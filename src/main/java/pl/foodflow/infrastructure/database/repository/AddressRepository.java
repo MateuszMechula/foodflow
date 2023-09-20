@@ -8,9 +8,6 @@ import pl.foodflow.infrastructure.database.entity.AddressEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.AddressJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.AddressEntityMapper;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Repository
 @AllArgsConstructor
 public class AddressRepository implements AddressDAO {
@@ -25,11 +22,4 @@ public class AddressRepository implements AddressDAO {
         return addressEntityMapper.mapFromEntity(saved);
     }
 
-    @Override
-    public Set<Address> findAddressByRestaurantId(Long restaurantId) {
-        Set<AddressEntity> addresses = addressJpaRepository.findByRestaurantId(restaurantId);
-        return addressJpaRepository.findByRestaurantId(restaurantId).stream()
-                .map(addressEntityMapper::mapFromEntity)
-                .collect(Collectors.toSet());
-    }
 }

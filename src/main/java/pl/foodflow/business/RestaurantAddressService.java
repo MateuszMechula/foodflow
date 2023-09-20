@@ -1,35 +1,38 @@
 package pl.foodflow.business;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.RestaurantAddressDAO;
 import pl.foodflow.business.exceptions.RestaurantAddressNotFoundException;
 import pl.foodflow.domain.RestaurantAddress;
+import pl.foodflow.utils.ErrorMessages;
 
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RestaurantAddressService {
+
     private final RestaurantAddressDAO restaurantAddressDAO;
 
-    public RestaurantAddress findById(Long restaurantAddressId) {
-        return restaurantAddressDAO.findById(restaurantAddressId)
-                .orElseThrow(() -> new RestaurantAddressNotFoundException
-                        ("RestaurantAddress with ID: [%s] not found".formatted(restaurantAddressId)));
-    }
-
-    @Transactional
     public RestaurantAddress findRestaurantAddressByAddressId(Long addressId) {
-        return restaurantAddressDAO.findRestaurantAddressByAddressId(addressId).orElseThrow();
+        log.info("Fetching RestaurantAddress with address ID: {}", addressId);
+        return restaurantAddressDAO.findRestaurantAddressByAddressId(addressId)
+                .orElseThrow(() -> new RestaurantAddressNotFoundException(
+                        ErrorMessages.RESTAURANT_ADDRESS_WITH_ADDRESS_ID_NOT_FOUND.formatted(addressId)));
     }
 
     @Transactional
     public void deleteRestaurantAddress(RestaurantAddress restaurantAddress) {
+        log.info("Deleting RestaurantAddress");
         restaurantAddressDAO.deleteRestaurantAddress(restaurantAddress);
+        log.info("RestaurantAddress removed successfully");
     }
 
     @Transactional
     public RestaurantAddress saveRestaurantAddress(RestaurantAddress restaurantAddress) {
+        log.info("Saving RestaurantAddress");
         return restaurantAddressDAO.saveRestaurantAddress(restaurantAddress);
     }
 }

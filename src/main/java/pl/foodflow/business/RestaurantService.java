@@ -1,7 +1,7 @@
 package pl.foodflow.business;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
@@ -9,6 +9,7 @@ import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.business.exceptions.InvalidAddressException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
 import pl.foodflow.domain.*;
+import pl.foodflow.utils.ErrorMessages;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,50 +17,46 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@Service
 @Slf4j
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class RestaurantService {
 
+    private final AddressDAO addressDAO;
     private final RestaurantDAO restaurantDAO;
     private final RestaurantAddressService restaurantAddressService;
-    private final AddressDAO addressDAO;
 
-    public Restaurant findById(Long restaurantId) {
+    public Restaurant getRestaurantById(Long restaurantId) {
+        log.info("Fetching restaurant with ID: {}", restaurantId);
         return restaurantDAO.findById(restaurantId).orElseThrow(() -> new RestaurantNotFound
-                ("Restaurant with ID: [%s] not found".formatted(restaurantId)));
+                (ErrorMessages.RESTAURANT_BY_ID_NOT_FOUND.formatted(restaurantId)));
+    }
+
+    private Restaurant getRestaurantByNip(String restaurantNip) {
+        log.info("Fetching restaurant by NIP: {}", restaurantNip);
+        return restaurantDAO.findRestaurantByNip(restaurantNip).orElseThrow(() -> new RestaurantNotFound(
+                ErrorMessages.RESTAURANT_BY_NIP_NOT_FOUND.formatted(restaurantNip)));
     }
 
     public List<Restaurant> findAll() {
+        log.info("Fetching all restaurants");
         return restaurantDAO.findAll();
     }
 
     @Transactional
-    public void createRestaurant(Restaurant restaurant) {
-        Address address = restaurant.getAddress();
-        if (address != null &&
-                isNotBlank(address.getCity()) &&
-                isNotBlank(address.getPostalCode()) &&
-                isNotBlank(address.getStreet()) &&
-                isNotBlank(address.getCountry())) {
-
-            restaurantDAO.saveRestaurant(restaurant);
-            log.info("Restaurant added successfully.");
-        } else {
-            log.error("Invalid restaurant address. Restaurant not saved.");
-            throw new InvalidAddressException("Invalid restaurant address.");
-        }
+    public void addRestaurant(Restaurant restaurant) {
+        validateRestaurantAddress(restaurant.getAddress());
+        restaurantDAO.saveRestaurant(restaurant);
+        log.info("Restaurant added successfully");
     }
 
     @Transactional
     public void addDeliveryAddressToRestaurant(Address deliveryAddress, Owner owner) {
-
         Restaurant restaurant = owner.getRestaurant();
         Menu menu = owner.getRestaurant().getMenu();
         Address address = owner.getRestaurant().getAddress();
 
         RestaurantAddress restaurantAddress = buildRestaurantAddress(deliveryAddress, restaurant);
-
         Address savedAddress = addressDAO.saveAddress(deliveryAddress);
         RestaurantAddress savedRestaurantAddress = restaurantAddressService
                 .saveRestaurantAddress(restaurantAddress.withAddress(savedAddress));
@@ -67,13 +64,36 @@ public class RestaurantService {
         Set<RestaurantAddress> restaurantAddresses = restaurant.getRestaurantAddresses();
         restaurantAddresses.add(savedRestaurantAddress);
 
-        Restaurant updatedRestaurant = restaurant
-                .withMenu(menu)
-                .withAddress(address.withRestaurant(restaurant))
-                .withRestaurantAddresses(restaurantAddresses)
-                .withOwner(owner);
+        Restaurant updatedRestaurant = getUpdatedRestaurant(owner, restaurant, menu, address, restaurantAddresses);
 
         restaurantDAO.saveRestaurant(updatedRestaurant);
+        log.info("Delivery address added successfully to restaurant NIP: {}", restaurant.getNip());
+    }
+
+    @Transactional
+    public void updateRestaurant(Restaurant updatedRestaurant) {
+        Restaurant existingRestaurant = getRestaurantByNip(updatedRestaurant.getNip());
+
+        if (existingRestaurant != null) {
+            Restaurant toSave = buildUpdatedRestaurant(updatedRestaurant, existingRestaurant);
+            restaurantDAO.saveRestaurant(toSave);
+            log.info("Restaurant with NIP: {} updated", updatedRestaurant.getNip());
+        }
+    }
+
+    @Transactional
+    public void deleteRestaurantById(Long restaurantId) {
+        restaurantDAO.deleteRestaurantById(restaurantId);
+        log.info("Restaurant with ID: {} deleted", restaurantId);
+    }
+
+    private void validateRestaurantAddress(Address address) {
+        if (address != null && isNotBlank(address.getCity()) && isNotBlank(address.getPostalCode())
+                && isNotBlank(address.getStreet()) && isNotBlank(address.getCountry())) {
+            return;
+        }
+        log.error("Invalid restaurant address. Restaurant not saved.");
+        throw new InvalidAddressException("Invalid restaurant address.");
     }
 
     private RestaurantAddress buildRestaurantAddress(Address address, Restaurant restaurant) {
@@ -83,19 +103,12 @@ public class RestaurantService {
                 .build();
     }
 
-    public void updateRestaurant(Restaurant updatedRestaurant) {
-        Restaurant existingRestaurant = findRestaurantByNip(updatedRestaurant.getNip());
-
-        if (existingRestaurant != null) {
-            Restaurant toSave = buildUpdatedRestaurant(updatedRestaurant, existingRestaurant);
-
-            restaurantDAO.saveRestaurant(toSave);
-        }
-    }
-
-    private Restaurant findRestaurantByNip(String nip) {
-        return restaurantDAO.findRestaurantByNip(nip).orElseThrow(() -> new RestaurantNotFound(
-                "Restaurant with NIP: [%s] not found".formatted(nip)));
+    private static Restaurant getUpdatedRestaurant(Owner owner, Restaurant restaurant, Menu menu, Address address, Set<RestaurantAddress> restaurantAddresses) {
+        return restaurant
+                .withMenu(menu)
+                .withAddress(address.withRestaurant(restaurant))
+                .withRestaurantAddresses(restaurantAddresses)
+                .withOwner(owner);
     }
 
     private static Restaurant buildUpdatedRestaurant(Restaurant updatedRestaurant, Restaurant existingRestaurant) {
@@ -118,9 +131,5 @@ public class RestaurantService {
                 .address(Optional.ofNullable(updatedRestaurant.getAddress()).orElse(existingRestaurant.getAddress()))
                 .owner(Optional.ofNullable(updatedRestaurant.getOwner()).orElse(existingRestaurant.getOwner()))
                 .build();
-    }
-
-    public void deleteRestaurantById(Long restaurantId) {
-        restaurantDAO.deleteRestaurantById(restaurantId);
     }
 }

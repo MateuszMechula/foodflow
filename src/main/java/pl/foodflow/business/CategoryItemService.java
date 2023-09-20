@@ -1,43 +1,61 @@
 package pl.foodflow.business;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.CategoryItemDAO;
 import pl.foodflow.business.exceptions.CategoryItemNotFoundException;
 import pl.foodflow.domain.CategoryItem;
+import pl.foodflow.utils.ErrorMessages;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryItemService {
 
     private final CategoryItemDAO categoryItemDAO;
 
-    public CategoryItem findById(Long categoryItemId) {
+    public CategoryItem getCategoryItemById(Long categoryItemId) {
+        log.info("Fetching CategoryItem by ID: {}", categoryItemId);
         return categoryItemDAO.findById(categoryItemId)
                 .orElseThrow(() -> new CategoryItemNotFoundException
-                        ("CategoryItem with ID: [%s] not found".formatted(categoryItemId)));
+                        (ErrorMessages.CATEGORY_ITEM_NOT_FOUND.formatted(categoryItemId)));
     }
 
     @Transactional
-    public void updateCategoryItem(CategoryItem categoryItem) {
-        if (categoryItem.getCategoryItemId() == null) {
-            throw new IllegalArgumentException("CategoryItem ID cannot be NULL");
-        }
-        CategoryItem existingCategoryItem = findById(categoryItem.getCategoryItemId());
+    public void updateCategoryItemById(CategoryItem categoryItem) {
+        requireNonNullId(categoryItem);
+        log.info("Updating CategoryItem by ID: {}", categoryItem.getCategoryItemId());
+        CategoryItem existingCategoryItem = getCategoryItemById(categoryItem.getCategoryItemId());
         CategoryItem updatedItem = buildUpdatedCategoryItem(categoryItem, existingCategoryItem);
-
         categoryItemDAO.saveCategoryItem(updatedItem);
     }
 
     @Transactional
-    public void deleteCategoryItem(Long categoryItemId) {
+    public void saveCategoryItem(CategoryItem categoryItem) {
+        log.info("Saving CategoryItem");
+        categoryItemDAO.saveCategoryItem(categoryItem);
+    }
+
+    @Transactional
+    public void deleteCategoryItemById(Long categoryItemId) {
+        log.info("Deleting CategoryItem by ID: {}", categoryItemId);
         categoryItemDAO.deleteCategoryItemById(categoryItemId);
     }
 
-    private static CategoryItem buildUpdatedCategoryItem(CategoryItem updatedCategoryItem, CategoryItem existingCategoryItem) {
+    private void requireNonNullId(CategoryItem categoryItem) {
+        if (categoryItem.getCategoryItemId() == null) {
+            throw new CategoryItemNotFoundException(ErrorMessages.CATEGORY_ITEM_IS_NULL);
+        }
+    }
+
+    private static CategoryItem buildUpdatedCategoryItem(
+            CategoryItem updatedCategoryItem,
+            CategoryItem existingCategoryItem) {
+
         return CategoryItem.builder()
                 .categoryItemId(existingCategoryItem.getCategoryItemId())
                 .name(Optional.ofNullable(updatedCategoryItem.getName()).orElse(existingCategoryItem.getName()))
@@ -47,9 +65,5 @@ public class CategoryItemService {
                 .menuCategory(Optional.ofNullable(updatedCategoryItem.getMenuCategory()).orElse(existingCategoryItem.getMenuCategory()))
                 .orderItems(Optional.ofNullable(updatedCategoryItem.getOrderItems()).orElse(existingCategoryItem.getOrderItems()))
                 .build();
-    }
-
-    public void saveCategoryItem(CategoryItem categoryItem) {
-        categoryItemDAO.saveCategoryItem(categoryItem);
     }
 }

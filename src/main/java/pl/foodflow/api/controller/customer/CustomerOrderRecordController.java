@@ -17,6 +17,7 @@ import pl.foodflow.business.exceptions.OrderRecordNotFoundException;
 import pl.foodflow.domain.Customer;
 import pl.foodflow.domain.OrderRecord;
 import pl.foodflow.domain.Restaurant;
+import pl.foodflow.enums.OrderStatus;
 import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class CustomerOrderRecordController {
             HttpSession session,
             Model model) {
 
-        Restaurant restaurant = restaurantService.findById(restaurantId);
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("orderDTO", new OrderDTO());
 
@@ -109,7 +110,7 @@ public class CustomerOrderRecordController {
     }
 
     private Customer getCustomerByUserId(long userId) {
-        return customerService.findByUserId(userId);
+        return customerService.getCustomerByUserId(userId);
     }
 
     private SearchAddressDTO getSessionSearchAddress(HttpSession session) {
@@ -128,9 +129,9 @@ public class CustomerOrderRecordController {
         long userId = getUserIdFromAuthentication(username);
 
         List<OrderRecord> allOrdersWithOrderStatusInProgress =
-                orderRecordService.getAllCustomerOrdersWithOrderStatusInProgress(userId);
+                orderRecordService.getAllCustomerOrdersWithStatus(userId, OrderStatus.IN_PROGRESS);
         List<OrderRecord> allOrdersWithOrderStatusCompleted =
-                orderRecordService.getAllCustomerOrdersWithOrderStatusCompleted(userId);
+                orderRecordService.getAllCustomerOrdersWithStatus(userId, OrderStatus.COMPLETED);
 
         model.addAttribute("allOrdersWithOrderStatusInProgress", allOrdersWithOrderStatusInProgress);
         model.addAttribute("allOrdersWithOrderStatusCompleted", allOrdersWithOrderStatusCompleted);

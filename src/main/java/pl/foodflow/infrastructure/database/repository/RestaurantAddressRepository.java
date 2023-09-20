@@ -24,13 +24,6 @@ public class RestaurantAddressRepository implements RestaurantAddressDAO {
     }
 
     @Override
-    public Optional<RestaurantAddress> findById(Long addressId) {
-        Optional<RestaurantAddressEntity> restAddress = restaurantAddressJpaRepository.findById(addressId);
-
-        return restAddress.map(restaurantAddressMapper::mapFromEntity);
-    }
-
-    @Override
     public void deleteRestaurantAddress(RestaurantAddress restaurantAddress) {
         RestaurantAddressEntity toDelete = restaurantAddressMapper.mapToEntity(restaurantAddress);
         restaurantAddressJpaRepository.delete(toDelete);

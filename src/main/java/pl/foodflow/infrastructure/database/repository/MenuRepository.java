@@ -8,7 +8,6 @@ import pl.foodflow.infrastructure.database.entity.MenuEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.MenuJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.MenuEntityMapper;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,13 +22,6 @@ public class MenuRepository implements MenuDAO {
     public Optional<Menu> findById(Long menuId) {
         return menuJpaRepository.findById(menuId)
                 .map(menuEntityMapper::mapFromEntity);
-    }
-
-    @Override
-    public List<Menu> findAll() {
-        return menuJpaRepository.findAll().stream()
-                .map(menuEntityMapper::mapFromEntity)
-                .toList();
     }
 
     @Override

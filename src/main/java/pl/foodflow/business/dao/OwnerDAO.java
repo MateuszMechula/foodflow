@@ -11,10 +11,6 @@ public interface OwnerDAO {
 
     List<Owner> findAll();
 
-    Owner findByEmail(String ownerEmail);
-
-    Optional<Owner> findById(Long ownerId);
-
     Optional<Owner> findByUserId(Integer userId);
 
     Optional<Owner> findByUserIdWithMenuAndCategoryAndItems(int userId);

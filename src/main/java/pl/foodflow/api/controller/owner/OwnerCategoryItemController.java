@@ -59,10 +59,10 @@ public class OwnerCategoryItemController {
     ) throws IOException {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserId(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
-        menuCategoryService.addItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
+        menuCategoryService.addCategoryItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
 
         log.info("Added a new Category Item: [{}]", categoryItem.getName());
         return "redirect:/owner/items";
@@ -95,7 +95,7 @@ public class OwnerCategoryItemController {
 
     private Owner getOwnerByUsername(String username) {
         int userId = userService.findByUsername(username).getUserId();
-        return ownerService.findByUserId(userId);
+        return ownerService.findOwnerByUserId(userId);
     }
 
     private Set<MenuCategory> getAllCategoriesFromOwner(Owner owner) {

@@ -1,20 +1,24 @@
 package pl.foodflow.business;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.OrderRecordDAO;
 import pl.foodflow.business.exceptions.OrderRecordNotFoundException;
 import pl.foodflow.domain.*;
 import pl.foodflow.enums.OrderStatus;
+import pl.foodflow.utils.ErrorMessages;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderRecordService {
 
     private final OrderRecordDAO orderRecordDAO;
@@ -23,86 +27,71 @@ public class OrderRecordService {
     private final OrderItemService orderItemService;
     private final OwnerService ownerService;
 
-    @Transactional
-    public OrderRecord findById(Long orderRecordId) {
+    public OrderRecord getOrderRecordById(Long orderRecordId) {
+        log.info("Fetching OrderRecord by OrderRecordID: {}", orderRecordId);
         return orderRecordDAO.findById(orderRecordId)
                 .orElseThrow(() -> new OrderRecordNotFoundException(
-                        "Order Record with ID: [%s] not found".formatted(orderRecordId)));
+                        ErrorMessages.ORDER_RECORD_NOT_FOUND.formatted(orderRecordId)));
     }
 
-    @Transactional
     public List<OrderRecord> findAll() {
+        log.info("Fetching all OrderRecords");
         return orderRecordDAO.findAll();
     }
 
-    @Transactional
-    public List<OrderRecord> getAllCustomerOrdersWithOrderStatusInProgress(long userId) {
-        Customer customer = customerService.findByUserId(userId);
-
-        return findAll().stream()
-                .filter(orderRecord -> orderRecord.getCustomer().getCustomerId().equals(customer.getCustomerId()))
-                .filter(orderRecord -> OrderStatus.IN_PROGRESS.toString().equals(orderRecord.getOrderStatus()))
-                .toList();
+    public List<OrderRecord> getAllCustomerOrdersWithStatus(long userId, OrderStatus status) {
+        log.info("Fetching all orders for customer with user ID: {} with status: {}", userId, status);
+        Customer customer = customerService.getCustomerByUserId(userId);
+        return filterOrdersByCustomerAndStatus(customer, status);
     }
 
-    @Transactional
-    public List<OrderRecord> getAllCustomerOrdersWithOrderStatusCompleted(long userId) {
-        Customer customer = customerService.findByUserId(userId);
-
-        return findAll().stream()
-                .filter(orderRecord -> orderRecord.getCustomer().getCustomerId().equals(customer.getCustomerId()))
-                .filter(orderRecord -> OrderStatus.COMPLETED.toString().equals(orderRecord.getOrderStatus()))
-                .toList();
-    }
-
-    @Transactional
-    public List<OrderRecord> getAllOwnerOrdersWithOrderStatusInProgress(long userId) {
-        Owner owner = ownerService.findByUserId((int) userId);
-
-        return findAll().stream()
-                .filter(orderRecord ->
-                        orderRecord.getRestaurant().getOwner().getOwnerId().equals(owner.getOwnerId()))
-                .filter(orderRecord -> OrderStatus.IN_PROGRESS.toString().equals(orderRecord.getOrderStatus()))
-                .toList();
-    }
-
-    @Transactional
-    public List<OrderRecord> getAllOwnerOrdersWithOrderStatusCompleted(long userId) {
-
-        Owner owner = ownerService.findByUserId((int) userId);
-
-        return findAll().stream()
-                .filter(orderRecord ->
-                        orderRecord.getRestaurant().getOwner().getOwnerId().equals(owner.getOwnerId()))
-                .filter(orderRecord -> OrderStatus.COMPLETED.toString().equals(orderRecord.getOrderStatus()))
-                .toList();
-    }
-
-    @Transactional
-    public void changeOrderStatusToCompleted(Long orderRecordId) {
-        OrderRecord orderRecord = findById(orderRecordId);
-        saveOrderRecord(orderRecord.withOrderStatus(String.valueOf(OrderStatus.COMPLETED)));
+    public List<OrderRecord> getAllOwnerOrdersWithStatus(long userId, OrderStatus status) {
+        log.info("Fetching all orders for owner with user ID: {} with status: {}", userId, status);
+        Owner owner = ownerService.findOwnerByUserId((int) userId);
+        return filterOrdersByOwnerAndStatus(owner, status);
     }
 
     @Transactional
     public OrderRecord saveOrderRecord(OrderRecord orderRecord) {
+        log.info("Saving order");
         return orderRecordDAO.saveOrderRecord(orderRecord);
     }
 
     @Transactional
     public void updateOrderRecord(OrderRecord orderRecord) {
         if (orderRecord.getOrderRecordId() == null) {
-            throw new IllegalArgumentException("OrderRecord ID cannot be NULL");
+            throw new OrderRecordNotFoundException(ErrorMessages.ORDER_RECORD_ID_IS_NULL);
         }
-        OrderRecord existingOrderRecord = findById(orderRecord.getOrderRecordId());
+        log.info("Updating OrderRecord with ID: {}", orderRecord.getOrderRecordId());
+        OrderRecord existingOrderRecord = getOrderRecordById(orderRecord.getOrderRecordId());
         OrderRecord updatedRecord = buildUpdatedOrderRecord(orderRecord, existingOrderRecord);
 
         saveOrderRecord(updatedRecord);
     }
 
     @Transactional
+    public void updateCategoryItemAndOrderRecord(
+            CategoryItem categoryItem,
+            OrderItem orderItem,
+            OrderRecord savedOrderRecord) {
+
+        log.info("Updating category and order");
+
+        OrderItem savedOrderItem = orderItemService.saveOrderItem(orderItem);
+        Set<OrderItem> categoryItemOrderItems = categoryItem.getOrderItems();
+        categoryItemOrderItems.add(savedOrderItem);
+
+        Set<OrderItem> orderRecordItems = savedOrderRecord.getOrderItems();
+        orderRecordItems.add(savedOrderItem);
+
+        categoryItemService.updateCategoryItemById(categoryItem.withOrderItems(categoryItemOrderItems));
+        updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
+    }
+
+    @Transactional
     public boolean deleteOrderWithPermission(Long orderRecordId) throws OrderRecordNotFoundException {
-        OrderRecord orderRecord = findById(orderRecordId);
+        log.info("Deleting order with ID: {}", orderRecordId);
+        OrderRecord orderRecord = getOrderRecordById(orderRecordId);
 
         LocalDateTime orderDateTime = orderRecord.getOrderDateTime().toLocalDateTime();
         LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
@@ -116,20 +105,26 @@ public class OrderRecordService {
     }
 
     @Transactional
-    public void updateCategoryItemAndOrderRecord(
-            CategoryItem categoryItem,
-            OrderItem orderItem,
-            OrderRecord savedOrderRecord) {
-        OrderItem savedOrderItem = orderItemService.saveOrderItem(orderItem);
+    public void changeOrderStatusToCompleted(Long orderRecordId) {
+        log.info("Changing order status to COMPLETED for order with ID: {}", orderRecordId);
+        OrderRecord orderRecord = getOrderRecordById(orderRecordId);
+        saveOrderRecord(orderRecord.withOrderStatus(String.valueOf(OrderStatus.COMPLETED)));
+    }
 
-        Set<OrderItem> categoryItemOrderItems = categoryItem.getOrderItems();
-        categoryItemOrderItems.add(savedOrderItem);
+    private List<OrderRecord> filterOrdersByOwnerAndStatus(Owner owner, OrderStatus status) {
+        log.info("Filtering orders for owner with status: {}", status);
+        return findAll().stream()
+                .filter(orderRecord -> orderRecord.getRestaurant().getOwner().equals(owner))
+                .filter(orderRecord -> status.toString().equals(orderRecord.getOrderStatus()))
+                .collect(Collectors.toList());
+    }
 
-        Set<OrderItem> orderRecordItems = savedOrderRecord.getOrderItems();
-        orderRecordItems.add(savedOrderItem);
-
-        categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
-        updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
+    private List<OrderRecord> filterOrdersByCustomerAndStatus(Customer customer, OrderStatus status) {
+        log.info("Filtering orders for customer with status: {}", status);
+        return findAll().stream()
+                .filter(orderRecord -> orderRecord.getCustomer().equals(customer))
+                .filter(orderRecord -> status.toString().equals(orderRecord.getOrderStatus()))
+                .collect(Collectors.toList());
     }
 
     private static OrderRecord buildUpdatedOrderRecord(OrderRecord orderRecord, OrderRecord existingOrderRecord) {
