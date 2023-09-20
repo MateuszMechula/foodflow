@@ -8,7 +8,6 @@ import pl.foodflow.infrastructure.database.entity.OwnerEntity;
 import pl.foodflow.infrastructure.database.repository.jpa.OwnerJpaRepository;
 import pl.foodflow.infrastructure.database.repository.mapper.OwnerEntityMapper;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,13 +22,6 @@ public class OwnerRepository implements OwnerDAO {
     public Optional<Owner> findOwnerByUserId(Integer userId) {
         return ownerJpaRepository.findByUserId(userId)
                 .map(ownerEntityMapper::mapFromEntity);
-    }
-
-    @Override
-    public List<Owner> findAllOwners() {
-        return ownerJpaRepository.findAll().stream()
-                .map(ownerEntityMapper::mapFromEntity)
-                .toList();
     }
 
     @Override

@@ -9,8 +9,6 @@ import pl.foodflow.business.exceptions.OwnerNotFoundException;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.utils.ErrorMessages;
 
-import java.util.List;
-
 
 @Slf4j
 @Service
@@ -23,11 +21,6 @@ public class OwnerService {
         return ownerDAO.findOwnerByUserId(userId)
                 .orElseThrow(() -> new OwnerNotFoundException(
                         ErrorMessages.OWNER_NOT_FOUND.formatted(userId)));
-    }
-
-    public List<Owner> findAll() {
-        log.info("Fetching all Owners");
-        return ownerDAO.findAllOwners();
     }
 
     @Transactional
