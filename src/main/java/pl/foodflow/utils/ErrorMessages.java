@@ -20,11 +20,9 @@ public class ErrorMessages {
     public static final String ORDER_RECORD_NOT_FOUND = "Order Record with ID: [%s] not found";
     public static final String ORDER_RECORD_ID_IS_NULL = "OrderRecord ID cannot be NULL";
     public static final String ORDER_ITEMS_NOT_FOUND = "OrderItems not found";
-
     public static final String OWNER_NOT_FOUND = "Owner with userId: [%s] not found";
     public static final String RESTAURANT_ADDRESS_WITH_ADDRESS_ID_NOT_FOUND =
             "RestaurantAddress with address ID: [%s] not found";
-
     public static final String USER_WITH_USERNAME_NOT_FOUND = "User with username: [%s] not found";
 
 }

@@ -64,7 +64,7 @@ public class OwnerRestaurantController {
     public ModelAndView restaurantDetails(Authentication authentication) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         if (Objects.isNull(owner)) {
             owner = Owner.builder().build();

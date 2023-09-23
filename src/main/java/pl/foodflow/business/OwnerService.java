@@ -18,15 +18,8 @@ public class OwnerService {
     private final OwnerDAO ownerDAO;
 
     public Owner findOwnerByUserId(Integer userId) {
-        return ownerDAO.findOwnerByUserId(userId)
-                .orElseThrow(() -> new OwnerNotFoundException(
-                        ErrorMessages.OWNER_NOT_FOUND.formatted(userId)));
-    }
-
-    @Transactional
-    public Owner findByUserIdWithMenuAndCategoryAndItems(int userId) {
         log.info("Fetching all information about the owner and his restaurant");
-        return ownerDAO.findByUserIdWithMenuAndCategoryAndItems(userId)
+        return ownerDAO.findOwnerByUserId(userId)
                 .orElseThrow(() -> new OwnerNotFoundException(
                         ErrorMessages.OWNER_NOT_FOUND.formatted(userId)));
     }

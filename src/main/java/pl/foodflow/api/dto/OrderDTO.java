@@ -21,6 +21,7 @@ public class OrderDTO {
 
     @NotEmpty(message = "Order items cannot be empty")
     @Size(min = 1, message = "Order items must have at least one entry")
+    @Builder.Default
     private Map<Long, Integer> orderItems = new HashMap<>();
 
     @NotBlank(message = "Order notes cannot be blank")

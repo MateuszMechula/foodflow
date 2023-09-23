@@ -7,7 +7,5 @@ import java.util.Optional;
 public interface OwnerDAO {
     Optional<Owner> findOwnerByUserId(Integer userId);
 
-    Optional<Owner> findByUserIdWithMenuAndCategoryAndItems(int userId);
-
     void saveOwner(Owner owner);
 }

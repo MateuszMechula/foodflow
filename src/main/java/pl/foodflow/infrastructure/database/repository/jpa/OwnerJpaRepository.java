@@ -12,14 +12,5 @@ import java.util.Optional;
 @Repository
 public interface OwnerJpaRepository extends JpaRepository<OwnerEntity, Long> {
     @NonNull List<OwnerEntity> findAll();
-
-    Optional<OwnerEntity> findByUserId(Integer userId);
-
-    @Query("SELECT DISTINCT owner FROM OwnerEntity owner " +
-            "LEFT JOIN FETCH owner.restaurant restaurant " +
-            "LEFT JOIN FETCH restaurant.menu menu " +
-            "LEFT JOIN FETCH menu.menuCategories categories " +
-            "LEFT JOIN FETCH categories.categoryItems categoryItems " +
-            "WHERE owner.userId = :userId")
-    Optional<OwnerEntity> findByUserIdWithMenuAndCategoryAndItems(Integer userId);
+    Optional<OwnerEntity> findOwnerEntityByUserId(Integer userId);
 }

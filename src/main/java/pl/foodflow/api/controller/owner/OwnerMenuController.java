@@ -36,7 +36,7 @@ public class OwnerMenuController {
     public ModelAndView menuSection(Authentication authentication) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         Menu menu = (owner != null && owner.getRestaurant() != null) ? owner.getRestaurant().getMenu() : null;
 
@@ -61,7 +61,7 @@ public class OwnerMenuController {
     ) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         Menu menu = menuMapper.map(menuDTO);
         menuService.createMenuForRestaurant(owner, menu);

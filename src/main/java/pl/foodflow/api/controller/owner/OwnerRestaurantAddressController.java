@@ -45,7 +45,7 @@ public class OwnerRestaurantAddressController {
     public ModelAndView addDeliveryAddressToRestaurantForm(Authentication authentication) {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         log.info("Fetching restaurant addresses for owner: {}", username);
         Set<RestaurantAddress> restaurantAddresses = Optional.ofNullable(owner)
@@ -71,7 +71,7 @@ public class OwnerRestaurantAddressController {
 
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findByUserIdWithMenuAndCategoryAndItems(userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
 
         Address address = addressMapper.map(addressDTO);
 

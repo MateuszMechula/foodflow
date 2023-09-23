@@ -91,16 +91,16 @@ public class OrderRecordService {
     @Transactional
     public boolean deleteOrderWithPermission(Long orderRecordId) throws OrderRecordNotFoundException {
         log.info("Deleting order with ID: {}", orderRecordId);
-        OrderRecord orderRecord = getOrderRecordById(orderRecordId);
+        OrderRecord orderRecordToDelete = getOrderRecordById(orderRecordId);
 
-        LocalDateTime orderDateTime = orderRecord.getOrderDateTime().toLocalDateTime();
+        LocalDateTime orderDateTime = orderRecordToDelete.getOrderDateTime().toLocalDateTime();
         LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
 
         if (orderDateTime.isBefore(fiveMinutesAgo)) {
             return false;
         }
-        orderItemService.deleteOrderItemByOrderRecordId(orderRecordId);
-        orderRecordDAO.deleteOrderRecord(orderRecord);
+        orderItemService.deleteOrderItemByOrderRecord(orderRecordToDelete);
+        orderRecordDAO.deleteOrderRecord(orderRecordToDelete);
         return true;
     }
 

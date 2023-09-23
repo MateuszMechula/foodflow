@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.OrderItemDAO;
 import pl.foodflow.domain.OrderItem;
+import pl.foodflow.domain.OrderRecord;
 
 @Slf4j
 @Service
@@ -21,8 +22,8 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void deleteOrderItemByOrderRecordId(Long orderRecordId) {
-        log.info("Deleting OrderItem by OrderRecordId: {}", orderRecordId);
-        orderItemDAO.deleteOrderItemByOrderRecordId(orderRecordId);
+    public void deleteOrderItemByOrderRecord(OrderRecord orderRecord) {
+        log.info("Deleting OrderItem by OrderRecordId: {}", orderRecord);
+        orderItemDAO.deleteOrderItemByOrderRecord(orderRecord);
     }
 }

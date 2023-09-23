@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MenuCategoryJpaRepository extends JpaRepository<MenuCategoryEntity, Long> {
-
     List<MenuCategoryEntity> findAllByMenu_MenuId(Long menuId);
 }

@@ -10,10 +10,4 @@ import java.util.Set;
 
 @Repository
 public interface AddressJpaRepository extends JpaRepository<AddressEntity, Long> {
-
-    @Query("SELECT a " +
-            "FROM AddressEntity a " +
-            "LEFT JOIN RestaurantAddressEntity ra ON a.addressId = ra.address.addressId " +
-            "AND (ra.restaurantAddressId = :restaurantId OR ra.restaurant.restaurantId IS NULL)")
-    Set<AddressEntity> findByRestaurantId(@Param("restaurantId") Long restaurantId);
 }

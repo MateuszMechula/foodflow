@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserEntityJpaRepository extends JpaRepository<UserEntity, Long> {
+public interface UserJpaRepository extends JpaRepository<UserEntity, Integer> {
 
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.userName = :username")
     Optional<UserEntity> findByUsername(@Param("username") String userName);
