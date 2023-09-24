@@ -33,12 +33,12 @@ class RestaurantAddressJpaRepositoryTest {
     @Test
     void shouldFindRestaurantAddressEntityByAddressId() {
         //given
-        RestaurantAddressEntity restaurantAddress = someRestaurantAddress1();
+        RestaurantAddressEntity restaurantAddress = someRestaurantAddressEntity1();
         Long addressId = restaurantAddress.getAddress().getAddressId();
 
-        userJpaRepository.saveAndFlush(someUser1());
-        ownerJpaRepository.saveAndFlush(someOwner1());
-        restaurantJpaRepository.saveAndFlush(someRestaurant1());
+        userJpaRepository.saveAndFlush(someUserEntity1());
+        ownerJpaRepository.saveAndFlush(someOwnerEntity1());
+        restaurantJpaRepository.saveAndFlush(someRestaurantEntity1());
         restaurantAddressJpaRepository.saveAndFlush(restaurantAddress);
         //when
         Optional<RestaurantAddressEntity> expected = restaurantAddressJpaRepository

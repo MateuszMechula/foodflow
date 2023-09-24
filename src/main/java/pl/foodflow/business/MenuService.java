@@ -74,6 +74,7 @@ public class MenuService {
     }
 
     private void validateOwnerAndMenuNotExist(Owner owner) {
+
         if (Objects.isNull(owner.getRestaurant())) {
             throw new RestaurantNotFound(ErrorMessages.RESTAURANT_NOT_CREATED);
         }

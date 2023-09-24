@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.infrastructure.database.entity.MenuCategoryEntity;
 import pl.foodflow.infrastructure.security.user.UserJpaRepository;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static pl.foodflow.util.TestDataFactory.*;
 
 @DataJpaTest
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(PersistenceContainerTestConfiguration.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -33,17 +34,17 @@ class MenuCategoryJpaRepositoryTest {
     @Test
     void shouldFindMenuCategoryByMenuId() {
         // given
-        userJpaRepository.saveAndFlush(someUser1());
-        ownerJpaRepository.saveAndFlush(someOwner1());
-        restaurantJpaRepository.saveAndFlush(someRestaurant1());
-        menuJpaRepository.saveAndFlush(someMenu1());
+        userJpaRepository.saveAndFlush(someUserEntity1());
+        ownerJpaRepository.saveAndFlush(someOwnerEntity1());
+        restaurantJpaRepository.saveAndFlush(someRestaurantEntity1());
+        menuJpaRepository.saveAndFlush(someMenuEntity1());
 
-        var menuCategories = List.of(someMenuCategory1(), someMenuCategory2(), someMenuCategory3());
+        var menuCategories = List.of(someMenuCategoryEntity1(), someMenuCategoryEntity2(), someMenuCategoryEntity3());
         menuCategoryJpaRepository.saveAllAndFlush(menuCategories);
 
         // when
         List<MenuCategoryEntity> availableMenuCategories = menuCategoryJpaRepository
-                .findAllByMenu_MenuId(someMenu1().getMenuId());
+                .findAllByMenuMenuId(someMenuEntity1().getMenuId());
         // then
         assertThat(availableMenuCategories).hasSize(3);
     }

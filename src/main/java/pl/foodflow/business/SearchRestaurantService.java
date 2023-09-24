@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class SearchRestaurantService {
 
-
     public List<Restaurant> filterMatchingRestaurants(
             SearchAddressDTO searchAddressDTO,
             List<Restaurant> allRestaurants) {

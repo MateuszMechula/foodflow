@@ -42,7 +42,7 @@ public class OwnerMenuCategoryController {
         Owner owner = ownerService.findOwnerByUserId(userId);
 
         if (owner != null && owner.getRestaurant() != null && owner.getRestaurant().getMenu() != null) {
-            var allMenuCategories = menuCategoryService.findAllByMenuCategoryId(owner.getRestaurant().getMenu().getMenuId());
+            var allMenuCategories = menuCategoryService.findAllCategoriesByMenuId(owner.getRestaurant().getMenu().getMenuId());
 
             if (allMenuCategories != null) {
                 Map<String, ?> model = Map.of(

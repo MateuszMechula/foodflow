@@ -41,17 +41,17 @@ class OrderItemJpaRepositoryTest {
     @Transactional
     void shouldDeleteOrderItemByOrderRecordId() {
         //given
-        userJpaRepository.saveAndFlush(someUser1());
-        ownerJpaRepository.saveAndFlush(someOwner1());
-        customerJpaRepository.saveAndFlush(someCustomer1());
-        restaurantJpaRepository.saveAndFlush(someRestaurant1());
-        menuJpaRepository.saveAndFlush(someMenu1());
-        menuCategoryJpaRepository.saveAndFlush(someMenuCategory1());
-        categoryItemJpaRepository.saveAndFlush(someCategoryItem1());
-        OrderRecordEntity orderRecord = someOrderRecord1();
+        userJpaRepository.saveAndFlush(someUserEntity1());
+        ownerJpaRepository.saveAndFlush(someOwnerEntity1());
+        customerJpaRepository.saveAndFlush(someCustomerEntity1());
+        restaurantJpaRepository.saveAndFlush(someRestaurantEntity1());
+        menuJpaRepository.saveAndFlush(someMenuEntity1());
+        menuCategoryJpaRepository.saveAndFlush(someMenuCategoryEntity1());
+        categoryItemJpaRepository.saveAndFlush(someCategoryItemEntity1());
+        OrderRecordEntity orderRecord = someOrderRecordEntity1();
         orderRecordJpaRepository.saveAndFlush(orderRecord);
 
-        OrderItemEntity orderItem = someOrderItem1();
+        OrderItemEntity orderItem = someOrderItemEntity1();
         orderItemJpaRepository.saveAndFlush(orderItem);
 
         //when

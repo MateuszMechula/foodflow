@@ -9,6 +9,7 @@ import pl.foodflow.infrastructure.database.repository.jpa.MenuCategoryJpaReposit
 import pl.foodflow.infrastructure.database.repository.mapper.MenuCategoryEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -18,8 +19,8 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     private final MenuCategoryEntityMapper menuCategoryEntityMapper;
 
     @Override
-    public List<MenuCategory> findAllByMenuCategoryId(Long menuId) {
-        return menuCategoryJpaRepository.findAllByMenu_MenuId(menuId).stream()
+    public List<MenuCategory> findAllCategoriesByMenuId(Long menuId) {
+        return menuCategoryJpaRepository.findAllByMenuMenuId(menuId).stream()
                 .map(menuCategoryEntityMapper::mapFromEntity)
                 .toList();
     }
@@ -34,5 +35,11 @@ public class MenuCategoryRepository implements MenuCategoryDAO {
     @Override
     public void deleteMenuCategoryById(Long menuCategoryId) {
         menuCategoryJpaRepository.deleteById(menuCategoryId);
+    }
+
+    @Override
+    public Optional<MenuCategory> findMenuCategoryById(Long menuCategoryId) {
+        return menuCategoryJpaRepository.findById(menuCategoryId)
+                .map(menuCategoryEntityMapper::mapFromEntity);
     }
 }

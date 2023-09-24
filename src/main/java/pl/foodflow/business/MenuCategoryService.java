@@ -30,9 +30,16 @@ public class MenuCategoryService {
     private final MenuCategoryDAO menuCategoryDAO;
     private final CategoryItemService categoryItemService;
 
-    public List<MenuCategory> findAllByMenuCategoryId(Long menuCategoryId) {
-        log.info("Fetching all MenuCategories by menuCategoryId: {}", menuCategoryId);
-        return menuCategoryDAO.findAllByMenuCategoryId(menuCategoryId);
+    public MenuCategory findMenuCategoryById(Long menuCategoryId) {
+        log.info("Fetching MenuCategory by ID: {}", menuCategoryId);
+        return menuCategoryDAO.findMenuCategoryById(menuCategoryId)
+                .orElseThrow(() -> new MenuCategoryNotFoundException(
+                        ErrorMessages.MENU_CATEGORY_NOT_FOUND.formatted(menuCategoryId)));
+    }
+
+    public List<MenuCategory> findAllCategoriesByMenuId(Long menuId) {
+        log.info("Fetching all MenuCategories by menuId: {}", menuId);
+        return menuCategoryDAO.findAllCategoriesByMenuId(menuId);
     }
 
     @Transactional
@@ -57,7 +64,7 @@ public class MenuCategoryService {
         validateAddItemToMenuCategory(owner, menuCategoryId, imageFile);
         log.info("Adding CategoryItem to MenuCategory by menuCategoryId: {}", menuCategoryId);
 
-        MenuCategory menuCategory = findMenuCategoryOrThrow(menuCategoryId, owner);
+        MenuCategory menuCategory = findMenuCategoryById(menuCategoryId);
 
         String url = uploadImage(imageFile);
         Menu menu = owner.getRestaurant().getMenu();
@@ -72,23 +79,9 @@ public class MenuCategoryService {
     }
 
     @Transactional
-    public void deleteCategoryItemFromMenuCategory(Long categoryItemId) {
-        log.info("Deleting CategoryItem from MenuCategory by categoryItemId: {}", categoryItemId);
-        categoryItemService.deleteCategoryItemById(categoryItemId);
-    }
-
-    @Transactional
     public String uploadImage(MultipartFile imageFile) throws IOException {
         log.info("Uploading image");
         return saveImageToFileSystem(imageFile);
-    }
-
-    private static MenuCategory findMenuCategoryOrThrow(Long menuCategoryId, Owner owner) {
-        log.info("Fetching MenuCategory by ID: {}", menuCategoryId);
-        return owner.getRestaurant().getMenu().getMenuCategories().stream()
-                .filter(category -> category.getMenuCategoryId().equals(menuCategoryId))
-                .findAny().orElseThrow(() -> new MenuCategoryNotFoundException
-                        (ErrorMessages.MENU_CATEGORY_NOT_FOUND.formatted(menuCategoryId)));
     }
 
     private void validateAddItemToMenuCategory(
@@ -113,7 +106,6 @@ public class MenuCategoryService {
         Path filePath = Paths.get(uploadDir, fileName);
 
         Files.createDirectories(filePath.getParent());
-
         try (OutputStream os = Files.newOutputStream(filePath)) {
             os.write(imageFile.getBytes());
         }

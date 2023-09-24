@@ -18,7 +18,7 @@ public class OwnerService {
     private final OwnerDAO ownerDAO;
 
     public Owner findOwnerByUserId(Integer userId) {
-        log.info("Fetching all information about the owner and his restaurant");
+        log.info("Fetching all information about owner");
         return ownerDAO.findOwnerByUserId(userId)
                 .orElseThrow(() -> new OwnerNotFoundException(
                         ErrorMessages.OWNER_NOT_FOUND.formatted(userId)));

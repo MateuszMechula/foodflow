@@ -32,9 +32,9 @@ class RestaurantJpaRepositoryTest {
     @Test
     void shouldFindRestaurantByNip() {
         //given
-        RestaurantEntity restaurant = someRestaurant1();
-        userJpaRepository.saveAndFlush(someUser1());
-        ownerJpaRepository.saveAndFlush(someOwner1());
+        RestaurantEntity restaurant = someRestaurantEntity1();
+        userJpaRepository.saveAndFlush(someUserEntity1());
+        ownerJpaRepository.saveAndFlush(someOwnerEntity1());
         restaurantJpaRepository.saveAndFlush(restaurant);
         //when
         Optional<RestaurantEntity> foundNipRestaurant = restaurantJpaRepository.findByNip(restaurant.getNip());

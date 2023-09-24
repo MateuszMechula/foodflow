@@ -13,8 +13,8 @@ import pl.foodflow.infrastructure.security.user.UserJpaRepository;
 import pl.foodflow.integration.configuration.PersistenceContainerTestConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.foodflow.util.TestDataFactory.someCustomer1;
-import static pl.foodflow.util.TestDataFactory.someUser1;
+import static pl.foodflow.util.TestDataFactory.someCustomerEntity1;
+import static pl.foodflow.util.TestDataFactory.someUserEntity1;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -30,8 +30,8 @@ class CustomerJpaRepositoryTest {
     @Test
     void shouldFindByUserId() {
         // given
-        userJpaRepository.saveAndFlush(someUser1());
-        CustomerEntity customer = someCustomer1();
+        userJpaRepository.saveAndFlush(someUserEntity1());
+        CustomerEntity customer = someCustomerEntity1();
 
         customerJpaRepository.saveAndFlush(customer);
         // when

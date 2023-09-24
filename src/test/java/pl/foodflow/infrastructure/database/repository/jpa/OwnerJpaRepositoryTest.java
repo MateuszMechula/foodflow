@@ -32,12 +32,12 @@ class OwnerJpaRepositoryTest {
     @Test
     void shouldFindOwnerByUserId() {
         //given
-        userJpaRepository.saveAndFlush(someUser4());
-        OwnerEntity owner = someOwner4();
+        userJpaRepository.saveAndFlush(someUserEntity4());
+        OwnerEntity owner = someOwnerEntity4();
 
         ownerJpaRepository.saveAndFlush(owner);
         //when
-        Optional<OwnerEntity> ownerFound = ownerJpaRepository.findOwnerEntityByUserId(someUser4().getUserId());
+        Optional<OwnerEntity> ownerFound = ownerJpaRepository.findOwnerEntityByUserId(someUserEntity4().getUserId());
         //then
         assertThat(ownerFound).isPresent();
     }
@@ -46,9 +46,9 @@ class OwnerJpaRepositoryTest {
     void shouldFindAllOwners() {
 
         //given
-        var users = List.of(someUser1(), someUser2(), someUser3());
+        var users = List.of(someUserEntity1(), someUserEntity2(), someUserEntity3());
         userJpaRepository.saveAllAndFlush(users);
-        var owners = List.of(someOwner1(), someOwner2(), someOwner3());
+        var owners = List.of(someOwnerEntity1(), someOwnerEntity2(), someOwnerEntity3());
         ownerJpaRepository.saveAllAndFlush(owners);
         //when
         List<OwnerEntity> expected = ownerJpaRepository.findAll();

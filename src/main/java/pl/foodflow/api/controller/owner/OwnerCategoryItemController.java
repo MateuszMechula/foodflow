@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
+import pl.foodflow.business.CategoryItemService;
 import pl.foodflow.business.MenuCategoryService;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.CategoryItem;
@@ -40,6 +41,7 @@ public class OwnerCategoryItemController {
     private final OwnerService ownerService;
     private final CategoryItemMapper categoryItemMapper;
     private final MenuCategoryService menuCategoryService;
+    private final CategoryItemService categoryItemService;
 
     @GetMapping(value = CATEGORY_ITEM)
     public String showCreateCategoryItemForm(Model model, Authentication authentication) {
@@ -54,9 +56,7 @@ public class OwnerCategoryItemController {
             @Valid @ModelAttribute("categoryItemDTO") CategoryItemDTO categoryItemDTO,
             @RequestParam("imageFile") MultipartFile imageFile,
             @RequestParam(value = "menuCategory", required = false) Long menuCategoryId,
-            Authentication authentication
-
-    ) throws IOException {
+            Authentication authentication) throws IOException {
         String username = authentication.getName();
         int userId = userService.findByUsername(username).getUserId();
         Owner owner = ownerService.findOwnerByUserId(userId);
@@ -72,7 +72,7 @@ public class OwnerCategoryItemController {
     public String deleteCategoryItem(
             @RequestParam Long categoryItemId) {
 
-        menuCategoryService.deleteCategoryItemFromMenuCategory(categoryItemId);
+        categoryItemService.deleteCategoryItemById(categoryItemId);
         log.info("CategoryItem with ID: [%s] was delete".formatted(categoryItemId));
         return "redirect:/owner/items";
     }
