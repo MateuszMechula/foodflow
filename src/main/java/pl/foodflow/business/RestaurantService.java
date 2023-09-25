@@ -8,7 +8,10 @@ import pl.foodflow.business.dao.AddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.business.exceptions.InvalidAddressException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.domain.*;
+import pl.foodflow.domain.Address;
+import pl.foodflow.domain.Owner;
+import pl.foodflow.domain.Restaurant;
+import pl.foodflow.domain.RestaurantAddress;
 import pl.foodflow.utils.ErrorMessages;
 
 import java.util.List;
@@ -32,7 +35,7 @@ public class RestaurantService {
                 (ErrorMessages.RESTAURANT_BY_ID_NOT_FOUND.formatted(restaurantId)));
     }
 
-    private Restaurant getRestaurantByNip(String restaurantNip) {
+    public Restaurant getRestaurantByNip(String restaurantNip) {
         log.info("Fetching restaurant by NIP: {}", restaurantNip);
         return restaurantDAO.findRestaurantByNip(restaurantNip).orElseThrow(() -> new RestaurantNotFound(
                 ErrorMessages.RESTAURANT_BY_NIP_NOT_FOUND.formatted(restaurantNip)));
@@ -53,8 +56,6 @@ public class RestaurantService {
     @Transactional
     public void addDeliveryAddressToRestaurant(Address deliveryAddress, Owner owner) {
         Restaurant restaurant = owner.getRestaurant();
-        Menu menu = owner.getRestaurant().getMenu();
-        Address address = owner.getRestaurant().getAddress();
 
         RestaurantAddress restaurantAddress = buildRestaurantAddress(deliveryAddress, restaurant);
         Address savedAddress = addressDAO.saveAddress(deliveryAddress);
@@ -64,9 +65,7 @@ public class RestaurantService {
         Set<RestaurantAddress> restaurantAddresses = restaurant.getRestaurantAddresses();
         restaurantAddresses.add(savedRestaurantAddress);
 
-        Restaurant updatedRestaurant = getUpdatedRestaurant(owner, restaurant, menu, address, restaurantAddresses);
-
-        restaurantDAO.saveRestaurant(updatedRestaurant);
+        restaurantDAO.saveRestaurant(restaurant);
         log.info("Delivery address added successfully to restaurant NIP: {}", restaurant.getNip());
     }
 
@@ -101,14 +100,6 @@ public class RestaurantService {
                 .restaurant(restaurant)
                 .address(address)
                 .build();
-    }
-
-    private static Restaurant getUpdatedRestaurant(Owner owner, Restaurant restaurant, Menu menu, Address address, Set<RestaurantAddress> restaurantAddresses) {
-        return restaurant
-                .withMenu(menu)
-                .withAddress(address.withRestaurant(restaurant))
-                .withRestaurantAddresses(restaurantAddresses)
-                .withOwner(owner);
     }
 
     private static Restaurant buildUpdatedRestaurant(Restaurant updatedRestaurant, Restaurant existingRestaurant) {

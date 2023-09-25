@@ -267,7 +267,7 @@ public class TestDataFactory {
                 .description("Najlepsza restauracja w trójmieście")
                 .openTime(OffsetTime.of(10, 0, 0, 0, ZoneOffset.UTC))
                 .closeTime(OffsetTime.of(22, 30, 0, 0, ZoneOffset.UTC))
-                .phone("504005669")
+                .phone("515273444")
                 .minimumOrderAmount(BigDecimal.valueOf(30))
                 .deliveryPrice(BigDecimal.valueOf(6))
                 .deliveryOption(true)
@@ -372,6 +372,51 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+    public static OrderRecord someUpdatedOrderRecord1() {
+        return OrderRecord.builder()
+                .orderRecordId(1L)
+                .orderNumber("ORDER15")
+                .orderDateTime(OffsetDateTime.of(2020, 5, 5, 0, 0, 0, 0, ZoneOffset.UTC))
+                .orderStatus(OrderStatus.COMPLETED.toString())
+                .orderNotes("proszę o szybką dostawę")
+                .totalAmount(BigDecimal.valueOf(150))
+                .contactPhone("505440003")
+                .deliveryAddress("Różana 15/22, 11-500 Tczew")
+                .deliveryType(DeliveryType.DELIVERY.toString())
+                .customer(someCustomer1())
+                .restaurant(someRestaurant1())
+                .build();
+    }
+    public static OrderRecord someOrderRecord2() {
+        return OrderRecord.builder()
+                .orderRecordId(2L)
+                .orderNumber("ORDER16")
+                .orderDateTime(OffsetDateTime.of(2020, 6, 6, 0, 0, 0, 0, ZoneOffset.UTC))
+                .orderStatus(OrderStatus.COMPLETED.toString())
+                .orderNotes("proszę o szybką dostawę")
+                .totalAmount(BigDecimal.valueOf(30))
+                .contactPhone("606550660")
+                .deliveryAddress("Wolska 13, 11-500 Giżycko")
+                .deliveryType(DeliveryType.DELIVERY.toString())
+                .customer(someCustomer1())
+                .restaurant(someRestaurant1())
+                .build();
+    }
+    public static OrderRecord someOrderRecord3() {
+        return OrderRecord.builder()
+                .orderRecordId(3L)
+                .orderNumber("ORDER17")
+                .orderDateTime(OffsetDateTime.of(2021, 6, 6, 0, 0, 0, 0, ZoneOffset.UTC))
+                .orderStatus(OrderStatus.IN_PROGRESS.toString())
+                .orderNotes("proszę o szybką dostawę")
+                .totalAmount(BigDecimal.valueOf(30))
+                .contactPhone("607005444")
+                .deliveryAddress("Glancka 15, 67-446 Raki")
+                .deliveryType(DeliveryType.DELIVERY.toString())
+                .customer(someCustomer1())
+                .restaurant(someRestaurant1())
+                .build();
+    }
 
     public static CategoryItemEntity someCategoryItemEntity1() {
         return CategoryItemEntity.builder()
@@ -441,6 +486,15 @@ public class TestDataFactory {
                         .city("Gdynia")
                         .country("Polska")
                         .build())
+                .build();
+    }
+
+    public static Address someAddress1() {
+        return Address.builder()
+                .country("Polska")
+                .street("Wyzwolenia")
+                .postalCode("30-440")
+                .city("Wałbrzych")
                 .build();
     }
 
