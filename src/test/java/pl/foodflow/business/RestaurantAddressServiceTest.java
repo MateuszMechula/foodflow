@@ -11,9 +11,7 @@ import pl.foodflow.domain.RestaurantAddress;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.foodflow.util.TestDataFactory.someRestaurantAddress1;

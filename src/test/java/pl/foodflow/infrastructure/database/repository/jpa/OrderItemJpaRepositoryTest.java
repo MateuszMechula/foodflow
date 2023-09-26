@@ -4,28 +4,19 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.infrastructure.database.entity.OrderItemEntity;
 import pl.foodflow.infrastructure.database.entity.OrderRecordEntity;
 import pl.foodflow.infrastructure.security.user.UserJpaRepository;
-import pl.foodflow.integration.configuration.PersistenceContainerTestConfiguration;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.foodflow.util.TestDataFactory.*;
 
-@DataJpaTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(PersistenceContainerTestConfiguration.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @TestPropertySource(properties = "test.name=OrderItemJpaRepositoryTest")
-class OrderItemJpaRepositoryTest {
+class OrderItemJpaRepositoryTest extends AbstractJpa {
 
     private UserJpaRepository userJpaRepository;
     private MenuJpaRepository menuJpaRepository;

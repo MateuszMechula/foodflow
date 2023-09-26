@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TestDataFactory {
 
@@ -114,6 +115,7 @@ public class TestDataFactory {
                 .userId(someUserEntity1().getUserId())
                 .build();
     }
+
     public static Owner someOwner1() {
         return Owner.builder()
                 .ownerId(1L)
@@ -131,6 +133,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+
     public static Owner someOwner2() {
         return Owner.builder()
                 .ownerId(1L)
@@ -148,6 +151,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurant2())
                 .build();
     }
+
     public static Owner someOwnerWithoutRestaurant1() {
         return Owner.builder()
                 .ownerId(1L)
@@ -259,6 +263,7 @@ public class TestDataFactory {
                 .menu(someMenu1())
                 .build();
     }
+
     public static Restaurant someRestaurant2() {
         return Restaurant.builder()
                 .restaurantId(1L)
@@ -288,6 +293,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurantEntity1())
                 .build();
     }
+
     public static Menu someMenu1() {
         return Menu.builder()
                 .menuId(1L)
@@ -372,6 +378,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+
     public static OrderRecord someUpdatedOrderRecord1() {
         return OrderRecord.builder()
                 .orderRecordId(1L)
@@ -387,6 +394,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+
     public static OrderRecord someOrderRecord2() {
         return OrderRecord.builder()
                 .orderRecordId(2L)
@@ -402,6 +410,7 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+
     public static OrderRecord someOrderRecord3() {
         return OrderRecord.builder()
                 .orderRecordId(3L)
@@ -462,6 +471,7 @@ public class TestDataFactory {
                         .build())
                 .build();
     }
+
     public static RestaurantAddress someRestaurantAddress1() {
         return RestaurantAddress.builder()
                 .restaurantAddressId(1L)
@@ -475,6 +485,7 @@ public class TestDataFactory {
                         .build())
                 .build();
     }
+
     public static RestaurantAddress someRestaurantAddress2() {
         return RestaurantAddress.builder()
                 .restaurantAddressId(1L)
@@ -495,6 +506,16 @@ public class TestDataFactory {
                 .street("Wyzwolenia")
                 .postalCode("30-440")
                 .city("Wałbrzych")
+                .build();
+    }
+
+    public static AddressEntity someAddressEntity1() {
+        return AddressEntity.builder()
+                .country("Polska")
+                .street("Wyzwolenia")
+                .postalCode("30-440")
+                .city("Wałbrzych")
+                .restaurantAddresses(Set.of(someRestaurantAddressEntity1()))
                 .build();
     }
 
@@ -530,6 +551,7 @@ public class TestDataFactory {
                 .city("Giżycko")
                 .build();
     }
+
     public static OrderDTO someOrderDTO() {
         Map<Long, Integer> orderItems = new HashMap<>();
         orderItems.put(1L, 2);
@@ -541,6 +563,7 @@ public class TestDataFactory {
                 .deliveryType(DeliveryType.DELIVERY)
                 .build();
     }
+
     public static OrderDTO someEmptyOrderDTO() {
         return OrderDTO.builder()
                 .orderNotes("Proszę o szybką dostawę")

@@ -41,6 +41,6 @@ public class AddressEntity {
     @OneToOne(mappedBy = "address")
     private RestaurantEntity restaurant;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "address")
     private Set<RestaurantAddressEntity> restaurantAddresses;
 }
