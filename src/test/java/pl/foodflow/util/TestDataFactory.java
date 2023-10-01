@@ -1,7 +1,6 @@
 package pl.foodflow.util;
 
-import pl.foodflow.api.dto.OrderDTO;
-import pl.foodflow.api.dto.SearchAddressDTO;
+import pl.foodflow.api.dto.*;
 import pl.foodflow.domain.*;
 import pl.foodflow.enums.DeliveryType;
 import pl.foodflow.enums.OrderStatus;
@@ -13,10 +12,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TestDataFactory {
 
@@ -243,6 +239,17 @@ public class TestDataFactory {
     }
 
     public static Restaurant someRestaurant1() {
+        Set<RestaurantAddress> restaurantAddresses = new HashSet<>();
+        restaurantAddresses.add(RestaurantAddress.builder()
+                .restaurantAddressId(1L)
+                .address(Address.builder()
+                        .addressId(1L)
+                        .street("Klonowa")
+                        .city("Giżycko")
+                        .postalCode("11-500")
+                        .country("Polska")
+                        .build()).build());
+
         return Restaurant.builder()
                 .restaurantId(1L)
                 .nip("7244505040")
@@ -261,6 +268,7 @@ public class TestDataFactory {
                         .country("Polska")
                         .build())
                 .menu(someMenu1())
+                .restaurantAddresses(restaurantAddresses)
                 .build();
     }
 
@@ -277,9 +285,29 @@ public class TestDataFactory {
                 .deliveryPrice(BigDecimal.valueOf(6))
                 .deliveryOption(true)
                 .address(Address.builder()
-                        .street("Orzechowa")
-                        .postalCode("80-300")
-                        .city("Gdańsk")
+                        .street("Klonowa")
+                        .postalCode("11-500")
+                        .city("Giżycko")
+                        .country("Polska")
+                        .build())
+                .build();
+    }
+
+    public static RestaurantDTO someRestaurantDTO2() {
+        return RestaurantDTO.builder()
+                .nip("7244505040")
+                .name("Gospoda")
+                .description("Najlepsza restauracja w trójmieście")
+                .openTime("10:00:00")
+                .closeTime("15:00:00")
+                .phone("515273444")
+                .minimumOrderAmount(BigDecimal.valueOf(30))
+                .deliveryPrice(BigDecimal.valueOf(6))
+                .deliveryOption(true)
+                .address(AddressDTO.builder()
+                        .street("Klonowa")
+                        .postalCode("11-500")
+                        .city("Giżycko")
                         .country("Polska")
                         .build())
                 .build();
@@ -295,10 +323,13 @@ public class TestDataFactory {
     }
 
     public static Menu someMenu1() {
+        Set<MenuCategory> menuCategories = new HashSet<>();
+        menuCategories.add(someMenuCategory1());
         return Menu.builder()
                 .menuId(1L)
                 .name("Best menu")
                 .description("Zapraszamy")
+                .menuCategories(menuCategories)
                 .build();
     }
 
@@ -482,6 +513,16 @@ public class TestDataFactory {
                         .postalCode("11-500")
                         .city("Giżycko")
                         .country("Polska")
+                        .restaurantAddresses(Set.of(RestaurantAddress.builder()
+                                .restaurantAddressId(1L)
+                                .restaurant(Restaurant.builder().restaurantId(1L).build())
+                                .address(Address.builder()
+                                        .addressId(1L)
+                                        .street("klonowa")
+                                        .city("Giżycko")
+                                        .postalCode("11-500")
+                                        .country("Polska")
+                                        .build()).build()))
                         .build())
                 .build();
     }
@@ -509,27 +550,29 @@ public class TestDataFactory {
                 .build();
     }
 
-    public static AddressEntity someAddressEntity1() {
-        return AddressEntity.builder()
+    public static AddressDTO someAddressDTO1() {
+        return AddressDTO.builder()
                 .country("Polska")
                 .street("Wyzwolenia")
                 .postalCode("30-440")
                 .city("Wałbrzych")
-                .restaurantAddresses(Set.of(someRestaurantAddressEntity1()))
                 .build();
     }
 
     public static MenuCategory someMenuCategory1() {
+        Set<CategoryItem> categoryItems = new HashSet<>();
+        categoryItems.add(someCategoryItem1());
         return MenuCategory.builder()
                 .menuCategoryId(1L)
                 .name("Burgery")
                 .description("Dobre burgerki")
-                .menu(someMenu1())
+                .categoryItems(categoryItems)
                 .build();
     }
 
     public static MenuCategory someMenuCategory2() {
         return MenuCategory.builder()
+                .menuCategoryId(2L)
                 .name("Pizza")
                 .description("Dobra pizza")
                 .menu(someMenu1())
@@ -538,6 +581,7 @@ public class TestDataFactory {
 
     public static MenuCategory someMenuCategory3() {
         return MenuCategory.builder()
+                .menuCategoryId(3L)
                 .name("Pierogi")
                 .description("Dobre pierożki")
                 .menu(someMenu1())
@@ -571,6 +615,32 @@ public class TestDataFactory {
                 .contactPhone("525404033")
                 .deliveryAddress("Romanowskiego 15, 11-500 Giżycko")
                 .deliveryType(DeliveryType.DELIVERY)
+                .build();
+    }
+
+    public static MenuCategoryDTO someMenuCategoryDTO() {
+        return MenuCategoryDTO.builder()
+                .name("name")
+                .description("description")
+                .restaurant(someRestaurant1())
+                .build();
+    }
+
+    public static MenuDTO someMenuDTO() {
+        return MenuDTO.builder()
+                .name("name")
+                .description("description")
+                .restaurant(someRestaurant1())
+                .build();
+    }
+
+    public static CategoryItemDTO someCategoryItemDTO() {
+        return CategoryItemDTO.builder()
+                .name("name")
+                .description("description")
+                .price(BigDecimal.valueOf(10))
+                .imageUrl("url")
+                .menuCategoryId(1L)
                 .build();
     }
 

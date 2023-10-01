@@ -39,15 +39,15 @@ public class OrderRecordService {
         return orderRecordDAO.findAllOrderRecords();
     }
 
-    public List<OrderRecord> getAllCustomerOrdersWithStatus(long userId, OrderStatus status) {
+    public List<OrderRecord> getAllCustomerOrdersWithStatus(Integer userId, OrderStatus status) {
         log.info("Fetching all orders for customer with user ID: {} with status: {}", userId, status);
         Customer customer = customerService.getCustomerByUserId(userId);
         return filterOrdersByCustomerAndStatus(customer, status);
     }
 
-    public List<OrderRecord> getAllOwnerOrdersWithStatus(long userId, OrderStatus status) {
+    public List<OrderRecord> getAllOwnerOrdersWithStatus(Integer userId, OrderStatus status) {
         log.info("Fetching all orders for owner with user ID: {} with status: {}", userId, status);
-        Owner owner = ownerService.findOwnerByUserId((int) userId);
+        Owner owner = ownerService.findOwnerByUserId(userId);
         return filterOrdersByOwnerAndStatus(owner, status);
     }
 

@@ -5,7 +5,7 @@ import pl.foodflow.domain.Customer;
 import java.util.Optional;
 
 public interface CustomerDAO {
-    Optional<Customer> findCustomerByUserId(Long userId);
+    Optional<Customer> findCustomerByUserId(Integer userId);
 
     void saveCustomer(Customer customer);
 }

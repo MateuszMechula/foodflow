@@ -81,7 +81,7 @@ class OrderRecordServiceTest {
     @Test
     void shouldGetAllCustomerOrdersWithStatus() {
         //given
-        long userId = 1L;
+        Integer userId = 1;
         OrderStatus status = OrderStatus.COMPLETED;
         Customer customer = someCustomer1();
         when(customerService.getCustomerByUserId(userId)).thenReturn(customer);
@@ -97,7 +97,7 @@ class OrderRecordServiceTest {
 
     @Test
     void shouldGetAllOwnerOrdersWithStatus() {
-        int userId = 1;
+        Integer userId = 1;
         OrderStatus status = OrderStatus.IN_PROGRESS;
         Owner owner = someOwner1();
         Restaurant restaurant = someRestaurant1().withOwner(owner);

@@ -3,6 +3,7 @@ package pl.foodflow.infrastructure.security.user;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,20 @@ public class UserService {
         return userDAO.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         ErrorMessages.USER_WITH_USERNAME_NOT_FOUND.formatted(userName)));
+    }
+
+    public Integer getUserIdByAuth() {
+        String username = getUsernameFromAuth();
+        return findByUsername(username).getUserId();
+    }
+
+    public String getUsernameFromAuth() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public Owner getCurrentOwner() {
+        int userIdByAuth = getUserIdByAuth();
+        return ownerService.findOwnerByUserId(userIdByAuth);
     }
 
     @Transactional

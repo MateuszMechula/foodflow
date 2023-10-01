@@ -23,8 +23,8 @@ public class MenuCategoryDTO {
 
     Restaurant restaurant;
 
-    public static MenuDTO buildDefault() {
-        return MenuDTO.builder()
+    public static MenuCategoryDTO buildDefault() {
+        return MenuCategoryDTO.builder()
                 .name("Lody")
                 .description("zajebuste lody")
                 .build();

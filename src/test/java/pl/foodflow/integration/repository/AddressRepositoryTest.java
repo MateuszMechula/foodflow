@@ -1,4 +1,4 @@
-package pl.foodflow.infrastructure.database.repository;
+package pl.foodflow.integration.repository;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.domain.Address;
+import pl.foodflow.infrastructure.database.repository.AddressRepository;
 import pl.foodflow.integration.configuration.PersistenceContainerTestConfiguration;
 
 import java.util.Optional;

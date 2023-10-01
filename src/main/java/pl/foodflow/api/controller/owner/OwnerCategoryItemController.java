@@ -3,7 +3,6 @@ package pl.foodflow.api.controller.owner;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
 import pl.foodflow.business.CategoryItemService;
 import pl.foodflow.business.MenuCategoryService;
-import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
@@ -38,15 +36,14 @@ public class OwnerCategoryItemController {
     public static final String DELETE_CATEGORY_ITEM = "/category-items";
 
     private final UserService userService;
-    private final OwnerService ownerService;
     private final CategoryItemMapper categoryItemMapper;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemService categoryItemService;
 
     @GetMapping(value = CATEGORY_ITEM)
-    public String showCreateCategoryItemForm(Model model, Authentication authentication) {
+    public String showCreateCategoryItemForm(Model model) {
         log.info("Displaying create category item form.");
-        prepareCreateCategoryItemFormModel(model, authentication);
+        prepareCreateCategoryItemFormModel(model);
 
         return "owner_category_item";
     }
@@ -55,12 +52,9 @@ public class OwnerCategoryItemController {
     public String addCategoryItem(
             @Valid @ModelAttribute("categoryItemDTO") CategoryItemDTO categoryItemDTO,
             @RequestParam("imageFile") MultipartFile imageFile,
-            @RequestParam(value = "menuCategory", required = false) Long menuCategoryId,
-            Authentication authentication) throws IOException {
-        String username = authentication.getName();
-        int userId = userService.findByUsername(username).getUserId();
-        Owner owner = ownerService.findOwnerByUserId(userId);
+            @RequestParam(value = "menuCategory", required = false) Long menuCategoryId) throws IOException {
 
+        Owner owner = userService.getCurrentOwner();
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
         menuCategoryService.addCategoryItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
 
@@ -69,17 +63,14 @@ public class OwnerCategoryItemController {
     }
 
     @PostMapping(value = DELETE_CATEGORY_ITEM)
-    public String deleteCategoryItem(
-            @RequestParam Long categoryItemId) {
-
+    public String deleteCategoryItem(@RequestParam Long categoryItemId) {
         categoryItemService.deleteCategoryItemById(categoryItemId);
         log.info("CategoryItem with ID: [%s] was delete".formatted(categoryItemId));
         return "redirect:/owner/items";
     }
 
-    private void prepareCreateCategoryItemFormModel(Model model, Authentication authentication) {
-        String username = authentication.getName();
-        Owner owner = getOwnerByUsername(username);
+    private void prepareCreateCategoryItemFormModel(Model model) {
+        Owner owner = userService.getCurrentOwner();
 
         Set<MenuCategory> allCategories = getAllCategoriesFromOwner(owner);
         Map<MenuCategory, Set<CategoryItem>> menuCategoryItems = allCategories.stream()
@@ -91,11 +82,6 @@ public class OwnerCategoryItemController {
         model.addAttribute("categoryItemDTO", new CategoryItemEntity());
         model.addAttribute("allCategories", allCategories);
         model.addAttribute("menuCategoryItems", menuCategoryItems);
-    }
-
-    private Owner getOwnerByUsername(String username) {
-        int userId = userService.findByUsername(username).getUserId();
-        return ownerService.findOwnerByUserId(userId);
     }
 
     private Set<MenuCategory> getAllCategoriesFromOwner(Owner owner) {

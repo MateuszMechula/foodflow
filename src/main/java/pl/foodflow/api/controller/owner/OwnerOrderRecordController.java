@@ -2,7 +2,6 @@ package pl.foodflow.api.controller.owner;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,28 +29,20 @@ public class OwnerOrderRecordController {
     private final UserService userService;
 
     @GetMapping(value = OWNER_ORDERS)
-    public String checkOwnerOrders(
-            Authentication auth,
-            Model model
-    ) {
-        log.info("Fetching owner orders for user: {}", auth.getName());
-        return getOrders(auth, model);
+    public String checkOwnerOrders(Model model) {
+        log.info("Fetching owner orders for user");
+        return getOrders(model);
     }
 
     @PostMapping(value = OWNER_ORDERS)
-    public String completedOrder(
-            @RequestParam Long orderRecordId,
-            Authentication auth,
-            Model model
-    ) {
+    public String completedOrder(@RequestParam Long orderRecordId, Model model) {
         log.info("Marking order as completed: {}", orderRecordId);
         orderRecordService.changeOrderStatusToCompleted(orderRecordId);
-        return getOrders(auth, model);
+        return getOrders(model);
     }
 
-    private String getOrders(Authentication auth, Model model) {
-        String username = auth.getName();
-        long userId = getUserIdFromAuthentication(username);
+    private String getOrders(Model model) {
+        Integer userId = userService.getUserIdByAuth();
 
         List<OrderRecord> allOwnerOrdersWithStatusInProgress =
                 orderRecordService.getAllOwnerOrdersWithStatus(userId, OrderStatus.IN_PROGRESS);
@@ -62,9 +53,5 @@ public class OwnerOrderRecordController {
         model.addAttribute("allOwnerOrdersWithOrderStatusCompleted", allOwnerOrdersWithOrderStatusCompleted);
 
         return "owner_orders_view";
-    }
-
-    private long getUserIdFromAuthentication(String username) {
-        return Long.parseLong(String.valueOf(userService.findByUsername(username).getUserId()));
     }
 }

@@ -59,6 +59,7 @@ public class RestaurantService {
 
         RestaurantAddress restaurantAddress = buildRestaurantAddress(deliveryAddress, restaurant);
         Address savedAddress = addressDAO.saveAddress(deliveryAddress);
+
         RestaurantAddress savedRestaurantAddress = restaurantAddressService
                 .saveRestaurantAddress(restaurantAddress.withAddress(savedAddress));
 

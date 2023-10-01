@@ -18,8 +18,8 @@ public class CustomerRepository implements CustomerDAO {
 
 
     @Override
-    public Optional<Customer> findCustomerByUserId(Long userId) {
-        return customerJpaRepository.findByUserId(Math.toIntExact(userId))
+    public Optional<Customer> findCustomerByUserId(Integer userId) {
+        return customerJpaRepository.findByUserId(userId)
                 .map(customerEntityMapper::mapFromEntity);
     }
 

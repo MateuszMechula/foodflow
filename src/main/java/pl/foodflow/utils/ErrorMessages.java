@@ -24,5 +24,7 @@ public class ErrorMessages {
     public static final String RESTAURANT_ADDRESS_WITH_ADDRESS_ID_NOT_FOUND =
             "RestaurantAddress with address ID: [%s] not found";
     public static final String USER_WITH_USERNAME_NOT_FOUND = "User with username: [%s] not found";
+    public static final String ORDER_CANNOT_BE_DELETED_AFTER_FIVE_MINUTES =
+            "Order cannot be deleted as it was placed more than 5 minutes ago";
 
 }

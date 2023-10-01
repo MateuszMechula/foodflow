@@ -28,7 +28,7 @@ class CustomerServiceTest {
     @Test
     void shouldReturnCustomerWhenUserIdExists() {
         //given
-        Long customerId = 1L;
+        Integer customerId = 1;
         Customer customer = someCustomer1();
 
         Mockito.when(customerDAO.findCustomerByUserId(customerId))
@@ -43,7 +43,7 @@ class CustomerServiceTest {
     @Test
     void shouldThrowExceptionWhenCustomerIdDoesNotExist() {
         //given
-        Long customerId = 1L;
+        Integer customerId = 1;
         when(customerDAO.findCustomerByUserId(customerId)).thenReturn(Optional.empty());
 
         //when,then
