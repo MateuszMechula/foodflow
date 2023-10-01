@@ -1,7 +1,6 @@
 package pl.foodflow.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
@@ -10,6 +9,7 @@ import pl.foodflow.infrastructure.security.user.UserJpaRepository;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static pl.foodflow.util.TestDataFactory.*;
 
 
@@ -31,6 +31,6 @@ class RestaurantJpaRepositoryTest extends AbstractJpa {
         //when
         Optional<RestaurantEntity> foundNipRestaurant = restaurantJpaRepository.findByNip(restaurant.getNip());
         //then
-        Assertions.assertThat(foundNipRestaurant).isPresent();
+        assertThat(foundNipRestaurant).isPresent();
     }
 }

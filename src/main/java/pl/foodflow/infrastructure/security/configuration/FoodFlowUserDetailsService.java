@@ -15,7 +15,7 @@ public class FoodFlowUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userJpaRepository.findByUsername(username).map(FoodFlowUserDetails::new)
+        return userJpaRepository.findUserEntityByUserName(username).map(FoodFlowUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

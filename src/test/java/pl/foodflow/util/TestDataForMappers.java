@@ -4,7 +4,9 @@ import pl.foodflow.domain.*;
 import pl.foodflow.enums.DeliveryType;
 import pl.foodflow.enums.OrderStatus;
 import pl.foodflow.infrastructure.database.entity.*;
+import pl.foodflow.infrastructure.security.role.RoleEntity;
 import pl.foodflow.infrastructure.security.user.User;
+import pl.foodflow.infrastructure.security.user.UserEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -20,6 +22,17 @@ public class TestDataForMappers {
                 .userName("user1")
                 .password("test")
                 .active(true)
+                .roles(Set.of(RoleEntity.builder().role("OWNER").build()))
+                .build();
+    }
+
+    public static UserEntity someUserEntity() {
+        return UserEntity.builder()
+                .userId(1)
+                .userName("testOwner")
+                .password("test")
+                .active(true)
+                .roles(Set.of(RoleEntity.builder().role("OWNER").build()))
                 .build();
     }
 

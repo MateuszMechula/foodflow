@@ -6,6 +6,7 @@ import pl.foodflow.enums.DeliveryType;
 import pl.foodflow.enums.OrderStatus;
 import pl.foodflow.infrastructure.database.entity.*;
 import pl.foodflow.infrastructure.security.user.User;
+import pl.foodflow.infrastructure.security.user.UserDTO;
 import pl.foodflow.infrastructure.security.user.UserEntity;
 
 import java.math.BigDecimal;
@@ -52,12 +53,62 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static UserEntity someUserEntity5() {
+        return UserEntity.builder()
+                .userId(1)
+                .userName("testOwner")
+                .password("test")
+                .active(true)
+                .build();
+    }
+
     public static User someUser1() {
         return User.builder()
                 .userId(1)
                 .userName("user1")
                 .password("test")
                 .active(true)
+                .build();
+    }
+
+    public static User someUserIntegration() {
+        return User.builder()
+                .userId(1)
+                .userName("user1")
+                .password("test")
+                .active(true)
+                .build();
+    }
+
+    public static UserDTO someUserDTO1() {
+        return UserDTO.builder()
+                .username("user1")
+                .password("test")
+                .name("Jan")
+                .surname("Kowalski")
+                .email("jankowalski@gmail.com")
+                .phone("505440550")
+                .street("Zamojska 25")
+                .postalCode("11-444")
+                .city("Rawicz")
+                .country("Polska")
+                .role("OWNER")
+                .build();
+    }
+
+    public static UserDTO someUserDTO2() {
+        return UserDTO.builder()
+                .username("user1")
+                .password("test")
+                .name("Jan")
+                .surname("Kowalski")
+                .email("jankowalski@gmail.com")
+                .phone("505440550")
+                .street("Zamojska 25")
+                .postalCode("11-444")
+                .city("Rawicz")
+                .country("Polska")
+                .role("CUSTOMER")
                 .build();
     }
 
@@ -95,6 +146,23 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static Customer someCustomerIntegration() {
+        return Customer.builder()
+                .customerId(1L)
+                .name("Jan")
+                .surname("Kowalski")
+                .email("jankowalski@gmial.com")
+                .address(Address.builder()
+                        .city("Gdańsk")
+                        .country("Polska")
+                        .postalCode("80-180")
+                        .street("Niepołomicka")
+                        .build())
+                .phone("505440550")
+                .userId(someUserIntegration().getUserId())
+                .build();
+    }
+
     public static OwnerEntity someOwnerEntity1() {
         return OwnerEntity.builder()
                 .ownerId(1L)
@@ -129,6 +197,25 @@ public class TestDataFactory {
                 .restaurant(someRestaurant1())
                 .build();
     }
+
+    public static Owner someOwnerIntegration() {
+        return Owner.builder()
+                .ownerId(1L)
+                .name("Patryk")
+                .surname("Nowobogacki")
+                .email("patryknowobogacki@gmail.com")
+                .phone("604555005")
+                .address(Address.builder()
+                        .street("Słowackiego")
+                        .city("Gdańsk")
+                        .postalCode("80-130")
+                        .country("Polska")
+                        .build())
+                .userId(someUser1().getUserId())
+                .restaurant(someRestaurantIntegration())
+                .build();
+    }
+
 
     public static Owner someOwner2() {
         return Owner.builder()
@@ -272,6 +359,27 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static Restaurant someRestaurantIntegration() {
+        return Restaurant.builder()
+                .restaurantId(1L)
+                .nip("7244505040")
+                .name("Gospoda")
+                .description("Najlepsza restauracja w trójmieście")
+                .openTime(OffsetTime.of(10, 0, 0, 0, ZoneOffset.UTC))
+                .closeTime(OffsetTime.of(22, 30, 0, 0, ZoneOffset.UTC))
+                .phone("504005669")
+                .minimumOrderAmount(BigDecimal.valueOf(30))
+                .deliveryPrice(BigDecimal.valueOf(6))
+                .deliveryOption(true)
+                .address(Address.builder()
+                        .street("Orzechowa")
+                        .postalCode("80-300")
+                        .city("Gdańsk")
+                        .country("Polska")
+                        .build())
+                .build();
+    }
+
     public static Restaurant someRestaurant2() {
         return Restaurant.builder()
                 .restaurantId(1L)
@@ -330,6 +438,16 @@ public class TestDataFactory {
                 .name("Best menu")
                 .description("Zapraszamy")
                 .menuCategories(menuCategories)
+                .menuId(1L)
+                .build();
+    }
+
+    public static Menu someMenuIntegration() {
+        return Menu.builder()
+                .menuId(1L)
+                .name("Best menu")
+                .description("Zapraszamy")
+                .restaurant(someRestaurantIntegration())
                 .build();
     }
 
@@ -410,6 +528,22 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static OrderRecord someOrderIntegration() {
+        return OrderRecord.builder()
+                .orderRecordId(1L)
+                .orderNumber("ORDER15")
+                .orderDateTime(OffsetDateTime.of(2020, 5, 5, 0, 0, 0, 0, ZoneOffset.UTC))
+                .orderStatus(OrderStatus.COMPLETED.toString())
+                .orderNotes("proszę o szybką dostawę")
+                .totalAmount(BigDecimal.valueOf(150))
+                .contactPhone("505440003")
+                .deliveryAddress("Różana 15/22, 11-500 Tczew")
+                .deliveryType(DeliveryType.DELIVERY.toString())
+                .customer(someCustomer1())
+                .restaurant(someRestaurantIntegration())
+                .build();
+    }
+
     public static OrderRecord someUpdatedOrderRecord1() {
         return OrderRecord.builder()
                 .orderRecordId(1L)
@@ -476,6 +610,17 @@ public class TestDataFactory {
                 .description("Soczysty burgerek")
                 .price(BigDecimal.valueOf(10))
                 .imageUrl("url")
+                .build();
+    }
+
+    public static CategoryItem someCategoryItemIntegration() {
+        return CategoryItem.builder()
+                .categoryItemId(1L)
+                .name("Bigmac")
+                .description("Soczysty burgerek")
+                .price(BigDecimal.valueOf(10))
+                .imageUrl("url")
+                .menuCategory(someMenuCategoryIntegration())
                 .build();
     }
 
@@ -576,6 +721,15 @@ public class TestDataFactory {
                 .name("Burgery")
                 .description("Dobre burgerki")
                 .categoryItems(categoryItems)
+                .build();
+    }
+
+    public static MenuCategory someMenuCategoryIntegration() {
+        return MenuCategory.builder()
+                .menuCategoryId(1L)
+                .name("Burgery")
+                .description("Dobre burgerki")
+                .menu(someMenuIntegration())
                 .build();
     }
 

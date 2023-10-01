@@ -24,7 +24,7 @@ import static pl.foodflow.util.TestDataFactory.someAddress1;
 @Import(PersistenceContainerTestConfiguration.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @TestPropertySource(properties = "test.name=AddressRepositoryTest")
-class AddressRepositoryTest {
+class AddressRepositoryIntegrationTest {
     private AddressRepository addressRepository;
 
     @Test

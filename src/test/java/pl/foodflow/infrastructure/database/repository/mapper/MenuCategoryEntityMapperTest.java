@@ -1,4 +1,4 @@
-package pl.foodflow.integration.mapper;
+package pl.foodflow.infrastructure.database.repository.mapper;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.infrastructure.database.entity.MenuCategoryEntity;
-import pl.foodflow.infrastructure.database.repository.mapper.MenuCategoryEntityMapper;
 import pl.foodflow.util.TestDataForMappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
