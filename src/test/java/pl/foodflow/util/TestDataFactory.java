@@ -550,6 +550,15 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static AddressEntity someAddressEntity1() {
+        return AddressEntity.builder()
+                .country("Polska")
+                .street("Wyzwolenia")
+                .postalCode("30-440")
+                .city("Wałbrzych")
+                .build();
+    }
+
     public static AddressDTO someAddressDTO1() {
         return AddressDTO.builder()
                 .country("Polska")
