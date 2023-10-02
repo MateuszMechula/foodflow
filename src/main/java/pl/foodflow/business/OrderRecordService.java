@@ -84,7 +84,7 @@ public class OrderRecordService {
         Set<OrderItem> orderRecordItems = savedOrderRecord.getOrderItems();
         orderRecordItems.add(savedOrderItem);
 
-        categoryItemService.updateCategoryItemById(categoryItem.withOrderItems(categoryItemOrderItems));
+        categoryItemService.updateCategoryItem(categoryItem.withOrderItems(categoryItemOrderItems));
         updateOrderRecord(savedOrderRecord.withOrderItems(orderRecordItems));
     }
 

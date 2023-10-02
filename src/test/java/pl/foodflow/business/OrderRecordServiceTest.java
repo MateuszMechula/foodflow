@@ -164,7 +164,7 @@ class OrderRecordServiceTest {
         //then
         verify(orderItemService, times(1)).saveOrderItem(orderItem);
         verify(categoryItemService, times(1))
-                .updateCategoryItemById(categoryItem.withOrderItems(any()));
+                .updateCategoryItem(categoryItem.withOrderItems(any()));
         verify(orderRecordDAO, times(1))
                 .saveOrderRecord(savedOrderRecord.withOrderItems(any()));
     }

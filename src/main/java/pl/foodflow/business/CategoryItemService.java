@@ -26,7 +26,7 @@ public class CategoryItemService {
     }
 
     @Transactional
-    public void updateCategoryItemById(CategoryItem categoryItem) {
+    public void updateCategoryItem(CategoryItem categoryItem) {
         requireNonNullId(categoryItem);
         log.info("Updating CategoryItem by ID: {}", categoryItem.getCategoryItemId());
         CategoryItem existingCategoryItem = getCategoryItemById(categoryItem.getCategoryItemId());

@@ -60,7 +60,7 @@ class CategoryItemServiceTest {
         when(categoryItemDAO.findCategoryItemById(categoryItem.getCategoryItemId()))
                 .thenReturn(Optional.ofNullable(existingCategoryItem));
         //when
-        categoryItemService.updateCategoryItemById(categoryItem);
+        categoryItemService.updateCategoryItem(categoryItem);
 
         //then
         verify(categoryItemDAO).saveCategoryItem(categoryItem);
