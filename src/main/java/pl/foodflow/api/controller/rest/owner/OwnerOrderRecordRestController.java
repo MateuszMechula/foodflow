@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(value = OwnerOrderRecordRestController.ORDER_RECORDS)
 public class OwnerOrderRecordRestController {
 
-    public static final String ORDER_RECORDS = "/api/v1/owner/order-records";
+    public static final String ORDER_RECORDS = "/owner/api/v1/order-records";
     public static final String COMPLETE_ORDER = "/complete/{orderRecordId}";
 
     private final OrderRecordService orderRecordService;

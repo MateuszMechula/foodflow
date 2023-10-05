@@ -19,35 +19,8 @@ public class TestDataFactory {
 
     public static UserEntity someUserEntity1() {
         return UserEntity.builder()
-                .userId(1)
-                .userName("user1")
-                .password("test")
-                .active(true)
-                .build();
-    }
-
-    public static UserEntity someUserEntity2() {
-        return UserEntity.builder()
-                .userId(2)
-                .userName("user2")
-                .password("test")
-                .active(true)
-                .build();
-    }
-
-    public static UserEntity someUserEntity3() {
-        return UserEntity.builder()
                 .userId(3)
-                .userName("user3")
-                .password("test")
-                .active(true)
-                .build();
-    }
-
-    public static UserEntity someUserEntity4() {
-        return UserEntity.builder()
-                .userId(4)
-                .userName("user3")
+                .userName("user1")
                 .password("test")
                 .active(true)
                 .build();
@@ -55,7 +28,6 @@ public class TestDataFactory {
 
     public static UserEntity someUserEntity5() {
         return UserEntity.builder()
-                .userId(1)
                 .userName("testOwner")
                 .password("test")
                 .active(true)
@@ -114,7 +86,7 @@ public class TestDataFactory {
 
     public static CustomerEntity someCustomerEntity1() {
         return CustomerEntity.builder()
-                .customerId(1L)
+                .customerId(2L)
                 .name("Jan")
                 .surname("Kowalski")
                 .email("jankowalski@gmial.com")
@@ -165,7 +137,7 @@ public class TestDataFactory {
 
     public static OwnerEntity someOwnerEntity1() {
         return OwnerEntity.builder()
-                .ownerId(1L)
+                .ownerId(2L)
                 .name("Patryk")
                 .surname("Nowobogacki")
                 .email("patryknowobogacki@gmail.com")
@@ -249,57 +221,6 @@ public class TestDataFactory {
                         .country("Polska")
                         .build())
                 .userId(someUser1().getUserId())
-                .build();
-    }
-
-    public static OwnerEntity someOwnerEntity2() {
-        return OwnerEntity.builder()
-                .ownerId(2L)
-                .name("Wiesław")
-                .surname("Stary")
-                .email("wieslawstary@gmail.com")
-                .phone("550660550")
-                .address(AddressEntity.builder()
-                        .street("Wielka 15")
-                        .city("Gdańsk")
-                        .postalCode("80-130")
-                        .country("Polska")
-                        .build())
-                .userId(someUserEntity2().getUserId())
-                .build();
-    }
-
-    public static OwnerEntity someOwnerEntity3() {
-        return OwnerEntity.builder()
-                .ownerId(3L)
-                .name("Radosław")
-                .surname("Wielkopolski")
-                .email("radoslawwielkopolski@gmail.com")
-                .phone("518440660")
-                .address(AddressEntity.builder()
-                        .street("Polandia")
-                        .city("Gdańsk")
-                        .postalCode("80-130")
-                        .country("Polska")
-                        .build())
-                .userId(someUserEntity3().getUserId())
-                .build();
-    }
-
-    public static OwnerEntity someOwnerEntity4() {
-        return OwnerEntity.builder()
-                .ownerId(4L)
-                .name("Radosław")
-                .surname("Wielkopolski")
-                .email("radoslawwielkopolski@gmail.com")
-                .phone("518440660")
-                .address(AddressEntity.builder()
-                        .street("Polandia")
-                        .city("Gdańsk")
-                        .postalCode("80-130")
-                        .country("Polska")
-                        .build())
-                .userId(someUserEntity4().getUserId())
                 .build();
     }
 
@@ -403,7 +324,27 @@ public class TestDataFactory {
 
     public static RestaurantDTO someRestaurantDTO2() {
         return RestaurantDTO.builder()
-                .nip("7244505040")
+                .nip("7654032040")
+                .name("Gospoda")
+                .description("Najlepsza restauracja w trójmieście")
+                .openTime("10:00:00")
+                .closeTime("15:00:00")
+                .phone("515273444")
+                .minimumOrderAmount(BigDecimal.valueOf(30))
+                .deliveryPrice(BigDecimal.valueOf(6))
+                .deliveryOption(true)
+                .address(AddressDTO.builder()
+                        .street("Klonowa")
+                        .postalCode("11-500")
+                        .city("Giżycko")
+                        .country("Polska")
+                        .build())
+                .build();
+    }
+
+    public static RestaurantDTO someRestaurantDTO3() {
+        return RestaurantDTO.builder()
+                .nip("7654032050")
                 .name("Gospoda")
                 .description("Najlepsza restauracja w trójmieście")
                 .openTime("10:00:00")
@@ -438,7 +379,6 @@ public class TestDataFactory {
                 .name("Best menu")
                 .description("Zapraszamy")
                 .menuCategories(menuCategories)
-                .menuId(1L)
                 .build();
     }
 
@@ -541,6 +481,22 @@ public class TestDataFactory {
                 .deliveryType(DeliveryType.DELIVERY.toString())
                 .customer(someCustomer1())
                 .restaurant(someRestaurantIntegration())
+                .build();
+    }
+
+    public static OrderRecord someOrderIntegration2() {
+        return OrderRecord.builder()
+                .orderRecordId(1L)
+                .orderNumber("ORDER15")
+                .orderDateTime(OffsetDateTime.of(2020, 5, 5, 0, 0, 0, 0, ZoneOffset.UTC))
+                .orderStatus(OrderStatus.COMPLETED.toString())
+                .orderNotes("proszę o szybką dostawę")
+                .totalAmount(BigDecimal.valueOf(150))
+                .contactPhone("505440003")
+                .deliveryAddress("Różana 15/22, 11-500 Tczew")
+                .deliveryType(DeliveryType.DELIVERY.toString())
+                .customer(Customer.builder().customerId(1L).build())
+                .restaurant(Restaurant.builder().restaurantId(1L).build())
                 .build();
     }
 
@@ -797,13 +753,20 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static MenuDTO someMenuDTO2() {
+        return MenuDTO.builder()
+                .name("name")
+                .description("description")
+                .restaurant(Restaurant.builder().restaurantId(1L).build())
+                .build();
+    }
+
     public static CategoryItemDTO someCategoryItemDTO() {
         return CategoryItemDTO.builder()
                 .name("name")
                 .description("description")
                 .price(BigDecimal.valueOf(10))
                 .imageUrl("url")
-                .menuCategoryId(1L)
                 .build();
     }
 

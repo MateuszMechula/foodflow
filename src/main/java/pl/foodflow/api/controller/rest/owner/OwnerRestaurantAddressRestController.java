@@ -20,7 +20,7 @@ import pl.foodflow.infrastructure.security.user.UserService;
 @AllArgsConstructor
 @RequestMapping(value = OwnerRestaurantAddressRestController.RESTAURANT_ADDRESSES)
 public class OwnerRestaurantAddressRestController {
-    public static final String RESTAURANT_ADDRESSES = "/api/v1/owner/restaurant-addresses";
+    public static final String RESTAURANT_ADDRESSES = "/owner/api/v1/restaurant-addresses";
     public static final String ADDRESS_ID = "/{addressId}";
 
     private final UserService userService;

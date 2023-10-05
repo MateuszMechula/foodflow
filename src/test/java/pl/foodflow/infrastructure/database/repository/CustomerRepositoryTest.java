@@ -35,7 +35,7 @@ class CustomerRepositoryTest {
         Customer customer = someCustomer1();
         CustomerEntity customerEntity = someCustomerEntity1();
 
-        when(customerJpaRepository.findByUserId(userId)).thenReturn(Optional.of(customerEntity));
+        when(customerJpaRepository.findCustomerEntityByUserId(userId)).thenReturn(Optional.of(customerEntity));
         when(customerEntityMapper.mapFromEntity(customerEntity)).thenReturn(customer);
         //when
         Optional<Customer> customerFound = customerRepository.findCustomerByUserId(userId);
@@ -43,7 +43,7 @@ class CustomerRepositoryTest {
         assertTrue(customerFound.isPresent());
         assertEquals(customer, customerFound.get());
 
-        verify(customerJpaRepository).findByUserId(userId);
+        verify(customerJpaRepository).findCustomerEntityByUserId(userId);
         verify(customerEntityMapper).mapFromEntity(customerEntity);
     }
 

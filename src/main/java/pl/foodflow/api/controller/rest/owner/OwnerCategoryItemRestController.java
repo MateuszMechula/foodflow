@@ -22,19 +22,20 @@ import java.io.IOException;
 @AllArgsConstructor
 @RequestMapping(value = OwnerCategoryItemRestController.CATEGORY_ITEMS)
 public class OwnerCategoryItemRestController {
-    public static final String CATEGORY_ITEMS = "/api/v1/owner/category-items";
-    private static final String CATEGORY_ITEM_ID = "/{categoryItemId}";
+    public static final String CATEGORY_ITEMS = "/owner/api/v1/category-items";
+    public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
+    public static final String CATEGORY_ITEM_ID = "/{categoryItemId}";
 
     private final UserService userService;
     private final CategoryItemMapper categoryItemMapper;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemService categoryItemService;
 
-    @PostMapping
+    @PostMapping(value = MENU_CATEGORY_ID)
     public ResponseEntity<Void> addCategoryItem(
-            @Valid @RequestBody CategoryItemDTO categoryItemDTO,
+            @PathVariable Long menuCategoryId,
             @RequestParam("imageFile") MultipartFile imageFile,
-            @RequestParam(value = "menuCategory", required = false) Long menuCategoryId) throws IOException {
+            @Valid @RequestBody CategoryItemDTO categoryItemDTO) throws IOException {
 
         Owner owner = userService.getCurrentOwner();
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);

@@ -7,8 +7,10 @@ import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.infrastructure.database.entity.CustomerEntity;
 import pl.foodflow.infrastructure.security.user.UserJpaRepository;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static pl.foodflow.util.TestDataFactory.someCustomerEntity1;
 import static pl.foodflow.util.TestDataFactory.someUserEntity1;
 
@@ -28,10 +30,10 @@ class CustomerJpaRepositoryTest extends AbstractJpa {
 
         customerJpaRepository.saveAndFlush(customer);
         // when
-        CustomerEntity foundCustomer = customerJpaRepository.findByUserId(1).orElseThrow();
+        Optional<CustomerEntity> foundCustomer = customerJpaRepository.findCustomerEntityByUserId(3);
         // then
-        assertNotNull(foundCustomer);
-        assertEquals("Jan", foundCustomer.getName());
-        assertEquals("Kowalski", foundCustomer.getSurname());
+        assertThat(foundCustomer).isPresent();
+        assertEquals("Jan", foundCustomer.get().getName());
+        assertEquals("Kowalski", foundCustomer.get().getSurname());
     }
 }

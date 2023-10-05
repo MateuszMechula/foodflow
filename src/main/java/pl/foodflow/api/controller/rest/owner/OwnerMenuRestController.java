@@ -18,7 +18,7 @@ import pl.foodflow.infrastructure.security.user.UserService;
 @AllArgsConstructor
 @RequestMapping(value = OwnerMenuRestController.MENUS)
 public class OwnerMenuRestController {
-    public static final String MENUS = "/api/v1/owner/menus";
+    public static final String MENUS = "/owner/api/v1/menus";
     public static final String MENU_ID = "/{menuId}";
     private final MenuMapper menuMapper;
     private final MenuService menuService;

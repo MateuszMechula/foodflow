@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping(value = CustomerSearchRestaurantRestController.SEARCH_RESTAURANTS)
 public class CustomerSearchRestaurantRestController {
 
-    public static final String SEARCH_RESTAURANTS = "/api/v1/customer/search-restaurants";
+    public static final String SEARCH_RESTAURANTS = "/customer/api/v1/search-restaurants";
     private final RestaurantService restaurantService;
     private final SearchRestaurantService searchRestaurantService;
 

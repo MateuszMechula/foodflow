@@ -19,7 +19,7 @@ import pl.foodflow.infrastructure.security.user.UserService;
 @AllArgsConstructor
 @RequestMapping(value = OwnerMenuCategoryRestController.MENU_CATEGORIES)
 public class OwnerMenuCategoryRestController {
-    public static final String MENU_CATEGORIES = "/api/v1/owner/menu-categories";
+    public static final String MENU_CATEGORIES = "/owner/api/v1/menu-categories";
     public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
     private final MenuService menuService;
     private final UserService userService;

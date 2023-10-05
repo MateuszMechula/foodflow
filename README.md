@@ -1,6 +1,7 @@
 # FoodFlow
 
-FoodFlow is a straightforward food ordering portal that enables restaurant owners to create accounts, establish their restaurants, define menus, specify delivery locations, and manage orders.
+FoodFlow is a straightforward food ordering portal that enables restaurant owners to create accounts, establish their
+restaurants, define menus, specify delivery locations, and manage orders.
 
 Customers can also create accounts, search for restaurants,
 view menus, place orders, and, under certain conditions,
@@ -37,6 +38,7 @@ Place Orders: Customers can place orders by selecting desired items and quantiti
 Order Confirmation: After placing an order, customers receive a confirmation with a unique order number.
 
 Order Cancellation: Customers can cancel orders if it has been less than 5 minutes since they were placed.
+
 ## Getting started
 
 To get started with this food ordering portal, follow these steps:
@@ -45,6 +47,7 @@ To get started with this food ordering portal, follow these steps:
 - Set up a PostgreSQL database and configure the application properties to connect to it.
 - Build and run the application.
 - Access the portal through a web browser.
+
 ## Technologies used
 
 - Java
@@ -55,6 +58,7 @@ To get started with this food ordering portal, follow these steps:
 - RESTful API for communication
 - Swagger for documenting REST APIs
 - RestAssured for API testing
+
 ## Authors
 
 - [@Author](https://www.github.com/MateuszMechula)

@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(value = CustomerOrderRecordRestController.ORDER_RECORDS)
 public class CustomerOrderRecordRestController {
-    public static final String ORDER_RECORDS = "/api/v1/customer/order-records";
+    public static final String ORDER_RECORDS = "/customer/api/v1/order-records";
     public static final String RESTAURANT_ID = "/{restaurantId}";
     public static final String ORDER_RECORD_ID = "/{orderRecordId}";
 
@@ -43,8 +43,9 @@ public class CustomerOrderRecordRestController {
     @PostMapping(value = RESTAURANT_ID)
     public ResponseEntity<OrderRecord> addOrderRecord(
             @PathVariable Long restaurantId,
-            @Valid @ModelAttribute("orderDTO") OrderDTO orderDTO
+            @Valid @RequestBody OrderDTO orderDTO
     ) {
+
         Integer userId = userService.getUserIdByAuth();
         Customer customer = customerService.getCustomerByUserId(userId);
 
