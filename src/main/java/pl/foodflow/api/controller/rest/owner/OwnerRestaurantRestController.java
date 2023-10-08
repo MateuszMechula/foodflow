@@ -26,6 +26,12 @@ public class OwnerRestaurantRestController {
     private final RestaurantMapper restaurantMapper;
     private final RestaurantService restaurantService;
 
+    @GetMapping(value = RESTAURANT_ID)
+    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurant);
+    }
+
     @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addRestaurant(
             @Valid @RequestBody RestaurantDTO restaurantDTO,

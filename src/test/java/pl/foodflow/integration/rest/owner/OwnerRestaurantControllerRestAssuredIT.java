@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.api.dto.RestaurantDTO;
+import pl.foodflow.domain.Restaurant;
 import pl.foodflow.integration.configuration.RestAssuredIntegrationTestBase;
 import pl.foodflow.integration.support.owner.OwnerRestaurantControllerTestSupport;
 
@@ -16,6 +17,16 @@ import static pl.foodflow.util.TestDataFactory.someRestaurantDTO3;
 public class OwnerRestaurantControllerRestAssuredIT
         extends RestAssuredIntegrationTestBase
         implements OwnerRestaurantControllerTestSupport {
+
+    @Test
+    void shouldGetRestaurantById() {
+        //given
+        Long restaurantId = 1L;
+        //when
+        Restaurant restaurant = getRestaurantById(restaurantId);
+        //then
+        assertThat(restaurant).isNotNull();
+    }
 
     @Test
     void shouldAddRestaurant() {

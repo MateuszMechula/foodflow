@@ -19,8 +19,15 @@ public class OwnerOrderRecordRestController {
 
     public static final String ORDER_RECORDS = "/api/v1/owner/order-records";
     public static final String COMPLETE_ORDER = "/complete/{orderRecordId}";
+    public static final String ORDER_RECORD_ID = "/{orderRecordId}";
 
     private final OrderRecordService orderRecordService;
+
+    @GetMapping(value = ORDER_RECORD_ID)
+    public ResponseEntity<OrderRecord> getOrderRecordById(@PathVariable Long orderRecordId) {
+        OrderRecord orderRecord = orderRecordService.getOrderRecordById(orderRecordId);
+        return ResponseEntity.status(HttpStatus.OK).body(orderRecord);
+    }
 
     @GetMapping
     public ResponseEntity<List<OrderRecord>> getAllOwnerOrdersWithStatus(

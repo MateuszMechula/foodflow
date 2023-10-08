@@ -19,6 +19,16 @@ public class OwnerOrderRecordControllerRestAssuredIT
         implements OwnerOrderRecordControllerTestSupport {
 
     @Test
+    void shouldGetOrderRecordById() {
+        //given
+        Long orderRecordId = 1L;
+        //when
+        OrderRecord orderRecord = getOrderRecordById(orderRecordId);
+        //then
+        assertThat(orderRecord).isNotNull();
+    }
+
+    @Test
     void shouldGetAllOwnerOrdersWithStatus() {
         //given
         Integer userId = 1;

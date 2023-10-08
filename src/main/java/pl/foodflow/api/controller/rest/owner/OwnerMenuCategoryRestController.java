@@ -28,6 +28,12 @@ public class OwnerMenuCategoryRestController {
     private final MenuCategoryMapper menuCategoryMapper;
     private final MenuCategoryService menuCategoryService;
 
+    @GetMapping(value = MENU_CATEGORY_ID)
+    public ResponseEntity<MenuCategory> getMenuCategoryById(@PathVariable Long menuCategoryId) {
+        MenuCategory menuCategory = menuCategoryService.findMenuCategoryById(menuCategoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(menuCategory);
+    }
+
     @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addMenuCategory(
             @Valid @RequestBody MenuCategoryDTO menuCategoryDTO,

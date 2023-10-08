@@ -8,12 +8,22 @@ import pl.foodflow.enums.OrderStatus;
 
 import java.util.List;
 
-import static pl.foodflow.api.controller.rest.owner.OwnerOrderRecordRestController.COMPLETE_ORDER;
-import static pl.foodflow.api.controller.rest.owner.OwnerOrderRecordRestController.ORDER_RECORDS;
+import static pl.foodflow.api.controller.rest.owner.OwnerOrderRecordRestController.*;
 
 public interface OwnerOrderRecordControllerTestSupport {
 
     RequestSpecification requestSpecification();
+
+    default OrderRecord getOrderRecordById(final Long orderRecordId) {
+        return requestSpecification()
+                .pathParam("orderRecordId", orderRecordId)
+                .get(ORDER_RECORDS + ORDER_RECORD_ID)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .response()
+                .as(OrderRecord.class);
+    }
 
     default List<OrderRecord> getAllOwnerOrdersWithStatus(
             final Integer userId,

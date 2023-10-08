@@ -1,19 +1,31 @@
 package pl.foodflow.integration.rest.owner;
 
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import pl.foodflow.api.dto.MenuCategoryDTO;
+import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.integration.configuration.RestAssuredIntegrationTestBase;
 import pl.foodflow.integration.support.owner.OwnerMenuCategoryRestControllerTestSupport;
 import pl.foodflow.util.TestDataFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @TestPropertySource(properties = "test.name=OwnerMenuCategoryControllerRestAssuredIT")
 public class OwnerMenuCategoryControllerRestAssuredIT
         extends RestAssuredIntegrationTestBase
         implements OwnerMenuCategoryRestControllerTestSupport {
+
+    @Test
+    void shouldGetMenuCategoryById() {
+        //given
+        Long menuCategoryId = 1L;
+        //when
+        MenuCategory menuCategory = getMenuCategoryById(menuCategoryId);
+        //then
+        assertThat(menuCategory).isNotNull();
+    }
 
     @Test
     void shouldAddMenuCategory() {
@@ -23,7 +35,7 @@ public class OwnerMenuCategoryControllerRestAssuredIT
         //when
         Response response = addMenuCategory(ownerId, menuCategoryDTO);
         //then
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -33,6 +45,6 @@ public class OwnerMenuCategoryControllerRestAssuredIT
         //when
         Response response = deleteMenuCategory(menuCategoryId);
         //then
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
