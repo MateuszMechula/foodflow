@@ -11,9 +11,9 @@ import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
 import pl.foodflow.business.CategoryItemService;
 import pl.foodflow.business.MenuCategoryService;
+import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.CategoryItem;
 import pl.foodflow.domain.Owner;
-import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.io.IOException;
 
@@ -22,29 +22,37 @@ import java.io.IOException;
 @AllArgsConstructor
 @RequestMapping(value = OwnerCategoryItemRestController.CATEGORY_ITEMS)
 public class OwnerCategoryItemRestController {
-    public static final String CATEGORY_ITEMS = "/owner/api/v1/category-items";
+    public static final String CATEGORY_ITEMS = "/api/v1/owner/category-items";
     public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
     public static final String CATEGORY_ITEM_ID = "/{categoryItemId}";
+    public static final String OWNER_ID = "/{ownerId}";
 
-    private final UserService userService;
+    private final OwnerService ownerService;
     private final CategoryItemMapper categoryItemMapper;
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemService categoryItemService;
 
-    @PostMapping(value = MENU_CATEGORY_ID)
+    @GetMapping(value = CATEGORY_ITEM_ID)
+    public ResponseEntity<CategoryItem> findCategoryItem(@PathVariable Long categoryItemId) {
+        CategoryItem categoryItem = categoryItemService.getCategoryItemById(categoryItemId);
+        return ResponseEntity.status(HttpStatus.OK).body(categoryItem);
+    }
+
+    @PostMapping(value = MENU_CATEGORY_ID + OWNER_ID)
     public ResponseEntity<Void> addCategoryItem(
             @PathVariable Long menuCategoryId,
+            @PathVariable Long ownerId,
             @RequestParam("imageFile") MultipartFile imageFile,
             @Valid @RequestBody CategoryItemDTO categoryItemDTO) throws IOException {
 
-        Owner owner = userService.getCurrentOwner();
+        Owner owner = ownerService.findOwnerById(ownerId);
         CategoryItem categoryItem = categoryItemMapper.map(categoryItemDTO);
         menuCategoryService.addCategoryItemToMenuCategory(menuCategoryId, owner, categoryItem, imageFile);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping(CATEGORY_ITEM_ID)
+    @DeleteMapping(value = CATEGORY_ITEM_ID)
     public ResponseEntity<Void> deleteCategoryItem(@PathVariable Long categoryItemId) {
         categoryItemService.deleteCategoryItemById(categoryItemId);
         log.info("CategoryItem with ID: [%s] was deleted".formatted(categoryItemId));

@@ -10,26 +10,30 @@ import pl.foodflow.api.dto.MenuCategoryDTO;
 import pl.foodflow.api.dto.mapper.MenuCategoryMapper;
 import pl.foodflow.business.MenuCategoryService;
 import pl.foodflow.business.MenuService;
+import pl.foodflow.business.OwnerService;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
-import pl.foodflow.infrastructure.security.user.UserService;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = OwnerMenuCategoryRestController.MENU_CATEGORIES)
 public class OwnerMenuCategoryRestController {
-    public static final String MENU_CATEGORIES = "/owner/api/v1/menu-categories";
+    public static final String MENU_CATEGORIES = "/api/v1/owner/menu-categories";
     public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
+    public static final String OWNER_ID = "/{ownerId}";
+
     private final MenuService menuService;
-    private final UserService userService;
+    private final OwnerService ownerService;
     private final MenuCategoryMapper menuCategoryMapper;
     private final MenuCategoryService menuCategoryService;
 
-    @PostMapping
+    @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addMenuCategory(
-            @Valid @RequestBody MenuCategoryDTO menuCategoryDTO) {
-        Owner owner = userService.getCurrentOwner();
+            @Valid @RequestBody MenuCategoryDTO menuCategoryDTO,
+            @PathVariable Long ownerId) {
+
+        Owner owner = ownerService.findOwnerById(ownerId);
         MenuCategory menu = menuCategoryMapper.map(menuCategoryDTO);
         menuService.addMenuCategoryToMenu(owner, menu);
 

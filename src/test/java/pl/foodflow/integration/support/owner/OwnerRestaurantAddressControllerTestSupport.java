@@ -5,17 +5,20 @@ import io.restassured.specification.RequestSpecification;
 import org.springframework.http.HttpStatus;
 import pl.foodflow.api.dto.AddressDTO;
 
-import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantAddressRestController.ADDRESS_ID;
-import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantAddressRestController.RESTAURANT_ADDRESSES;
+import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantAddressRestController.*;
 
 public interface OwnerRestaurantAddressControllerTestSupport {
 
     RequestSpecification requestSpecification();
 
-    default Response addDeliveryAddressToRestaurant(final AddressDTO addressDTO) {
+    default Response addDeliveryAddressToRestaurant(
+            final AddressDTO addressDTO,
+            final Long ownerId) {
+
         return requestSpecification()
+                .pathParam("ownerId", ownerId)
                 .body(addressDTO)
-                .post(RESTAURANT_ADDRESSES)
+                .post(RESTAURANT_ADDRESSES + OWNER_ID)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()

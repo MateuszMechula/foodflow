@@ -2,7 +2,6 @@ package pl.foodflow.integration.rest.owner;
 
 import io.restassured.response.Response;
 import lombok.AllArgsConstructor;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,19 +23,18 @@ public class OwnerMenuControllerRestAssuredIT
     private MenuJpaRepository menuJpaRepository;
 
     @Test
-    @Tag("owner")
     void shouldAddMenu() {
         //given
         menuJpaRepository.deleteAll();
         MenuDTO menuDTO = someMenuDTO2();
+        Long ownerId = 1L;
         //when
-        Response response = addMenu(menuDTO);
+        Response response = addMenu(menuDTO, ownerId);
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
-    @Tag("owner")
     void shouldDeleteMenu() {
         //given
         Long menuId = 1L;

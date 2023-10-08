@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.foodflow.api.dto.RestaurantDTO;
 import pl.foodflow.api.dto.mapper.RestaurantMapper;
+import pl.foodflow.business.OwnerService;
 import pl.foodflow.business.RestaurantService;
 import pl.foodflow.domain.Owner;
 import pl.foodflow.domain.Restaurant;
-import pl.foodflow.infrastructure.security.user.UserService;
 
 @Slf4j
 @RestController
@@ -19,16 +19,19 @@ import pl.foodflow.infrastructure.security.user.UserService;
 @RequestMapping(value = OwnerRestaurantRestController.RESTAURANTS)
 public class OwnerRestaurantRestController {
 
-    public static final String RESTAURANTS = "/owner/api/v1/restaurants";
+    public static final String RESTAURANTS = "/api/v1/owner/restaurants";
     public static final String RESTAURANT_ID = "/{restaurantId}";
-    private final UserService userService;
+    public static final String OWNER_ID = "/{ownerId}";
+    private final OwnerService ownerService;
     private final RestaurantMapper restaurantMapper;
     private final RestaurantService restaurantService;
 
-    @PostMapping
+    @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addRestaurant(
-            @Valid @RequestBody RestaurantDTO restaurantDTO) {
-        Owner owner = userService.getCurrentOwner();
+            @Valid @RequestBody RestaurantDTO restaurantDTO,
+            @PathVariable Long ownerId) {
+
+        Owner owner = ownerService.findOwnerById(ownerId);
 
         Restaurant restaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.addRestaurant(restaurant.withOwner(owner));
@@ -37,9 +40,11 @@ public class OwnerRestaurantRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
-        Owner owner = userService.getCurrentOwner();
+    @PutMapping(value = OWNER_ID)
+    public ResponseEntity<Void> updateRestaurant(
+            @RequestBody RestaurantDTO restaurantDTO,
+            @PathVariable Long ownerId) {
+        Owner owner = ownerService.findOwnerById(ownerId);
 
         Restaurant updatedRestaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.updateRestaurant(updatedRestaurant.withOwner(owner));

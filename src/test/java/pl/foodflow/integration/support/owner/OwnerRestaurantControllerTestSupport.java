@@ -5,27 +5,28 @@ import io.restassured.specification.RequestSpecification;
 import org.springframework.http.HttpStatus;
 import pl.foodflow.api.dto.RestaurantDTO;
 
-import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantRestController.RESTAURANTS;
-import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantRestController.RESTAURANT_ID;
+import static pl.foodflow.api.controller.rest.owner.OwnerRestaurantRestController.*;
 
 public interface OwnerRestaurantControllerTestSupport {
 
     RequestSpecification requestSpecification();
 
-    default Response addRestaurant(final RestaurantDTO restaurantDTO) {
+    default Response addRestaurant(final RestaurantDTO restaurantDTO, final Long ownerId) {
         return requestSpecification()
+                .pathParam("ownerId", ownerId)
                 .body(restaurantDTO)
-                .post(RESTAURANTS)
+                .post(RESTAURANTS + OWNER_ID)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
                 .response();
     }
 
-    default Response updateRestaurant(final RestaurantDTO restaurantDTO) {
+    default Response updateRestaurant(final RestaurantDTO restaurantDTO, final Long ownerId) {
         return requestSpecification()
+                .pathParam("ownerId", ownerId)
                 .body(restaurantDTO)
-                .put(RESTAURANTS)
+                .put(RESTAURANTS + OWNER_ID)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()

@@ -16,11 +16,19 @@ public class CustomerService {
 
     private final CustomerDAO customerDAO;
 
+    public Customer findCustomerById(Long customerId) {
+        log.info("Fetching Customer by ID: {}", customerId);
+        return customerDAO.findCustomerById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(
+                        ErrorMessages.CUSTOMER_NOT_FOUND.formatted(customerId)
+                ));
+    }
+
     public Customer getCustomerByUserId(Integer userId) {
         log.info("Fetching Customer by user ID: {}", userId);
         return customerDAO.findCustomerByUserId(userId)
                 .orElseThrow(() -> new CustomerNotFoundException(
-                        ErrorMessages.CUSTOMER_NOT_FOUND.formatted(userId)));
+                        ErrorMessages.CUSTOMER_WITH_USER_ID_NOT_FOUND.formatted(userId)));
     }
 
     @Transactional

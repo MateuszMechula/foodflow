@@ -12,11 +12,15 @@ public interface CustomerOrderRecordRestControllerTestSupport {
     RequestSpecification requestSpecification();
 
 
-    default OrderRecord addOrderRecord(final Long restaurantId, final OrderDTO orderDTO) {
+    default OrderRecord addOrderRecord(
+            final Long restaurantId,
+            final Long customerId,
+            final OrderDTO orderDTO) {
         return requestSpecification()
                 .pathParam("restaurantId", restaurantId)
+                .pathParam("customerId", customerId)
                 .body(orderDTO)
-                .post(ORDER_RECORDS + RESTAURANT_ID)
+                .post(ORDER_RECORDS + RESTAURANT_ID + CUSTOMER_ID)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()

@@ -1,7 +1,6 @@
 package pl.foodflow.integration.rest.owner;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -20,7 +19,6 @@ public class OwnerOrderRecordControllerRestAssuredIT
         implements OwnerOrderRecordControllerTestSupport {
 
     @Test
-    @Tag("owner")
     void shouldGetAllOwnerOrdersWithStatus() {
         //given
         Integer userId = 1;
@@ -32,7 +30,6 @@ public class OwnerOrderRecordControllerRestAssuredIT
     }
 
     @Test
-    @Tag("owner")
     void shouldCompleteOrder() {
         //given
         Long orderRecordId = 2L;

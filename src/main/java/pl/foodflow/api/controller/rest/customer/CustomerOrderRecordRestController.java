@@ -13,7 +13,6 @@ import pl.foodflow.business.OrderRecordService;
 import pl.foodflow.domain.Customer;
 import pl.foodflow.domain.OrderRecord;
 import pl.foodflow.enums.OrderStatus;
-import pl.foodflow.infrastructure.security.user.UserService;
 
 import java.util.List;
 
@@ -22,11 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(value = CustomerOrderRecordRestController.ORDER_RECORDS)
 public class CustomerOrderRecordRestController {
-    public static final String ORDER_RECORDS = "/customer/api/v1/order-records";
+    public static final String ORDER_RECORDS = "/api/v1/customer/order-records";
     public static final String RESTAURANT_ID = "/{restaurantId}";
+    public static final String CUSTOMER_ID = "/{customerId}";
     public static final String ORDER_RECORD_ID = "/{orderRecordId}";
 
-    private final UserService userService;
     private final CustomerService customerService;
     private final OrderRecordService orderRecordService;
     private final OrderProcessingService orderProcessingService;
@@ -40,17 +39,16 @@ public class CustomerOrderRecordRestController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
-    @PostMapping(value = RESTAURANT_ID)
+    @PostMapping(value = RESTAURANT_ID + CUSTOMER_ID)
     public ResponseEntity<OrderRecord> addOrderRecord(
             @PathVariable Long restaurantId,
+            @PathVariable Long customerId,
             @Valid @RequestBody OrderDTO orderDTO
     ) {
-
-        Integer userId = userService.getUserIdByAuth();
-        Customer customer = customerService.getCustomerByUserId(userId);
+        Customer customer = customerService.findCustomerById(customerId);
 
         OrderRecord savedOrderRecord = orderProcessingService
-                .processAndCreateOrder(restaurantId, customer.withUserId(userId), orderDTO);
+                .processAndCreateOrder(restaurantId, customer, orderDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrderRecord);
     }

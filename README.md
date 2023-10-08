@@ -7,6 +7,10 @@ Customers can also create accounts, search for restaurants,
 view menus, place orders, and, under certain conditions,
 cancel orders.
 
+## ERD Diagram
+
+![ERD Diagram](src/main/resources/diagramERD-foodflow.png)
+
 ## Features for restaurant owners
 
 Account Creation: Restaurant owners can create accounts on the platform to offer their food delivery services.
@@ -44,7 +48,7 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
 To get started with this food ordering portal, follow these steps:
 
 - Clone the repository to your local machine.
-- Set up a PostgreSQL database and configure the application properties to connect to it.
+- Set up a PostgreSQL database and configure the application.yml to connect to it.
 - Build and run the application.
 - Access the portal through a web browser.
 

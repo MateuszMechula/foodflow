@@ -2,7 +2,6 @@ package pl.foodflow.integration.rest.customer;
 
 import io.restassured.response.Response;
 import lombok.AllArgsConstructor;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ public class CustomerSearchRestaurantControllerRestAssuredIT
         implements CustomerSearchRestaurantRestControllerTestSupport {
 
     @Test
-    @Tag("customer")
     void shouldSearchRestaurantsByAddress() {
         //given
         String street = "Klonowa";

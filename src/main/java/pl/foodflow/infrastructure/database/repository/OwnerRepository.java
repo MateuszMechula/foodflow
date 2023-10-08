@@ -19,6 +19,12 @@ public class OwnerRepository implements OwnerDAO {
 
 
     @Override
+    public Optional<Owner> findOwnerById(Long ownerId) {
+        return ownerJpaRepository.findById(ownerId)
+                .map(ownerEntityMapper::mapFromEntity);
+    }
+
+    @Override
     public Optional<Owner> findOwnerByUserId(Integer userId) {
         return ownerJpaRepository.findOwnerEntityByUserId(userId)
                 .map(ownerEntityMapper::mapFromEntity);

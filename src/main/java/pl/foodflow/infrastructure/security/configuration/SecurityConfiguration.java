@@ -56,6 +56,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/registration/**").permitAll()
                         .requestMatchers("/login", "/error", "/fail.jpg", "/images/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
                         .requestMatchers("/redirect-home").authenticated()

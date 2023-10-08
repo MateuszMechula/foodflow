@@ -2,7 +2,6 @@ package pl.foodflow.integration.rest.customer;
 
 import io.restassured.response.Response;
 import lombok.AllArgsConstructor;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
@@ -26,13 +25,13 @@ public class CustomerOrderRecordControllerRestAssuredIT
     private OrderRecordService orderRecordService;
 
     @Test
-    @Tag("customer")
     void shouldAddOrderRecordCorrectly() {
         //given
         Long restaurantId = 1L;
+        Long customerId = 1L;
         OrderDTO orderDTO = someOrderDTO();
         //when
-        OrderRecord orderRecord = addOrderRecord(restaurantId, orderDTO);
+        OrderRecord orderRecord = addOrderRecord(restaurantId, customerId, orderDTO);
         //then
         assertThat(orderRecord).isNotNull();
         assertThat(orderRecord.getOrderRecordId()).isNotNull().isGreaterThan(0);
@@ -42,7 +41,6 @@ public class CustomerOrderRecordControllerRestAssuredIT
     }
 
     @Test
-    @Tag("customer")
     void shouldDeleteOrderRecordCorrectly() {
         //given
         OrderRecord orderRecord = orderRecordService.saveOrderRecord(someOrderIntegration2());

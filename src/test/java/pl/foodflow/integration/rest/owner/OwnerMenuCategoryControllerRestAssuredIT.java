@@ -2,7 +2,6 @@ package pl.foodflow.integration.rest.owner;
 
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -17,18 +16,17 @@ public class OwnerMenuCategoryControllerRestAssuredIT
         implements OwnerMenuCategoryRestControllerTestSupport {
 
     @Test
-    @Tag("owner")
     void shouldAddMenuCategory() {
         //given
+        Long ownerId = 1L;
         MenuCategoryDTO menuCategoryDTO = TestDataFactory.someMenuCategoryDTO();
         //when
-        Response response = addMenuCategory(menuCategoryDTO);
+        Response response = addMenuCategory(ownerId, menuCategoryDTO);
         //then
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
-    @Tag("owner")
     void shouldDeleteMenuCategory() {
         //given
         Long menuCategoryId = 1L;

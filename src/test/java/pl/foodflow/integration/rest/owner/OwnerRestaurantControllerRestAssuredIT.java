@@ -1,7 +1,6 @@
 package pl.foodflow.integration.rest.owner;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -19,29 +18,28 @@ public class OwnerRestaurantControllerRestAssuredIT
         implements OwnerRestaurantControllerTestSupport {
 
     @Test
-    @Tag("owner")
     void shouldAddRestaurant() {
         //given
+        Long ownerId = 1L;
         RestaurantDTO restaurantDTO = someRestaurantDTO3();
         //when
-        Response response = addRestaurant(restaurantDTO);
+        Response response = addRestaurant(restaurantDTO, ownerId);
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
-    @Tag("owner")
     void shouldUpdateRestaurant() {
         //given
+        Long ownerId = 1L;
         RestaurantDTO restaurantDTO = someRestaurantDTO2();
         //when
-        Response response = updateRestaurant(restaurantDTO);
+        Response response = updateRestaurant(restaurantDTO, ownerId);
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    @Tag("owner")
     void shouldDeleteRestaurant() {
         //given
         Long restaurantId = 1L;

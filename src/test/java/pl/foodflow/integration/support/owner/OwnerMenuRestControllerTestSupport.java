@@ -5,17 +5,17 @@ import io.restassured.specification.RequestSpecification;
 import org.springframework.http.HttpStatus;
 import pl.foodflow.api.dto.MenuDTO;
 
-import static pl.foodflow.api.controller.rest.owner.OwnerMenuRestController.MENUS;
-import static pl.foodflow.api.controller.rest.owner.OwnerMenuRestController.MENU_ID;
+import static pl.foodflow.api.controller.rest.owner.OwnerMenuRestController.*;
 
 public interface OwnerMenuRestControllerTestSupport {
 
     RequestSpecification requestSpecification();
 
-    default Response addMenu(final MenuDTO menuDTO) {
+    default Response addMenu(final MenuDTO menuDTO, final Long ownerId) {
         return requestSpecification()
+                .pathParam("ownerId", ownerId)
                 .body(menuDTO)
-                .post(MENUS)
+                .post(MENUS + OWNER_ID)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
