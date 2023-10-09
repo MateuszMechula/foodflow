@@ -3,8 +3,6 @@ server:
   servlet:
     context-path: /foodflow
 spring:
-  profiles:
-    active: local
   devtools:
     restart:
       enabled: true
@@ -25,7 +23,7 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/foodflow
+    url: jdbc:postgresql://localhost:5432/foodflow
     username: postgres
     password: postgres
     hikari:
@@ -50,3 +48,5 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  profiles:
+    active: dev
