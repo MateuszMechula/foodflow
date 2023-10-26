@@ -83,7 +83,7 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
   - Spring Data PostgreSQL
   - Lombok
   - Gradle
-  - FlyWay
+  - Flyway
   - Mapstruct
 
 ### Backend Testing
