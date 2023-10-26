@@ -76,14 +76,31 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
 
 ## Technologies used
 
-- Java
-- Spring Boot
-- Hibernate
-- PostgreSQL
-- Thymeleaf (for frontend templates)
-- RESTful API for communication
-- Swagger for documenting REST APIs
-- RestAssured for API testing
+### Backend
+  - Spring Boot
+  - Spring Web
+  - Spring Security
+  - Spring Data PostgreSQL
+  - Lombok
+  - Gradle
+  - FlyWay
+  - Mapstruct
+
+### Backend Testing
+  - JUnit
+  - Mockito
+  - RestAssured
+  - Testcontainers
+
+### Database
+  - PostgreSQL
+    
+### Frontend
+  - Thymeleaf
+
+### Other
+  - Docker
+  - Swagger
 
 ## Authors
 
