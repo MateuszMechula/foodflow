@@ -43,6 +43,10 @@ Order Confirmation: After placing an order, customers receive a confirmation wit
 
 Order Cancellation: Customers can cancel orders if it has been less than 5 minutes since they were placed.
 
+<br>
+
+![Restaurant-details](src/main/resources/restaurantdetails.png)
+
 ## Getting started
 
 1. Clone project
