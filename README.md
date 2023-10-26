@@ -45,12 +45,34 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
 
 ## Getting started
 
-To get started with this food ordering portal, follow these steps:
+1. Clone project
 
-- Clone the repository to your local machine by running the following command in your terminal: git clone <repository-url>
-- Navigate to the project directory: cd project-directory
-- Start and build the project using Docker Compose with the following command: docker-compose up --build
-- Access the Portal: Once the project has started successfully, you can access the portal through a web browser by navigating to: http://localhost:PORT/foodflow
+  ``` bash      
+   git clone https://github.com/mateuszmechula/foodflow.git
+  ```
+
+2. Open cloned directory
+  ``` bash      
+   cd foodflow
+  ```
+
+3. Build project
+
+  ``` bash
+  ./gradlew clean build
+  ```
+
+4. Go to docker directory
+
+  ``` bash      
+   cd docker
+  ```
+
+5. Run using docker-compose 
+
+  ``` bash
+  docker-compose up -d
+  ```
 
 ## Technologies used
 
