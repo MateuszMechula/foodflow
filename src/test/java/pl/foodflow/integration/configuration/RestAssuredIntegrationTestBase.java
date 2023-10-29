@@ -1,33 +1,54 @@
 package pl.foodflow.integration.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import pl.foodflow.integration.support.AuthenticationTestSupport;
 import pl.foodflow.integration.support.ControllerTestSupport;
 
-import static pl.foodflow.api.controller.customer.CustomerHomePageController.CUSTOMER;
-import static pl.foodflow.api.controller.owner.OwnerRestaurantController.OWNER;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public abstract class RestAssuredIntegrationTestBase
         extends AbstractIntegrationTest
         implements ControllerTestSupport, AuthenticationTestSupport {
+
+    protected static WireMockServer wireMockServer;
     @Autowired
     private ObjectMapper objectMapper;
-    private String jSessionIdValue;
 
     @Override
     public ObjectMapper getObjectMapper() {
         return objectMapper;
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        wireMockServer = new WireMockServer(
+                wireMockConfig()
+                        .port(9090)
+                        .extensions(new ResponseTemplateTransformer(false))
+
+        );
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        wireMockServer.stop();
+    }
+
+    @AfterEach
+    void afterEach() {
+        wireMockServer.resetAll();
     }
 
     public RequestSpecification restAssuredBase() {
@@ -47,45 +68,10 @@ public abstract class RestAssuredIntegrationTestBase
     public RequestSpecification requestSpecification() {
         return restAssuredBase()
                 .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
-                .cookie("JSESSIONID", jSessionIdValue);
+                .contentType(ContentType.JSON);
     }
 
     public RequestSpecification requestSpecificationNoAuthentication() {
         return restAssuredBase();
     }
-
-    @BeforeEach
-    void beforeEach(TestInfo testInfo) {
-        if (testInfo.getTestMethod().isPresent()) {
-            if (testInfo.getTestMethod().get().isAnnotationPresent(Tag.class)) {
-                Tag tag = testInfo.getTestMethod().get().getAnnotation(Tag.class);
-                String tagValue = tag.value();
-                if ("customer".equals(tagValue)) {
-                    jSessionIdValue = login("test_customer", "test")
-                            .and()
-                            .cookie("JSESSIONID")
-                            .header(HttpHeaders.LOCATION, "http://localhost:%s%s%s".formatted(serverPort, basePath, CUSTOMER))
-                            .extract()
-                            .cookie("JSESSIONID");
-                } else if ("owner".equals(tagValue)) {
-                    jSessionIdValue = login("test_owner", "test")
-                            .and()
-                            .cookie("JSESSIONID")
-                            .header(HttpHeaders.LOCATION, "http://localhost:%s%s%s".formatted(serverPort, basePath, OWNER))
-                            .extract()
-                            .cookie("JSESSIONID");
-                }
-            }
-        }
-    }
-
-    @AfterEach
-    void afterEach() {
-        logout()
-                .and()
-                .cookie("JSESSIONID", "");
-        jSessionIdValue = null;
-    }
-
 }

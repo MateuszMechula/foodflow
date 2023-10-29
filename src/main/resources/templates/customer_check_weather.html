@@ -11,8 +11,15 @@
     <h1>Check Weather</h1>
     <form th:action="@{/customer/check-weather-form}" method="get">
         <div class="form-group">
-            <input type="text" name="locationParameter" placeholder="Localization Parameter" class="form-control mb-2"/>
-            <input type="text" name="lang" placeholder="Language" class="form-control mb-2"/>
+            <label>
+                <span>Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city</span>
+                <br>
+                <input type="text" name="locationParameter" placeholder="Localization Parameter"
+                       class="form-control mb-2"/>
+            </label>
+            <label>
+                <input type="text" name="lang" placeholder="Language" class="form-control mb-2"/>
+            </label>
         </div>
         <button type="submit" class="btn btn-primary">Check Weather</button>
     </form>

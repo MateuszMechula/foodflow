@@ -1,0 +1,41 @@
+{
+  "location": {
+    "name": "Warszawa",
+    "region": "",
+    "country": "Poland",
+    "lat": 52.25,
+    "lon": 21,
+    "tz_id": "Europe/Warsaw",
+    "localtime_epoch": 1698607242,
+    "localtime": "2023-10-29 20:20"
+  },
+  "current": {
+    "last_updated_epoch": 1698606900,
+    "last_updated": "2023-10-29 20:15",
+    "temp_c": 13,
+    "temp_f": 55.4,
+    "is_day": 0,
+    "condition": {
+      "text": "Bezchmurnie",
+      "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+      "code": 1000
+    },
+    "wind_mph": 10.5,
+    "wind_kph": 16.9,
+    "wind_degree": 160,
+    "wind_dir": "SSE",
+    "pressure_mb": 1005,
+    "pressure_in": 29.68,
+    "precip_mm": 0,
+    "precip_in": 0,
+    "humidity": 82,
+    "cloud": 0,
+    "feelslike_c": 11.6,
+    "feelslike_f": 52.8,
+    "vis_km": 10,
+    "vis_miles": 6,
+    "uv": 1,
+    "gust_mph": 16.6,
+    "gust_kph": 26.7
+  }
+}
