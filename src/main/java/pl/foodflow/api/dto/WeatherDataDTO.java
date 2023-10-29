@@ -16,7 +16,7 @@ public class WeatherDataDTO {
     private String country;
     private String localtime;
 
-    private Integer temp_c;
+    private double temp_c;
     private double temp_f;
     private double wind_mph;
     private double wind_kph;
@@ -28,7 +28,7 @@ public class WeatherDataDTO {
 
     private Integer precip_mm;
     private int humidity;
-    private Integer vis_km;
+    private double vis_km;
     private Integer uv;
     private String text;
     private String icon;

@@ -10,26 +10,58 @@ import java.util.Map;
 public class WeatherMapper {
 
     public WeatherDataDTO map(Map<?, ?> location, Map<?, ?> current, Map<?, ?> condition) {
-        return WeatherDataDTO.builder()
-                .name(location.get("name").toString())
-                .region(location.get("region").toString())
-                .country(location.get("country").toString())
-                .localtime(location.get("localtime").toString())
-                .temp_c((Integer) current.get("temp_c"))
-                .temp_f((double) current.get("temp_f"))
-                .wind_mph((double) current.get("wind_mph"))
-                .wind_kph((double) current.get("wind_kph"))
-                .wind_dir(current.get("wind_dir").toString())
-                .feelslike_c((double) current.get("feelslike_c"))
-                .feelslike_f((double) current.get("feelslike_f"))
-                .gust_kph((double) current.get("gust_kph"))
-                .gust_mph((double) current.get("gust_mph"))
-                .precip_mm((Integer) current.get("precip_mm"))
-                .humidity((int) current.get("humidity"))
-                .vis_km((Integer) current.get("vis_km"))
-                .uv((Integer) current.get("uv"))
-                .icon(condition.get("icon").toString())
-                .text(condition.get("text").toString())
-                .build();
+        WeatherDataDTO.WeatherDataDTOBuilder builder = WeatherDataDTO.builder()
+                .name(getString(location, "name"))
+                .region(getString(location, "region"))
+                .country(getString(location, "country"))
+                .localtime(getString(location, "localtime"))
+                .wind_dir(getString(current, "wind_dir"))
+                .icon(getString(condition, "icon"))
+                .text(getString(condition, "text"));
+
+        Integer tempCInt = getInteger(current, "temp_c");
+        Double tempCDouble = getDouble(current, "temp_c");
+
+        if (tempCInt != null) {
+            builder.temp_c(tempCInt);
+        } else if (tempCDouble != null) {
+            builder.temp_c((int) Math.round(tempCDouble));
+        }
+
+        builder.temp_f(getDouble(current, "temp_f"))
+                .wind_mph(getDouble(current, "wind_mph"))
+                .wind_kph(getDouble(current, "wind_kph"))
+                .feelslike_c(getDouble(current, "feelslike_c"))
+                .feelslike_f(getDouble(current, "feelslike_f"))
+                .gust_kph(getDouble(current, "gust_kph"))
+                .gust_mph(getDouble(current, "gust_mph"))
+                .humidity(getInteger(current, "humidity"));
+
+        return builder.build();
+    }
+
+    private String getString(Map<?, ?> map, String key) {
+        Object value = map.get(key);
+        return value != null ? value.toString() : null;
+    }
+
+    private Integer getInteger(Map<?, ?> map, String key) {
+        Object value = map.get(key);
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else if (value instanceof Double) {
+            return (int) Math.round((Double) value);
+        }
+        return null;
+    }
+
+    private Double getDouble(Map<?, ?> map, String key) {
+        Object value = map.get(key);
+        if (value instanceof Double) {
+            return (Double) value;
+        } else if (value instanceof Integer) {
+            return (double) (Integer) value;
+        }
+        return null;
     }
 }

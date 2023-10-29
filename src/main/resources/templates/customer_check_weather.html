@@ -46,11 +46,6 @@
         </p>
 
         <p th:if="${weatherData}">
-            <span th:if="${weatherData.precip_mm}"><strong>Precipitation:</strong> <span
-                    th:text="${weatherData.precip_mm}"></span> mm</span>
-        </p>
-
-        <p th:if="${weatherData}">
             <span th:if="${weatherData.humidity}"><strong>Humidity:</strong> <span
                     th:text="${weatherData.humidity}"></span>%</span>
         </p>
@@ -64,10 +59,6 @@
         <p th:if="${weatherData}">
             <span th:if="${weatherData.vis_km}"><strong>Visibility:</strong> <span
                     th:text="${weatherData.vis_km}"></span> km</span>
-        </p>
-
-        <p th:if="${weatherData}">
-            <span th:if="${weatherData.uv}"><strong>UV Index:</strong> <span th:text="${weatherData.uv}"></span></span>
         </p>
 
         <p th:if="${weatherData}">
