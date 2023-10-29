@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Weather</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="check-weather" class="container mt-5">
+    <h1>Check Weather</h1>
+    <form th:action="@{/customer/check-weather-form}" method="get">
+        <div class="form-group">
+            <input type="text" name="locationParameter" placeholder="Localization Parameter" class="form-control mb-2"/>
+            <input type="text" name="lang" placeholder="Language" class="form-control mb-2"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Check Weather</button>
+    </form>
+
+    <hr>
+
+    <div th:if="${weatherData.name}">
+        <h2 th:if="${weatherData}">Weather in <span th:text="${weatherData.name}"></span>, <span
+                th:text="${weatherData.country}"></span></h2>
+        <br>
+        <p th:if="${weatherData.localtime}"><strong>Local Time:</strong> <span
+                th:text="${weatherData.localtime}"></span></p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.temp_c}"><strong>Temperature:</strong> <span
+                    th:text="${weatherData.temp_c}"></span>°C (<span
+                    th:text="${weatherData.temp_f}"></span>°F)</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.wind_kph}"><strong>Wind Speed:</strong> <span
+                    th:text="${weatherData.wind_kph}"></span> km/h (<span
+                    th:text="${weatherData.wind_mph}"></span> mph)</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.precip_mm}"><strong>Precipitation:</strong> <span
+                    th:text="${weatherData.precip_mm}"></span> mm</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.humidity}"><strong>Humidity:</strong> <span
+                    th:text="${weatherData.humidity}"></span>%</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.feelslike_c}"><strong>Feels Like:</strong> <span
+                    th:text="${weatherData.feelslike_c}"></span>°C (<span
+                    th:text="${weatherData.feelslike_f}"></span>°F)</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.vis_km}"><strong>Visibility:</strong> <span
+                    th:text="${weatherData.vis_km}"></span> km</span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.uv}"><strong>UV Index:</strong> <span th:text="${weatherData.uv}"></span></span>
+        </p>
+
+        <p th:if="${weatherData}">
+            <span th:if="${weatherData.gust_mph}"><strong>Gust Speed:</strong> <span
+                    th:text="${weatherData.gust_mph}"></span> mph (<span
+                    th:text="${weatherData.gust_kph}"></span> km/h)</span>
+        </p>
+        <p th:if="${weatherData != null && weatherData != null}">
+            <strong>Weather Condition:</strong> <span th:text="${weatherData.text}"></span>
+            <img th:src="${weatherData.icon}" alt="Weather Icon"/>
+        </p>
+    </div>
+
+    <br>
+    <a href="/foodflow/customer" class="btn btn-success mt-3">Go back to the main page</a>
+</div>
+<br>
+</body>
+</html>
+
+
+
+

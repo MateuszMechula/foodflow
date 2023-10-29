@@ -3,6 +3,7 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'org.openapi.generator' version "${openApiGeneratorVersion}"
 }
 
 group = 'pl'
@@ -36,6 +37,7 @@ dependencies {
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-devtools'
@@ -47,6 +49,10 @@ dependencies {
 
     // api create swagger documentation
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
+
+    // Po wygenerowaniu klienta, trzeba będzie dodać poniższe zależności, żeby kod się kompilował
+    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
+    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
 
     // annotations
     compileOnly 'org.projectlombok:lombok'
@@ -70,8 +76,29 @@ dependencies {
 
     //integration test
     testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-
 }
+
+openApiGenerate {
+    generatorName = "java"
+    library = "webclient"
+    configOptions = [
+            'serializableModel'   : 'true',
+            'dateLibrary'         : 'java8',
+            'serializationLibrary': 'jackson',
+            'validateSpec'        : 'false'
+    ]
+    outputDir = "$buildDir/generated-sources/openapi".toString()
+    inputSpec = "$rootDir/src/main/resources/constracts/weatherAPI-1.0.2.json".toString()
+    apiPackage = "pl.foodflow.infrastructure.weather.api"
+    modelPackage = "pl.foodflow.infrastructure.weather.model"
+}
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/generated-sources/openapi/src/main/java"
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate
 
 test {
     useJUnitPlatform()

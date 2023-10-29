@@ -2,6 +2,10 @@ server:
   port: 8080
   servlet:
     context-path: /foodflow
+api:
+  weather:
+    url: https://api.weatherapi.com/v1
+
 spring:
   profiles:
     active: local
