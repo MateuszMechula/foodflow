@@ -136,33 +136,43 @@
         <hr class="my-4">
 
         <form th:object="${orderDTO}" method="post">
-            <div th:each="menuCategory, menuCategoryStat : ${restaurant.menu.menuCategories}" class="mb-4">
-                <h2 th:text="${menuCategory.name}" class="font-weight-bold"></h2>
+            <div th:if="${restaurant != null and restaurant.menu != null and restaurant.menu.menuCategories != null}">
+                <div th:each="menuCategory, menuCategoryStat : ${restaurant.menu.menuCategories}" class="mb-4">
+                    <h2 th:if="${menuCategory != null}" th:text="${menuCategory.name}" class="font-weight-bold"></h2>
 
-                <div th:each="categoryItem, itemStat : ${menuCategory.categoryItems}" class="item-card">
-                    <div class="text-section">
-                        <div class="item-details">
-                            <h5 class="card-title item-name font-weight-bold" th:text="${categoryItem.name}"></h5>
-                            <p class="card-text item-description" th:text="${categoryItem.description}"></p>
-                            <p class="card-text item-price font-weight-bold"
-                               th:text="${categoryItem.price} + ' zł'"></p>
+                    <div th:each="categoryItem, itemStat : ${menuCategory.categoryItems}">
+                        <div class="item-card">
+                            <div class="text-section">
+                                <div class="item-details">
+                                    <h5 class="card-title item-name font-weight-bold" th:if="${categoryItem != null}"
+                                        th:text="${categoryItem.name}"></h5>
+                                    <p class="card-text item-description" th:if="${categoryItem != null}"
+                                       th:text="${categoryItem.description}"></p>
+                                    <p class="card-text item-price font-weight-bold" th:if="${categoryItem != null}"
+                                       th:text="${categoryItem.price} + ' zł'"></p>
+                                </div>
+                            </div>
+                            <div class="image-section">
+                                <div class="image-container">
+                                    <img th:if="${categoryItem != null}"
+                                         th:src="@{'/images/' + ${categoryItem.imageUrl}}" alt="Product Image">
+                                </div>
+                            </div>
+
+                            <label th:if="${categoryItem != null}"
+                                   th:for="${'orderItems__' + categoryItem.categoryItemId}"
+                                   th:text="${' Quantity for ' + categoryItem.name + ':'}"></label>
+                            <label>
+                                <input type="number" th:if="${categoryItem != null}"
+                                       th:id="${'orderItems__' + categoryItem.categoryItemId}"
+                                       th:field="*{orderItems[__${categoryItem.categoryItemId}__]}" min="0"
+                                       style="width: 50px;">
+                            </label>
                         </div>
                     </div>
-                    <div class="image-section">
-                        <div class="image-container">
-                            <img th:src="@{'/images/' + ${categoryItem.imageUrl}}" alt="Product Image">
-                        </div>
-                    </div>
-
-                    <label th:for="${'orderItems__' + categoryItem.categoryItemId}"
-                           th:text="${'Quantity for ' + categoryItem.name + ':'}"></label>
-                    <label>
-                        <input type="number" th:id="${'orderItems__' + categoryItem.categoryItemId}"
-                               th:field="*{orderItems[__${categoryItem.categoryItemId}__]}" min="0"
-                               style="width: 50px;">
-                    </label>
                 </div>
             </div>
+
 
             <div class="notes-section">
                 <div class="form-group">
@@ -185,7 +195,9 @@
 
                 <button type="submit" class="btn btn-primary">Place Order</button>
                 <br>
-                <a th:href="@{/customer/search-restaurants}" class="btn btn-success">Back to the search</a>
+                <a th:href="@{'/customer/search-restaurants/page' + '?street=' + ${searchAddressDTO.street}
+                + '&postalCode=' + ${searchAddressDTO.postalCode} + '&city=' + ${searchAddressDTO.city}}"
+                   class="btn btn-success">Back to the search</a>
                 <br>
             </div>
         </form>

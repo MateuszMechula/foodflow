@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <title>Search Restaurants</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+
+    <h2>Matching restaurants:</h2>
+
+    <form th:action="@{'/customer/search-restaurants/page'}" method="get">
+        <input type="hidden" name="street" th:value="${searchAddressDTO.street}"/>
+        <input type="hidden" name="postalCode" th:value="${searchAddressDTO.postalCode}"/>
+        <input type="hidden" name="city" th:value="${searchAddressDTO.city}"/>
+
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort">
+            <option value="defaultSortColumn">Default</option>
+            <option value="name">Restaurant Name</option>
+            <option value="deliveryPrice">Delivery Price</option>
+            <option value="minimumOrderAmount">Minimum order amount</option>
+        </select>
+        <input type="submit" value="Sort">
+    </form>
+
+    <table class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Restaurant name</th>
+            <th>Phone</th>
+            <th>Description</th>
+            <th>Delivery Price</th>
+            <th>Minimum order amount</th>
+            <th>Order</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="restaurant: ${listRestaurants}">
+            <td th:text="${restaurant.name}"></td>
+            <td th:text="${restaurant.phone}"></td>
+            <td th:text="${restaurant.description}"></td>
+            <td th:text="${restaurant.deliveryPrice}"></td>
+            <td th:text="${restaurant.minimumOrderAmount}"></td>
+            <td>
+                <a th:href="@{/customer/order/{id}(id=${restaurant.restaurantId}, address=${restaurant.restaurantAddresses[0].address})}"
+                   class="btn btn-primary">Restaurant Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${totalPages > 1}">
+        <div class="row col-sm-10">
+            <div class="col sm-2">
+                Total Rows: [[${totalItems}]]
+            </div>
+            <div class="col sm-1">
+            <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{'/customer/search-restaurants/page' + '?street=' + ${searchAddressDTO.street} + '&postalCode=' + ${searchAddressDTO.postalCode} + '&city=' + ${searchAddressDTO.city} + '&pageNo=' + ${i}}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+            </div>
+            <div class="col sm-1">
+                <a th:if="${currentPage < totalPages}"
+                   th:href="@{'/customer/search-restaurants/page' + '?street=' + ${searchAddressDTO.street} + '&postalCode=' + ${searchAddressDTO.postalCode} + '&city=' + ${searchAddressDTO.city} + '&pageNo=' + ${currentPage + 1}}">Next</a>
+                <span th:unless="${currentPage < totalPages}"></span>
+            </div>
+            <div class="col sm-1">
+                <a th:if="${currentPage != totalPages}"
+                   th:href="@{'/customer/search-restaurants/page' + '?street=' + ${searchAddressDTO.street} + '&postalCode=' + ${searchAddressDTO.postalCode} + '&city=' + ${searchAddressDTO.city} + '&pageNo=' + ${totalPages}}">Last</a>
+                <span th:unless="${currentPage != totalPages}"></span>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <a th:href="@{/customer/search-restaurants}" class="btn btn-success">Back to the main page</a>
+    <br>
+</div>
+</body>
+</html>
+
+
+

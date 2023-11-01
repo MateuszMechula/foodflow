@@ -1,5 +1,7 @@
 package pl.foodflow.business.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.foodflow.domain.Restaurant;
 
 import java.util.List;
@@ -15,4 +17,6 @@ public interface RestaurantDAO {
     void saveRestaurant(Restaurant restaurant);
 
     void deleteRestaurantById(Long restaurantId);
+
+    Page<Restaurant> findPaginated(Pageable pageable);
 }

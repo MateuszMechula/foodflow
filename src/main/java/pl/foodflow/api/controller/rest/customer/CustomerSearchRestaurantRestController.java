@@ -37,10 +37,10 @@ public class CustomerSearchRestaurantRestController {
                 .city(city)
                 .build();
 
-        List<Restaurant> allRestaurants = restaurantService.findAll();
-        List<Restaurant> matchingRestaurants = searchRestaurantService.filterMatchingRestaurants
-                (searchAddressDTO, allRestaurants);
+//        List<Restaurant> allRestaurants = restaurantService.findAll();
+//        List<Restaurant> matchingRestaurants = searchRestaurantService.filterMatchingRestaurants
+//                (searchAddressDTO, allRestaurants);
 
-        return ResponseEntity.status(HttpStatus.OK).body(matchingRestaurants);
+        return (ResponseEntity<List<Restaurant>>) ResponseEntity.status(HttpStatus.OK);
     }
 }

@@ -7,7 +7,7 @@
 <body>
 <div class="container mt-4">
     <h1>Search Restaurants by Address</h1>
-    <form th:action="@{/customer/search-restaurants}" method="post" th:object="${searchAddressDTO}">
+    <form th:action="@{/customer/search-restaurants/page}" method="get" th:object="${searchAddressDTO}">
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="street">Street:</label>
@@ -25,30 +25,9 @@
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
-    <h2>Matching Restaurants:</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="restaurant : ${matchingRestaurants}">
-            <td th:text="${restaurant.name}"></td>
-            <td th:text="${restaurant.description}"></td>
-            <td>
-                <a th:href="@{/customer/order/{id}(id=${restaurant.restaurantId}, address=${restaurant.restaurantAddresses[0].address})}"
-                   class="btn btn-primary">Restaurant Details</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
     <br>
     <a th:href="@{/customer}" class="btn btn-success">Back to the main page</a>
     <br>
 </div>
 </body>
 </html>
-
-

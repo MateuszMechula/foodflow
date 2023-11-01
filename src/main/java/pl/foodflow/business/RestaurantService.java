@@ -3,6 +3,10 @@ package pl.foodflow.business;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.AddressDAO;
 import pl.foodflow.business.dao.RestaurantDAO;
@@ -44,6 +48,12 @@ public class RestaurantService {
     public List<Restaurant> findAll() {
         log.info("Fetching all restaurants");
         return restaurantDAO.findAllRestaurants();
+    }
+
+    public Page<Restaurant> findPaginated(int pageNo, int pageSize, String sortColumn) {
+        Pageable pageable = "defaultSortColumn".equals(sortColumn) ? PageRequest.of(pageNo - 1, pageSize) :
+                PageRequest.of(pageNo - 1, pageSize, Sort.by(sortColumn));
+        return restaurantDAO.findPaginated(pageable);
     }
 
     @Transactional

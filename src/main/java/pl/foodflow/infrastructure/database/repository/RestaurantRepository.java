@@ -1,6 +1,8 @@
 package pl.foodflow.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.foodflow.business.dao.RestaurantDAO;
 import pl.foodflow.domain.Restaurant;
@@ -47,5 +49,11 @@ public class RestaurantRepository implements RestaurantDAO {
     @Override
     public void deleteRestaurantById(Long restaurantId) {
         restaurantJpaRepository.deleteById(restaurantId);
+    }
+
+    @Override
+    public Page<Restaurant> findPaginated(Pageable pageable) {
+        return restaurantJpaRepository.findAll(pageable)
+                .map(restaurantEntityMapper::mapFromEntity);
     }
 }
