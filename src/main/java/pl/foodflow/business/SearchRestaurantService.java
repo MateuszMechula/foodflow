@@ -17,13 +17,11 @@ public class SearchRestaurantService {
             SearchAddressDTO searchAddressDTO,
             List<Restaurant> allRestaurants) {
 
-        List<Restaurant> matchingRestaurants = allRestaurants.stream()
+        return allRestaurants.stream()
                 .filter(restaurant -> hasMatchingAddress(searchAddressDTO, restaurant))
                 .collect(Collectors.toList());
-
-        log.info("Found {} matching restaurants.", matchingRestaurants.size());
-        return matchingRestaurants;
     }
+
 
     private boolean hasMatchingAddress(SearchAddressDTO searchAddressDTO, Restaurant restaurant) {
         return restaurant.getRestaurantAddresses().stream()
