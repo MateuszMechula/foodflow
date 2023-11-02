@@ -28,6 +28,7 @@ public class CustomerSearchRestaurantController {
 
     public static final String CUSTOMER = "/customer";
     public static final String SEARCH_RESTAURANTS = "/search-restaurants";
+    public static final String PAGE = "/page";
 
     private final RestaurantService restaurantService;
     private final SearchRestaurantService searchRestaurantService;
@@ -40,7 +41,7 @@ public class CustomerSearchRestaurantController {
         return "customer_search_restaurant_form";
     }
 
-    @GetMapping(value = SEARCH_RESTAURANTS + "/page")
+    @GetMapping(value = SEARCH_RESTAURANTS + PAGE)
     public String findPaginated(@Valid @ModelAttribute SearchAddressDTO searchAddressDTO,
                                 @RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
                                 @RequestParam(name = "sort", required = false) String sortColumn,

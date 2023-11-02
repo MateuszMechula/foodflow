@@ -195,15 +195,15 @@
 
                 <button type="submit" class="btn btn-primary">Place Order</button>
                 <br>
-                <a th:href="@{'/customer/search-restaurants/page' + '?street=' + ${searchAddressDTO.street}
-                + '&postalCode=' + ${searchAddressDTO.postalCode} + '&city=' + ${searchAddressDTO.city}}"
-                   class="btn btn-success">Back to the search</a>
+                <a th:href="@{'/customer/search-restaurants/page' + '?street=' + searchAddressDTO.street + '&postalCode=' +
+                 searchAddressDTO.postalCode + '&city=' + searchAddressDTO.city}">
+
+                    class="btn btn-success">Back to the search</a>
                 <br>
             </div>
         </form>
 
     </div>
-</div>
 </div>
 
 <div class="container mt-4" th:unless="${restaurant != null}">

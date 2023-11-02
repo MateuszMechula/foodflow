@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.foodflow.api.dto.SearchAddressDTO;
@@ -17,10 +19,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static pl.foodflow.api.controller.customer.CustomerSearchRestaurantController.CUSTOMER;
-import static pl.foodflow.api.controller.customer.CustomerSearchRestaurantController.SEARCH_RESTAURANTS;
+import static pl.foodflow.api.controller.customer.CustomerSearchRestaurantController.*;
 import static pl.foodflow.util.TestDataFactory.*;
 
 @WebMvcTest(CustomerSearchRestaurantController.class)
@@ -39,7 +39,7 @@ class CustomerSearchRestaurantControllerTest {
         mockMvc.perform(get(CUSTOMER + SEARCH_RESTAURANTS))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("searchAddressDTO", new SearchAddressDTO()))
-                .andExpect(view().name("customer_search_restaurant"));
+                .andExpect(view().name("customer_search_restaurant_form"));
     }
 
     @Test
@@ -47,20 +47,27 @@ class CustomerSearchRestaurantControllerTest {
     void searchRestaurantsWorksCorrectly() throws Exception {
         //given
         SearchAddressDTO searchAddressDTO = someSearchAddressDTO();
-        List<Restaurant> allRestaurants = List.of(someRestaurant1(), someRestaurant2());
+        List<Restaurant> all = List.of(someRestaurant1(), someRestaurant2());
+        Page<Restaurant> allRestaurants = new PageImpl<>(all);
         List<Restaurant> matchingRestaurants = List.of(someRestaurant2());
+        int page = 1;
+        int pageSize = 5;
+        String sortColumn = "defaultSortColumn";
 
-        when(restaurantService.findAll()).thenReturn(allRestaurants);
-        when(searchRestaurantService.filterMatchingRestaurants(searchAddressDTO, allRestaurants))
+        when(restaurantService.findPaginated(page, pageSize, sortColumn)).thenReturn(allRestaurants);
+        when(searchRestaurantService.filterMatchingRestaurants(searchAddressDTO, allRestaurants.getContent()))
                 .thenReturn(matchingRestaurants);
         //when,then
-        mockMvc.perform(post(CUSTOMER + SEARCH_RESTAURANTS)
+        mockMvc.perform(get(CUSTOMER + SEARCH_RESTAURANTS + PAGE)
                         .param("street", searchAddressDTO.getStreet())
                         .param("city", searchAddressDTO.getStreet())
                         .param("postalCode", searchAddressDTO.getPostalCode()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("matchingRestaurants"))
+                .andExpect(model().attributeExists("currentPage"))
+                .andExpect(model().attributeExists("totalPages"))
+                .andExpect(model().attributeExists("totalItems"))
+                .andExpect(model().attributeExists("listRestaurants"))
                 .andExpect(model().attributeExists("searchAddressDTO"))
-                .andExpect(view().name("customer_search_restaurant"));
+                .andExpect(view().name("customer_search_restaurant_table"));
     }
 }

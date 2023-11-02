@@ -90,7 +90,7 @@ class CustomerOrderRecordControllerTest {
         MockHttpSession session = new MockHttpSession();
 
         // Perform the request and verify the results
-        mockMvc.perform(get(CUSTOMER + CUSTOMER_ORDER + "/{restaurantId}", restaurantId)
+        mockMvc.perform(get(CUSTOMER + CUSTOMER_ORDER + RESTAURANT_ID, restaurantId)
                         .session(session))
 
                 // Then

@@ -56,6 +56,7 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
   ```
 
 2. Open cloned directory
+
   ``` bash      
    cd foodflow
   ```
@@ -72,7 +73,7 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
    cd docker
   ```
 
-5. Run using docker-compose 
+5. Run using docker-compose
 
   ``` bash
   docker-compose up -d
@@ -81,30 +82,35 @@ Order Cancellation: Customers can cancel orders if it has been less than 5 minut
 ## Technologies used
 
 ### Backend
-  - Spring Boot
-  - Spring Web
-  - Spring Security
-  - Spring Data PostgreSQL
-  - Lombok
-  - Gradle
-  - Flyway
-  - Mapstruct
+
+- Spring Boot
+- Spring Web
+- Spring Security
+- Spring Data PostgreSQL
+- Lombok
+- Gradle
+- Flyway
+- Mapstruct
 
 ### Backend Testing
-  - JUnit
-  - Mockito
-  - RestAssured
-  - Testcontainers
+
+- JUnit
+- Mockito
+- RestAssured
+- Testcontainers
 
 ### Database
-  - PostgreSQL
-    
+
+- PostgreSQL
+
 ### Frontend
-  - Thymeleaf
+
+- Thymeleaf
 
 ### Other
-  - Docker
-  - Swagger
+
+- Docker
+- Swagger
 
 ## Authors
 
