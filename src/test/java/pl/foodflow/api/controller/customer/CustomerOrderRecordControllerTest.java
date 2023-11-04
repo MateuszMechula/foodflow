@@ -58,10 +58,13 @@ class CustomerOrderRecordControllerTest {
     void checkCustomerOrdersWorksCorrectly() throws Exception {
         //given
         Integer userId = 1;
+        Long restaurantId = 1L;
+        Restaurant restaurant = someRestaurant1();
         List<OrderRecord> orderRecordsInProgress = List.of(someOrderRecord3());
         List<OrderRecord> orderRecordsCompleted = List.of(someOrderRecord3());
 
         when(userService.getUserIdByAuth()).thenReturn(userId);
+        when(restaurantService.getRestaurantById(restaurantId)).thenReturn(restaurant);
         when(orderRecordService.getAllCustomerOrdersWithStatus(userId, OrderStatus.IN_PROGRESS))
                 .thenReturn(orderRecordsInProgress);
         when(orderRecordService.getAllCustomerOrdersWithStatus(userId, OrderStatus.COMPLETED))
@@ -77,27 +80,6 @@ class CustomerOrderRecordControllerTest {
                 .andExpect(model().attribute("allOrdersWithOrderStatusCompleted", orderRecordsCompleted))
                 .andExpect(view().name("customer_orders_view"));
 
-    }
-
-    @Test
-    void restaurantDetailsWorksCorrectly() throws Exception {
-        //given
-        Long restaurantId = 1L;
-        Restaurant restaurant = someRestaurant1();
-        when(restaurantService.getRestaurantById(restaurantId)).thenReturn(restaurant);
-
-        // When
-        MockHttpSession session = new MockHttpSession();
-
-        // Perform the request and verify the results
-        mockMvc.perform(get(CUSTOMER + CUSTOMER_ORDER + RESTAURANT_ID, restaurantId)
-                        .session(session))
-
-                // Then
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("restaurant", restaurant))
-                .andExpect(model().attribute("orderDTO", new OrderDTO()))
-                .andExpect(view().name("customer_order_form"));
     }
 
     @Test

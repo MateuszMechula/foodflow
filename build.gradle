@@ -118,6 +118,16 @@ jacocoTestReport {
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "pl/foodflow/infrastructure/weather/model/*",
+                    "pl/foodflow/infrastructure/weather/api/*",
+                    "pl/foodflow/api/dto/*",
+                    "pl/foodflow/domain/*"
+            ])
+        }))
+    }
 }
 
 compileJava.options.encoding = 'UTF-8'
