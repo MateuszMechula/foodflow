@@ -49,19 +49,21 @@ public class CustomerOrderRecordRestController {
 
     @Operation(
             summary = "Add order record",
-            description = "Create a new order record with the following data structure:\n"
-                    + "```json\n"
-                    + "{\n"
-                    + "  \"orderItems\": {\n"
-                    + "    \"categoryItemId1\": 3,  // 'categoryItemId' with 'quantity'\n"
-                    + "    \"categoryItemId2\": 2,  // 'categoryItemId' with 'quantity'\n"
-                    + "    ...\n"
-                    + "  },\n"
-                    + "  \"orderNotes\": \"string\",\n"
-                    + "  \"contactPhone\": \"867996949\",\n"
-                    + "  \"deliveryAddress\": \"string\",\n"
-                    + "  \"deliveryType\": \"DELIVERY\"\n"
-                    + "}\n"
+            description = """
+                    Create a new order record with the following data structure:
+                    ```json
+                    {
+                      "orderItems": {
+                        "categoryItemId1": 3,  // 'categoryItemId' with 'quantity'
+                        "categoryItemId2": 2,  // 'categoryItemId' with 'quantity'
+                        ...
+                      },
+                      "orderNotes": "string",
+                      "contactPhone": "867996949",
+                      "deliveryAddress": "string",
+                      "deliveryType": "DELIVERY"
+                    }
+                    """
     )
     @PostMapping(value = RESTAURANT_ID + CUSTOMER_ID)
     public ResponseEntity<OrderRecord> addOrderRecord(
