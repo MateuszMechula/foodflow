@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.foodflow.infrastructure.security.user.UserDTO;
 import pl.foodflow.infrastructure.security.user.UserService;
 
-import static pl.foodflow.infrastructure.security.controller.RegistrationController.REGISTRATION;
+import static pl.foodflow.infrastructure.security.controller.UserRegistrationController.REGISTRATION;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = REGISTRATION)
-public class RegistrationController {
+public class UserRegistrationController {
     public static final String REGISTER = "/register";
     public static final String REGISTRATION = "/registration";
     public static final String REGISTRATION_FORM = "/registration-form";

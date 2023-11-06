@@ -14,13 +14,13 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static pl.foodflow.infrastructure.security.controller.RegistrationController.*;
+import static pl.foodflow.infrastructure.security.controller.UserRegistrationController.*;
 import static pl.foodflow.util.TestDataFactory.someUserDTO1;
 
-@WebMvcTest(RegistrationController.class)
+@WebMvcTest(UserRegistrationController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-class RegistrationControllerTest {
+class UserRegistrationControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private UserService userService;

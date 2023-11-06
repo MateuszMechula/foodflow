@@ -1,3 +1,31 @@
+insert into food_flow_user (user_name, password, active)
+values ('owner', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true);
+
+insert into food_flow_user (user_name, password, active)
+values ('customer', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true);
+
+insert into address (street, postal_code, city, country)
+values ('Niepołomicka', '80-180', 'Gdańsk', 'Polska');
+
+insert into owner (name, surname, email, phone, address_id, user_id)
+values ('Mateusz', 'Mechula', 'mateuszmechua@gmail.com', '515273042', 1, 1);
+
+insert into address (street, postal_code, city, country)
+values ('Skarpiego', '11-700', 'Mrągowo', 'Polska');
+
+insert into customer (name, surname, email, phone, address_id, user_id)
+values ('Jan', 'Kowalski', 'jankowalski@gmail.com', '666054032', 2, 2);
+
+insert into food_flow_role (role_id, role)
+values (1, 'OWNER'),
+       (2, 'CUSTOMER');
+
+insert into food_flow_user_role (user_id, role_id)
+values (1, 1);
+
+insert into food_flow_user_role (user_id, role_id)
+values (2, 2);
+
 INSERT INTO address (street, postal_code, city, country)
 VALUES ('Pierwsza 1', '12-345', 'Kraków', 'Polska'),
        ('Druga 2', '23-456', 'Warszawa', 'Polska'),
@@ -21,17 +49,17 @@ VALUES ('Pierwsza 1', '12-345', 'Kraków', 'Polska'),
        ('Dwadzieścia 20', '20-000', 'Gdańsk', 'Polska'),
        ('klonowa 6a', '11-400', 'Kętrzyn', 'Polska');
 
-INSERT INTO food_flow_user (user_id, user_name, password, active)
-VALUES (3, 'user1', 'password1', true),
-       (4, 'user2', 'password2', true),
-       (5, 'user3', 'password3', true),
-       (6, 'user4', 'password4', true),
-       (7, 'user5', 'password5', true),
-       (8, 'user6', 'password6', true),
-       (9, 'user7', 'password7', true),
-       (10, 'user8', 'password8', true),
-       (11, 'user9', 'password9', true),
-       (12, 'user10', 'password10', true);
+INSERT INTO food_flow_user (user_name, password, active)
+VALUES ('user1', 'password1', true),
+       ('user2', 'password2', true),
+       ('user3', 'password3', true),
+       ('user4', 'password4', true),
+       ('user5', 'password5', true),
+       ('user6', 'password6', true),
+       ('user7', 'password7', true),
+       ('user8', 'password8', true),
+       ('user9', 'password9', true),
+       ('user10', 'password10', true);
 
 insert into owner (name, surname, email, phone, address_id, user_id)
 values ('John', 'Doe', 'john.doe@example.com', '123456789', 3, 3),

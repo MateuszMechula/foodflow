@@ -10,4 +10,7 @@ public interface MenuCategoryMapper {
     @Mapping(target = "categoryItems", ignore = true)
     @Mapping(target = "menu", ignore = true)
     MenuCategory map(MenuCategoryDTO menuCategoryDTO);
+
+    @Mapping(target = "restaurant", ignore = true)
+    MenuCategoryDTO mapToDTO(MenuCategory menuCategory);
 }

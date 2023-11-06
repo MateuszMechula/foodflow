@@ -1,5 +1,7 @@
 package pl.foodflow.api.controller.rest.owner;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import pl.foodflow.domain.Owner;
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = OwnerMenuRestController.MENUS)
+@Tag(name = "owner menu")
 public class OwnerMenuRestController {
     public static final String MENUS = "/api/v1/owner/menus";
     public static final String MENU_ID = "/{menuId}";
@@ -25,6 +28,16 @@ public class OwnerMenuRestController {
     private final MenuService menuService;
     private final OwnerService ownerService;
 
+    @Operation(summary = "Get menu")
+    @GetMapping(value = MENU_ID)
+    public ResponseEntity<MenuDTO> getMenu(@PathVariable Long menuId) {
+        Menu menu = menuService.getMenuById(menuId);
+        MenuDTO menuDTO = menuMapper.mapToDTO(menu);
+
+        return ResponseEntity.status(HttpStatus.OK).body(menuDTO);
+    }
+
+    @Operation(summary = "Add menu")
     @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addMenu(
             @Valid @RequestBody MenuDTO menuDTO,
@@ -36,6 +49,7 @@ public class OwnerMenuRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Delete menu")
     @DeleteMapping(value = MENU_ID)
     public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);

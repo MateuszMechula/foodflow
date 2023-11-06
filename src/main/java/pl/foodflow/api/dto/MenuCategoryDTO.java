@@ -1,5 +1,6 @@
 package pl.foodflow.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import pl.foodflow.domain.Restaurant;
 @NoArgsConstructor
 public class MenuCategoryDTO {
 
+    @JsonIgnore
     Long menuCategoryId;
     @NotBlank(message = "Name is required")
     String name;
@@ -21,6 +23,7 @@ public class MenuCategoryDTO {
     @Size(max = 255, message = "Description must be less than or equal to 255 characters")
     String description;
 
+    @JsonIgnore
     Restaurant restaurant;
 
     public static MenuCategoryDTO buildDefault() {

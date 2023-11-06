@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.CustomerService;
 import pl.foodflow.business.OwnerService;
+import pl.foodflow.business.exceptions.UserNotFoundException;
 import pl.foodflow.domain.Address;
 import pl.foodflow.domain.Customer;
 import pl.foodflow.domain.Owner;
@@ -28,6 +29,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final OwnerService ownerService;
     private final CustomerService customerService;
+
+    public User findById(int userId) {
+        return userDAO.findUserById(userId)
+                .orElseThrow(() -> new UserNotFoundException(
+                        ErrorMessages.USER_WITH_ID_NOT_FOUND.formatted(userId)));
+    }
 
     public User findByUsername(String userName) {
         return userDAO.findByUserName(userName)
@@ -50,18 +57,21 @@ public class UserService {
     }
 
     @Transactional
-    public void registerUser(UserDTO userDTO) {
+    public User registerUser(UserDTO userDTO) {
         User user = buildUser(userDTO);
         User savedUser = userDAO.save(user);
 
         if (userDTO.getRole().equalsIgnoreCase("owner")) {
             Owner owner = buildNewOwner(userDTO);
             ownerService.saveOwner(owner.withUserId(savedUser.getUserId()));
+
         } else if (userDTO.getRole().equalsIgnoreCase("customer")) {
             Customer customer = buildNewCustomer(userDTO);
             customerService.saveCustomer(customer.withUserId(savedUser.getUserId()));
         }
         log.info("User registered successfully: {}", userDTO.getUsername());
+
+        return savedUser;
     }
 
     private Customer buildNewCustomer(UserDTO userDTO) {

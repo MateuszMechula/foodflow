@@ -1,12 +1,14 @@
 package pl.foodflow.api.controller.rest.owner;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.foodflow.api.dto.AddressDTO;
+import pl.foodflow.api.dto.AddressRequestDTO;
 import pl.foodflow.api.dto.mapper.AddressMapper;
 import pl.foodflow.business.OwnerService;
 import pl.foodflow.business.RestaurantAddressService;
@@ -19,6 +21,7 @@ import pl.foodflow.domain.RestaurantAddress;
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = OwnerRestaurantAddressRestController.RESTAURANT_ADDRESSES)
+@Tag(name = "owner restaurantAddress")
 public class OwnerRestaurantAddressRestController {
     public static final String RESTAURANT_ADDRESSES = "/api/v1/owner/restaurant-addresses";
     public static final String ADDRESS_ID = "/{addressId}";
@@ -29,13 +32,14 @@ public class OwnerRestaurantAddressRestController {
     private final RestaurantService restaurantService;
     private final RestaurantAddressService restaurantAddressService;
 
+    @Operation(summary = "Add deliveryAddress to restaurant")
     @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addDeliveryAddressToRestaurant(
-            @Valid @RequestBody AddressDTO addressDTO,
+            @Valid @RequestBody AddressRequestDTO requestDTO,
             @PathVariable Long ownerId
     ) {
         Owner owner = ownerService.findOwnerById(ownerId);
-        Address address = addressMapper.map(addressDTO);
+        Address address = addressMapper.map(requestDTO);
 
         restaurantService.addDeliveryAddressToRestaurant(address, owner);
         log.info("Delivery address added to restaurant NIP: {}", owner.getRestaurant().getNip());
@@ -43,6 +47,7 @@ public class OwnerRestaurantAddressRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Delete restaurantAddress")
     @DeleteMapping(value = ADDRESS_ID)
     public ResponseEntity<Void> deleteRestaurantAddress(
             @PathVariable Long addressId) {

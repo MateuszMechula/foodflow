@@ -10,7 +10,12 @@ import pl.foodflow.infrastructure.database.entity.OrderItemEntity;
 public interface OrderItemEntityMapper {
     OrderItemEntity mapToEntity(OrderItem orderItem);
 
-    @Mapping(target = "categoryItem", ignore = true)
+    @Mapping(target = "categoryItem.name", ignore = true)
+    @Mapping(target = "categoryItem.description", ignore = true)
+    @Mapping(target = "categoryItem.price", ignore = true)
+    @Mapping(target = "categoryItem.imageUrl", ignore = true)
+    @Mapping(target = "categoryItem.menuCategory", ignore = true)
+    @Mapping(target = "categoryItem.orderItems", ignore = true)
     @Mapping(target = "orderRecord", ignore = true)
     OrderItem mapFromEntity(OrderItemEntity saved);
 }

@@ -1,5 +1,7 @@
 package pl.foodflow.api.controller.rest.owner;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import pl.foodflow.domain.Owner;
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = OwnerMenuCategoryRestController.MENU_CATEGORIES)
+@Tag(name = "owner menuCategory")
 public class OwnerMenuCategoryRestController {
     public static final String MENU_CATEGORIES = "/api/v1/owner/menu-categories";
     public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
@@ -28,12 +31,15 @@ public class OwnerMenuCategoryRestController {
     private final MenuCategoryMapper menuCategoryMapper;
     private final MenuCategoryService menuCategoryService;
 
+    @Operation(summary = "Get menuCategory")
     @GetMapping(value = MENU_CATEGORY_ID)
-    public ResponseEntity<MenuCategory> getMenuCategoryById(@PathVariable Long menuCategoryId) {
+    public ResponseEntity<MenuCategoryDTO> getMenuCategoryById(@PathVariable Long menuCategoryId) {
         MenuCategory menuCategory = menuCategoryService.findMenuCategoryById(menuCategoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(menuCategory);
+        MenuCategoryDTO menuCategoryDTO = menuCategoryMapper.mapToDTO(menuCategory);
+        return ResponseEntity.status(HttpStatus.OK).body(menuCategoryDTO);
     }
 
+    @Operation(summary = "Add menuCategory")
     @PostMapping(value = OWNER_ID)
     public ResponseEntity<Void> addMenuCategory(
             @Valid @RequestBody MenuCategoryDTO menuCategoryDTO,
@@ -46,6 +52,7 @@ public class OwnerMenuCategoryRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Delete menuCategory")
     @DeleteMapping(value = MENU_CATEGORY_ID)
     public ResponseEntity<Void> deleteMenuCategory(@PathVariable Long menuCategoryId) {
         menuCategoryService.deleteMenuCategoryById(menuCategoryId);

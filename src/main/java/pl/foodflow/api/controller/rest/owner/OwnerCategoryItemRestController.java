@@ -1,5 +1,7 @@
 package pl.foodflow.api.controller.rest.owner;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.io.IOException;
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = OwnerCategoryItemRestController.CATEGORY_ITEMS)
+@Tag(name = "owner categoryItem")
 public class OwnerCategoryItemRestController {
     public static final String CATEGORY_ITEMS = "/api/v1/owner/category-items";
     public static final String MENU_CATEGORY_ID = "/{menuCategoryId}";
@@ -32,12 +35,15 @@ public class OwnerCategoryItemRestController {
     private final MenuCategoryService menuCategoryService;
     private final CategoryItemService categoryItemService;
 
+    @Operation(summary = "Find categoryItem")
     @GetMapping(value = CATEGORY_ITEM_ID)
-    public ResponseEntity<CategoryItem> findCategoryItem(@PathVariable Long categoryItemId) {
+    public ResponseEntity<CategoryItemDTO> findCategoryItem(@PathVariable Long categoryItemId) {
         CategoryItem categoryItem = categoryItemService.getCategoryItemById(categoryItemId);
-        return ResponseEntity.status(HttpStatus.OK).body(categoryItem);
+        CategoryItemDTO categoryItemDTO = categoryItemMapper.mapToDTO(categoryItem);
+        return ResponseEntity.status(HttpStatus.OK).body(categoryItemDTO);
     }
 
+    @Operation(summary = "Add categoryItem")
     @PostMapping(value = MENU_CATEGORY_ID + OWNER_ID)
     public ResponseEntity<Void> addCategoryItem(
             @PathVariable Long menuCategoryId,
@@ -52,6 +58,7 @@ public class OwnerCategoryItemRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Delete categoryItem")
     @DeleteMapping(value = CATEGORY_ITEM_ID)
     public ResponseEntity<Void> deleteCategoryItem(@PathVariable Long categoryItemId) {
         categoryItemService.deleteCategoryItemById(categoryItemId);

@@ -119,6 +119,7 @@ public class RestaurantService {
                         .orElse(existingRestaurant.getRestaurantId()))
                 .nip(Optional.ofNullable(updatedRestaurant.getNip()).orElse(existingRestaurant.getNip()))
                 .name(Optional.ofNullable(updatedRestaurant.getName()).orElse(existingRestaurant.getName()))
+                .description(Optional.ofNullable(updatedRestaurant.getDescription()).orElse(existingRestaurant.getDescription()))
                 .deliveryOption(Optional.ofNullable(updatedRestaurant.getDeliveryOption())
                         .orElse(existingRestaurant.getDeliveryOption()))
                 .openTime(Optional.ofNullable(updatedRestaurant.getOpenTime()).orElse(existingRestaurant.getOpenTime()))

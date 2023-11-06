@@ -20,7 +20,7 @@ public class OrderRecordRepository implements OrderRecordDAO {
 
     @Override
     public Optional<OrderRecord> findOrderRecordById(Long orderRecordId) {
-        return orderRecordJpaRepository.findById(orderRecordId)
+        return orderRecordJpaRepository.findOrderRecordById(orderRecordId)
                 .map(orderRecordEntityMapper::mapFromEntity);
     }
 

@@ -9,15 +9,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.foodflow.api.dto.ExceptionMessage;
-import pl.foodflow.business.exceptions.NotFoundException;
-import pl.foodflow.business.exceptions.OrderRecordNotFoundException;
+import pl.foodflow.business.exceptions.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,13 +27,31 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
 
-    private static final Map<Class<?>, HttpStatus> EXCEPTION_STATUS = Map.of(
-            ConstraintViolationException.class, HttpStatus.BAD_REQUEST,
-            DataIntegrityViolationException.class, HttpStatus.BAD_REQUEST,
-            EntityNotFoundException.class, HttpStatus.NOT_FOUND,
-            OrderRecordNotFoundException.class, HttpStatus.NOT_FOUND,
-            NotFoundException.class, HttpStatus.NOT_FOUND
-    );
+    private static final Map<Class<?>, HttpStatus> EXCEPTION_STATUS = new HashMap<>();
+
+    static {
+        EXCEPTION_STATUS.put(ConstraintViolationException.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(DataIntegrityViolationException.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(EntityNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(NotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(CategoryItemNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(CustomerNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(InvalidAddressException.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(MenuCategoryNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(MenuNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(MissingImageFileException.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(OrderItemsNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(OrderRecordNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(OrdersNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(OwnerNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(RestaurantAddressNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(RestaurantAlreadyExistsException.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(RestaurantNotFound.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(MenuAlreadyExists.class, HttpStatus.BAD_REQUEST);
+        EXCEPTION_STATUS.put(UsernameNotFoundException.class, HttpStatus.NOT_FOUND);
+        EXCEPTION_STATUS.put(UserNotFoundException.class, HttpStatus.NOT_FOUND);
+
+    }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
@@ -44,6 +63,7 @@ public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
     ) {
         final String errorId = UUID.randomUUID().toString();
         log.error("Exception: ID={}, HttpStatus={}", errorId, statusCode, exception);
+
         return super.handleExceptionInternal(exception, ExceptionMessage.of(errorId), headers, statusCode, request);
     }
 
@@ -62,9 +82,11 @@ public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
         final String errorId = UUID.randomUUID().toString();
         log.error("Exception: ID={}, HttpStatus={}", errorId, status, exception);
 
+        ErrorDetails errorDetails = new ErrorDetails(errorId, exception.getMessage());
+
         return ResponseEntity
                 .status(status)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(ExceptionMessage.of(errorId));
+                .body(errorDetails);
     }
 }

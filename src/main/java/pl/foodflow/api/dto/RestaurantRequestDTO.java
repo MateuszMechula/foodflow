@@ -1,5 +1,6 @@
 package pl.foodflow.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,10 +15,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestaurantDTO {
-
-    Long restaurantId;
-
+public class RestaurantRequestDTO {
     @Pattern(regexp = "\\d{10}", message = "NIP must be a 10-digit number")
     String nip;
 
@@ -40,27 +38,9 @@ public class RestaurantDTO {
     BigDecimal minimumOrderAmount;
     BigDecimal deliveryPrice;
     Boolean deliveryOption;
-    AddressDTO address;
+    AddressRequestDTO address;
+    @JsonIgnore
     String ownerEmail;
+    @JsonIgnore
     Long ownerId;
-    Long menuId;
-
-    public static RestaurantDTO buildDefault() {
-        return RestaurantDTO.builder()
-                .nip("7213405941")
-                .name("BurgerKing")
-                .description("Najlepsze Burgery")
-                .openTime("10:00:00")
-                .closeTime("18:00:00")
-                .phone("515303202")
-                .minimumOrderAmount(new BigDecimal("30"))
-                .deliveryPrice(new BigDecimal("5"))
-                .address(AddressDTO.builder()
-                        .street("Klonowa")
-                        .postalCode("11-400")
-                        .city("Kętrzyn")
-                        .country("Polska")
-                        .build())
-                .build();
-    }
 }

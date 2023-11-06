@@ -9,4 +9,8 @@ import pl.foodflow.domain.Menu;
 public interface MenuMapper {
     @Mapping(target = "menuCategories", ignore = true)
     Menu map(MenuDTO menuDTO);
+
+    @Mapping(source = "restaurant.restaurantId", target = "restaurantId")
+    MenuDTO mapToDTO(Menu menu);
+
 }

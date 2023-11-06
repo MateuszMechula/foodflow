@@ -36,7 +36,7 @@ class OrderRecordRepositoryTest {
         OrderRecordEntity orderRecordEntity = someOrderRecordEntity1();
         OrderRecord orderRecord = someOrderRecord1();
 
-        when(orderRecordJpaRepository.findById(orderRecordId)).thenReturn(Optional.of(orderRecordEntity));
+        when(orderRecordJpaRepository.findOrderRecordById(orderRecordId)).thenReturn(Optional.of(orderRecordEntity));
         when(orderRecordEntityMapper.mapFromEntity(orderRecordEntity)).thenReturn(orderRecord);
         //when
         Optional<OrderRecord> foundOrderRecord = orderRecordRepository.findOrderRecordById(orderRecordId);
@@ -45,7 +45,7 @@ class OrderRecordRepositoryTest {
                 .isPresent()
                 .contains(orderRecord);
 
-        verify(orderRecordJpaRepository).findById(orderRecordId);
+        verify(orderRecordJpaRepository).findOrderRecordById(orderRecordId);
         verify(orderRecordEntityMapper).mapFromEntity(orderRecordEntity);
     }
 

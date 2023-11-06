@@ -10,4 +10,8 @@ public interface CategoryItemMapper {
     @Mapping(target = "menuCategory", ignore = true)
     @Mapping(target = "orderItems", ignore = true)
     CategoryItem map(CategoryItemDTO entity);
+
+    @Mapping(source = "menuCategory.menuCategoryId", target = "menuCategoryId")
+    CategoryItemDTO mapToDTO(CategoryItem categoryItem);
+
 }

@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.foodflow.business.dao.MenuDAO;
+import pl.foodflow.business.exceptions.MenuAlreadyExists;
 import pl.foodflow.business.exceptions.MenuNotFoundException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
@@ -106,7 +106,7 @@ class MenuServiceTest {
         Menu menu = someMenu1();
 
         //when,then
-        assertThrows(ThatRestaurantHasAMenu.class, () -> menuService.createMenuForRestaurant(owner, menu));
+        assertThrows(MenuAlreadyExists.class, () -> menuService.createMenuForRestaurant(owner, menu));
         verify(menuDAO, never()).saveMenu(any());
     }
 

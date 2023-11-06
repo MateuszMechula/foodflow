@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.foodflow.business.dao.MenuDAO;
+import pl.foodflow.business.exceptions.MenuAlreadyExists;
 import pl.foodflow.business.exceptions.MenuNotFoundException;
 import pl.foodflow.business.exceptions.RestaurantNotFound;
-import pl.foodflow.business.exceptions.ThatRestaurantHasAMenu;
 import pl.foodflow.domain.Menu;
 import pl.foodflow.domain.MenuCategory;
 import pl.foodflow.domain.Owner;
@@ -79,7 +79,7 @@ public class MenuService {
             throw new RestaurantNotFound(ErrorMessages.RESTAURANT_NOT_CREATED);
         }
         if (Objects.nonNull(owner.getRestaurant().getMenu())) {
-            throw new ThatRestaurantHasAMenu
+            throw new MenuAlreadyExists
                     (ErrorMessages.RESTAURANT_ALREADY_HAS_MENU.formatted(owner.getRestaurant().getNip()));
         }
     }
