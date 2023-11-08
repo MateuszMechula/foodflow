@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.foodflow.business.OrderRecordService;
 import pl.foodflow.domain.OrderRecord;
@@ -36,7 +35,6 @@ class OwnerOrderRecordControllerTest {
     private UserService userService;
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void checkOwnerOrdersWorksCorrectly() throws Exception {
         //given
         Integer userId = 1;
@@ -60,7 +58,6 @@ class OwnerOrderRecordControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void completedOrderWorksCorrectly() throws Exception {
         //given
         Long orderRecordId = 1L;

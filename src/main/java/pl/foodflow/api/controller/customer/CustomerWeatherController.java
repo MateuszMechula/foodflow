@@ -26,7 +26,7 @@ public class CustomerWeatherController {
     private final WeatherClientImpl weatherClient;
 
     @GetMapping(value = CHECK_WEATHER)
-    public String checkWeatherForm(Model model) {
+    public String showWeatherForm(Model model) {
         log.info("Checking weather.");
         model.addAttribute("weatherData", new WeatherDataDTO());
         return "customer_check_weather";

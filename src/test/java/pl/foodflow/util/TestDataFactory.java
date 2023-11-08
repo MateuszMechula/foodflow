@@ -770,4 +770,7 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static WeatherDataDTO weatherDataDTO() {
+        return new WeatherDataDTO();
+    }
 }

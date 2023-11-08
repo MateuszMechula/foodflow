@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.foodflow.api.dto.SearchAddressDTO;
 import pl.foodflow.business.RestaurantService;
@@ -34,7 +33,6 @@ class CustomerSearchRestaurantControllerTest {
     private SearchRestaurantService searchRestaurantService;
 
     @Test
-    @WithMockUser(username = "testCustomer", roles = "CUSTOMER")
     void showSearchFormWorksCorrectly() throws Exception {
         mockMvc.perform(get(CUSTOMER + SEARCH_RESTAURANTS))
                 .andExpect(status().isOk())
@@ -43,7 +41,6 @@ class CustomerSearchRestaurantControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testCustomer", roles = "CUSTOMER")
     void searchRestaurantsWorksCorrectly() throws Exception {
         //given
         SearchAddressDTO searchAddressDTO = someSearchAddressDTO();

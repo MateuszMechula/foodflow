@@ -54,7 +54,6 @@ class CustomerOrderRecordControllerTest {
     private OrderProcessingService orderProcessingService;
 
     @Test
-    @WithMockUser(username = "testCustomer", roles = "CUSTOMER")
     void checkCustomerOrdersWorksCorrectly() throws Exception {
         //given
         Integer userId = 1;
@@ -83,7 +82,6 @@ class CustomerOrderRecordControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testCustomer", roles = "CUSTOMER")
     void deleteOrderRecordWorksCorrectly() throws Exception {
         //given
         Long orderRecordId = 1L;

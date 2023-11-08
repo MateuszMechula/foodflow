@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.foodflow.api.dto.MenuDTO;
 import pl.foodflow.api.dto.mapper.MenuMapper;
@@ -36,7 +35,6 @@ class OwnerMenuControllerTest {
     private UserService userService;
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void menuSectionWorksCorrectly() throws Exception {
         //given
         Owner owner = someOwner1();
@@ -50,7 +48,6 @@ class OwnerMenuControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void addMenuWorksCorrectly() throws Exception {
         //given
         Owner owner = someOwner1();

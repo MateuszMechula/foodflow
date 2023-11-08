@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.foodflow.api.dto.CategoryItemDTO;
 import pl.foodflow.api.dto.mapper.CategoryItemMapper;
@@ -39,7 +38,6 @@ class OwnerCategoryItemControllerTest {
     private CategoryItemMapper categoryItemMapper;
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void showCreateCategoryItemFormWorksCorrectly() throws Exception {
         // given
         Owner owner = someOwner1();
@@ -55,7 +53,6 @@ class OwnerCategoryItemControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testOwner", roles = "OWNER")
     void addCategoryItemWorksCorrectly() throws Exception {
         //given
         Long menuCategoryId = 1L;
