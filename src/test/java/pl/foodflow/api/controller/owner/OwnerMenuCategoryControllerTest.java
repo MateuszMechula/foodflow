@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static pl.foodflow.api.controller.owner.OwnerMenuCategoryController.*;
 import static pl.foodflow.util.TestDataFactory.*;
 
-@WebMvcTest(OwnerMenuCategoryController.class)
+@WebMvcTest(OwnerMenuCatpegoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 class OwnerMenuCategoryControllerTest {

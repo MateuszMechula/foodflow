@@ -36,7 +36,7 @@ spring:
       idle-timeout: 10000
       connection-timeout: 20000
       maximum-pool-size: 20
-      minimum-idle: 10
+      miimum-idle: 10
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -48,8 +48,8 @@ spring:
         jdbc:
           time_zone: UTC
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        show_sql: false
-        format_sql: false
+        show_sql: true
+        format_sql: true
   mvc:
     hiddenmethod:
       filter:
