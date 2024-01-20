@@ -29,9 +29,9 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/foodflow
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://ec2-52-215-68-14.eu-west-1.compute.amazonaws.com:5432/d47bpra9rvtdhl
+    username: jmvwjovvhvnrsd
+    password: 59cea70415780f72cea41c0f419b5219460b0aaacee1381751dccb21a1bb5af1
     hikari:
       idle-timeout: 10000
       connection-timeout: 20000
@@ -48,7 +48,7 @@ spring:
         jdbc:
           time_zone: UTC
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        show_sql: false
+        show_sql: true
         format_sql: false
   mvc:
     hiddenmethod:
