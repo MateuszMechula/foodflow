@@ -1,19 +1,3 @@
-# TEST APPLICATION -> https://food-flow-75e570332cc6.herokuapp.com/foodflow
-
-## Demo Accounts
-
-#### To explore FoodFlow's features, you can use the following demo accounts:
-
-#### Owner Account:
-
-username: owner <br>
-password: test
-
-#### Customer Account:
-
-username: customer <br>
-Password: test
-
 # FoodFlow
 
 FoodFlow is a straightforward food ordering portal that enables restaurant owners to create accounts, establish their
